@@ -1,9 +1,10 @@
 set(SRC_FILES
-    App.cpp
+        # App.cpp
 )
 
 set(INCLUDE_FILES
-    App.hpp
+        # App.hpp
+        # Character.hpp
 )
 
 set(TEST_FILES

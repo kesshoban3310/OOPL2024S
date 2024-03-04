@@ -1,6 +1,9 @@
 #ifndef APP_HPP
 #define APP_HPP
 
+#include "ImageObject.hpp"
+#include "Util/GameObject.hpp"
+#include "Util/Root.hpp"
 #include "pch.hpp" // IWYU pragma: export
 
 class App {
@@ -24,6 +27,10 @@ private:
 
 private:
     State m_CurrentState = State::START;
+    Util::Root m_Root;
+
+    // game objects
+    std::shared_ptr<ImageObject> background;
 };
 
 #endif
