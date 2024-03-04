@@ -1,10 +1,11 @@
 set(SRC_FILES
         App.cpp
+        Component/ImageObject.cpp
 )
 
 set(INCLUDE_FILES
         App.hpp
-        Character.hpp
+        Component/ImageObject.hpp
 )
 
 set(TEST_FILES

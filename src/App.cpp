@@ -15,7 +15,6 @@ void App::Start() {
 
 void App::Update() {
 
-    background->SetVisible(true);
     m_Root.Update();
 
     /*

@@ -1,7 +1,7 @@
 #ifndef APP_HPP
 #define APP_HPP
 
-#include "ImageObject.hpp"
+#include "Component/ImageObject.hpp"
 #include "Util/GameObject.hpp"
 #include "Util/Root.hpp"
 #include "pch.hpp" // IWYU pragma: export
