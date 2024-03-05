@@ -2,6 +2,7 @@
 #define APP_HPP
 
 #include "Component/ImageObject.hpp"
+#include "Component/AnimatedObject.hpp"
 #include "Util/GameObject.hpp"
 #include "Util/Root.hpp"
 #include "pch.hpp" // IWYU pragma: export
@@ -30,7 +31,7 @@ private:
     Util::Root m_Root;
 
     // game objects
-    std::shared_ptr<ImageObject> background;
+    std::shared_ptr<AnimatedObject> background;
 };
 
 #endif

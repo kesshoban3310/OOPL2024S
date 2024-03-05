@@ -1,5 +1,5 @@
-#ifndef IMAGEOBJECT_HPP
-#define IMAGEOBJECT_HPP
+#ifndef IMAGE_OBJECT_HPP
+#define IMAGE_OBJECT_HPP
 
 #include <string>
 
@@ -16,6 +16,8 @@ public:
 
     [[nodiscard]] bool GetVisibility() const;
 
+    [[nodiscard]] const glm::vec2 &GetScale() const;
+
     void SetImage(const std::string &ImagePath);
 
     void SetPosition(const glm::vec2 &Position);
@@ -28,4 +30,4 @@ private:
     std::string m_ImagePath;
 };
 
-#endif // IMAGEOBJECT_HPP
+#endif // IMAGE_OBJECT_HPP

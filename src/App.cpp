@@ -8,7 +8,8 @@ void App::Start() {
     LOG_TRACE("Start");
     m_CurrentState = State::UPDATE;
 
-    background = std::make_shared<ImageObject>(RESOURCE_DIR"/Picture/UI/Title2.png");
+    background = std::make_shared<AnimatedObject>( std::vector<std::string>
+        {RESOURCE_DIR"/Picture/UI/Title1.png", RESOURCE_DIR"/Picture/UI/Title2.png"});
     background->SetScale({3, 3});
     m_Root.AddChild(background);
 }

@@ -17,6 +17,10 @@ ImageObject::ImageObject(const std::string &ImagePath) {
     return m_Visible;
 }
 
+[[nodiscard]] const glm::vec2 &ImageObject::GetScale() const {
+    return m_Transform.scale;
+}
+
 void ImageObject::SetImage(const std::string &ImagePath) {
     m_ImagePath = ImagePath;
     m_Drawable = std::make_shared<Util::Image>(m_ImagePath);
