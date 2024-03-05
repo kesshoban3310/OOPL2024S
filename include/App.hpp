@@ -2,6 +2,9 @@
 #define APP_HPP
 
 #include "pch.hpp" // IWYU pragma: export
+#include "BackGround.hpp"
+#include "Util/Root.hpp"
+
 
 class App {
 public:
@@ -23,7 +26,9 @@ private:
     void ValidTask();
 
 private:
+    Util::Root m_Root;
     State m_CurrentState = State::START;
+    std::shared_ptr<BackGround> m_BackGround;
 };
 
 #endif
