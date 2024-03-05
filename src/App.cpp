@@ -5,17 +5,22 @@
 #include "Util/Logger.hpp"
 
 void App::Start() {
-    LOG_TRACE("Start");
-    m_CurrentState = State::UPDATE;
-
-    background = std::make_shared<AnimatedObject>( std::vector<std::string>
-        {RESOURCE_DIR"/Picture/UI/Title1.png", RESOURCE_DIR"/Picture/UI/Title2.png"});
+    background = std::make_shared<AnimatedObject>(
+        std::vector<std::string>{RESOURCE_DIR "/Picture/UI/Title1.png",
+                                 RESOURCE_DIR "/Picture/UI/Title2.png"},
+        true, 250, true);
     background->SetScale({3, 3});
     m_Root.AddChild(background);
+    m_CurrentState = State::UPDATE;
 }
 
 void App::Update() {
 
+    if (Util::Input::IsKeyDown(Util::Keycode::RETURN)) {
+       background->ResetAnimation();
+       background->PlayAnimation();
+       background->SetLooping(false);
+    }
     m_Root.Update();
 
     /*
