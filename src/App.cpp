@@ -7,10 +7,14 @@
 
 void App::Start() {
     LOG_TRACE("Start");
-    m_BackGround = std::make_shared<BackGround>(RESOURCE_DIR"/Picture/Map/Bomb Man Stage.png");
+    m_BackGround = std::make_shared<BackGroundImage>(RESOURCE_DIR"/Picture/Map/Bomb Man Stage.png");
     m_BackGround->SetZIndex(-10);
-    m_BackGround->SetVisible(1);
+    m_BackGround->SetVisible(0);
     m_Root.AddChild(m_BackGround);
+    std::vector<std::vector<int>> a ={{2,2},{2,2}};
+    m_Map = std::make_shared<BackGroundMap>(a,"Bomb Man Stage");
+    m_Map->SetImageToMap();
+    m_Root.AddChildren(m_Map->GetChildren());
     m_CurrentState = State::UPDATE;
 }
 

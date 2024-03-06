@@ -1,9 +1,10 @@
 #ifndef APP_HPP
 #define APP_HPP
 
-#include "pch.hpp" // IWYU pragma: export
-#include "BackGround.hpp"
+#include "BackGroundImage.hpp"
 #include "Util/Root.hpp"
+#include "pch.hpp" // IWYU pragma: export
+#include "BackGroundMap.hpp"
 
 
 class App {
@@ -28,7 +29,8 @@ private:
 private:
     Util::Root m_Root;
     State m_CurrentState = State::START;
-    std::shared_ptr<BackGround> m_BackGround;
+    std::shared_ptr<BackGroundImage> m_BackGround;
+    std::shared_ptr<BackGroundMap> m_Map;
 };
 
 #endif

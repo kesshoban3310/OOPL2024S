@@ -1,5 +1,5 @@
 //
-// Created by User on 2024/3/5.
+// Created by Nick Chang on 2024/3/5.
 //
 //                       _oo0oo_
 //                      o8888888o
@@ -25,19 +25,20 @@
 //               Buddha Bless         NEVER BUG
 //
 
-#include "BackGround.hpp"
+#include "BackGroundImage.hpp"
 #include "Util/Image.hpp"
 
-BackGround::BackGround(const std::string &BackGroundPath) {
+BackGroundImage::BackGroundImage(const std::string &BackGroundPath) {
     SetImage(BackGroundPath);
 }
-void BackGround::SetImage(const std::string &BackGroundPath) {
+void BackGroundImage::SetImage(const std::string &BackGroundPath) {
     m_BackGroundPath = BackGroundPath;
     m_Drawable = std::make_shared<Util::Image>(m_BackGroundPath);
+    m_Transform.scale = {3,3};
 }
-[[nodiscard]] const glm::vec2& BackGround::GetPosition() {
+[[nodiscard]] const glm::vec2&BackGroundImage::GetPosition() {
     return m_Transform.translation;
 }
-void BackGround::SetPosition(const glm::vec2& Position) {
+void BackGroundImage::SetPosition(const glm::vec2& Position) {
     m_Transform.translation = Position;
 }
