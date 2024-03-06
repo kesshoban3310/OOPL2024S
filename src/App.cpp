@@ -5,21 +5,29 @@
 #include "Util/Logger.hpp"
 
 void App::Start() {
-    background = std::make_shared<AnimatedObject>(
-        std::vector<std::string>{RESOURCE_DIR "/Picture/UI/Title1.png",
-                                 RESOURCE_DIR "/Picture/UI/Title2.png"},
-        true, 250, true);
-    background->SetScale({3, 3});
-    m_Root.AddChild(background);
+    background.push_back(std::make_shared<ImageObject>(RESOURCE_DIR "/Picture/Tiles/Bomb Man Stage/Background/2.png"));
+    background.back()->SetScale({3, 3});
+    background.back()->SetPosition({-3 * 8 * 15, 3 * 8 * 13});
+    m_Root.AddChild(background.back());
+    for(int i=0; i<16; i++) {
+        background.push_back(std::make_shared<ImageObject>(RESOURCE_DIR "/Picture/Tiles/Bomb Man Stage/Background/2.png"));
+        background.back()->SetScale({3, 3});
+        background.back()->SetPosition({3 * 16 * i - 3 * 8 * 15, -100});
+        m_Root.AddChild(background.back());
+    }
+    for(int i=0; i<15; i++) {
+        background.push_back(std::make_shared<ImageObject>(RESOURCE_DIR "/Picture/Tiles/Bomb Man Stage/Background/2.png"));
+        background.back()->SetScale({3, 3});
+        background.back()->SetPosition({3 * 16 * i - 3 * 8 * 15, 0});
+        m_Root.AddChild(background.back());
+    }
     m_CurrentState = State::UPDATE;
 }
 
 void App::Update() {
 
     if (Util::Input::IsKeyDown(Util::Keycode::RETURN)) {
-       background->ResetAnimation();
-       background->PlayAnimation();
-       background->SetLooping(false);
+
     }
     m_Root.Update();
 

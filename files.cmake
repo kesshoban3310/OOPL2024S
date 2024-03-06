@@ -9,6 +9,7 @@ set(INCLUDE_FILES
         App.hpp
         Component/ImageObject.hpp
         Component/AnimatedObject.hpp
+        Component/TilesToPosition.hpp
 )
 
 set(TEST_FILES
