@@ -31,7 +31,8 @@ private:
     Util::Root m_Root;
 
     // game objects
-    std::vector<std::shared_ptr<ImageObject>> background;
+    std::shared_ptr<AnimatedObject> m_StartBackground;
+    std::shared_ptr<ImageObject> m_Tile;
 };
 
 #endif
