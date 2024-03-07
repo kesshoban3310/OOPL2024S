@@ -4,8 +4,11 @@
 #include "Component/ImageObject.hpp"
 #include "Component/AnimatedObject.hpp"
 #include "Util/GameObject.hpp"
+#include "BackGroundImage.hpp"
 #include "Util/Root.hpp"
 #include "pch.hpp" // IWYU pragma: export
+#include "BackGroundMap.hpp"
+
 
 class App {
 public:
@@ -27,12 +30,18 @@ private:
     void ValidTask();
 
 private:
+    Util::Root m_Root;
     State m_CurrentState = State::START;
+
     Util::Root m_Root;
 
     // game objects
     std::shared_ptr<AnimatedObject> m_StartBackground;
     std::shared_ptr<ImageObject> m_Tile;
+
+    std::shared_ptr<BackGroundImage> m_BackGround;
+    std::shared_ptr<BackGroundMap> m_Map;
+
 };
 
 #endif

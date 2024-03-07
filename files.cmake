@@ -3,6 +3,8 @@ set(SRC_FILES
         Component/ImageObject.cpp
         Component/AnimatedObject.cpp
         Component/Tilemap.cpp
+        BackGroundImage.cpp
+        BackGroundMap.cpp
 )
 
 set(INCLUDE_FILES
@@ -10,6 +12,8 @@ set(INCLUDE_FILES
         Component/ImageObject.hpp
         Component/AnimatedObject.hpp
         Component/Tilemap.hpp
+        BackGroundImage.hpp
+        BackGroundMap.hpp
 )
 
 set(TEST_FILES
