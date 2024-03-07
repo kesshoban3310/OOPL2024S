@@ -33,8 +33,6 @@ private:
     Util::Root m_Root;
     State m_CurrentState = State::START;
 
-    Util::Root m_Root;
-
     // game objects
     std::shared_ptr<AnimatedObject> m_StartBackground;
     std::shared_ptr<ImageObject> m_Tile;
