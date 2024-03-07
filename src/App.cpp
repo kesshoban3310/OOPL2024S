@@ -7,14 +7,15 @@
 
 void App::Start() {
     LOG_TRACE("Start");
-    m_BackGround = std::make_shared<BackGroundImage>(RESOURCE_DIR"/Picture/Map/Bomb Man Stage.png");
-    m_BackGround->SetZIndex(-10);
-    m_BackGround->SetVisible(0);
-    m_Root.AddChild(m_BackGround);
-    std::vector<std::vector<int>> a ={{2,2},{2,2}};
+
+    //
+    //  Try to test how to spawn map.
+    //
+    std::vector<std::vector<int>> a(14,{3,4,2,6});
     m_Map = std::make_shared<BackGroundMap>(a,"Bomb Man Stage");
     m_Map->SetImageToMap();
     m_Root.AddChildren(m_Map->GetChildren());
+
     m_CurrentState = State::UPDATE;
 }
 
@@ -22,25 +23,18 @@ void App::Update() {
 
     // TODO: do your things here and delete this line <3
     if(Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-        auto tmp = m_BackGround->GetPosition();
-        tmp.x += 5;
-        m_BackGround->SetPosition({tmp.x, tmp.y});
+        m_Map->Move(5,0);
     }
     if(Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-        auto tmp = m_BackGround->GetPosition();
-        tmp.x -= 5;
-        m_BackGround->SetPosition({tmp.x, tmp.y});
+        m_Map->Move(-5,0);
     }
     if(Util::Input::IsKeyPressed(Util::Keycode::UP)) {
-        auto tmp = m_BackGround->GetPosition();
-        tmp.y -= 5;
-        m_BackGround->SetPosition({tmp.x, tmp.y});
+        m_Map->Move(0,-5);
     }
     if(Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
-        auto tmp = m_BackGround->GetPosition();
-        tmp.y += 5;
-        m_BackGround->SetPosition({tmp.x, tmp.y});
+        m_Map->Move(0,5);
     }
+
     /*
      * Do not touch the code below as they serve the purpose for
      * closing the window.

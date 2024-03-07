@@ -9,7 +9,7 @@ class BackGroundMap{
 public:
     BackGroundMap(std::vector<std::vector<int>> v,std::string stage);
     void SetImageToMap();
-    void Move(const int num);
+    void Move(const int dx,const int dy);
 
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
         std::vector<std::shared_ptr<Util::GameObject>> ans;
