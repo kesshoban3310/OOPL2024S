@@ -1,11 +1,13 @@
 set(SRC_FILES
     App.cpp
-    BackGround.cpp
+    BackGroundImage.cpp
+    BackGroundMap.cpp
 )
 
 set(INCLUDE_FILES
     App.hpp
-    BackGround.hpp
+    BackGroundImage.hpp
+    BackGroundMap.hpp
 )
 
 set(TEST_FILES
