@@ -22,3 +22,18 @@ This is a [PTSD](https://github.com/ntut-open-source-club/practical-tools-for-si
    cmake -DCMAKE_BUILD_TYPE=Debug -B build # -G Ninja
    ```
    better read [PTSD README](https://github.com/ntut-open-source-club/practical-tools-for-simple-design)
+
+## PTSD 更改內容
+
+### PTSD/include/config.hpp
+
+```c++
+constexpr unsigned int WINDOW_WIDTH = 16 * 16 * 3;
+constexpr unsigned int WINDOW_HEIGHT = 14 * 16 * 3;
+```
+
+### PTSD/src/Core/Texture.cpp
+
+```c++
+GL_LINEAR -> GL_NEAREST
+```

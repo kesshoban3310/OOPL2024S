@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-project(SSNI-674)
+project(ROCKMAN)
+
 
 set(CMAKE_CXX_STANDARD 17)
 
