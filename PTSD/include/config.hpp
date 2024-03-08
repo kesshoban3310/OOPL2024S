@@ -5,13 +5,13 @@
 
 #include "Util/Logger.hpp"
 
-constexpr const char *TITLE = "Practical Tools for Simple Design";
+constexpr const char *TITLE = "Rockman";
 
 constexpr int WINDOW_POS_X = SDL_WINDOWPOS_UNDEFINED;
 constexpr int WINDOW_POS_Y = SDL_WINDOWPOS_UNDEFINED;
 
-constexpr unsigned int WINDOW_WIDTH = 1280;
-constexpr unsigned int WINDOW_HEIGHT = 720;
+constexpr unsigned int WINDOW_WIDTH = 16 * 16 * 3;
+constexpr unsigned int WINDOW_HEIGHT = 14 * 16 * 3;
 
 constexpr Util::Logger::Level DEFAULT_LOG_LEVEL = Util::Logger::Level::DEBUG;
 
