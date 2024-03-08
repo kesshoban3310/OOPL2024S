@@ -31,7 +31,7 @@ void App::Start() {
 
 void App::Update() {
     if(!m_Map) {
-        std::vector<std::vector<int>> a(14,{3,4,2,6});
+        std::vector<std::vector<int>> a = {{2, 2}, {2, 2}};
         m_Map = std::make_shared<BackGroundMap>(a,"Bomb Man Stage");
         m_Map->SetImageToMap();
         m_Root.AddChildren(m_Map->GetChildren());
