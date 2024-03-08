@@ -1,57 +1,107 @@
+
 name: main
 
-on: [push]
+on: 
+  merge_group:
+  pull_request:
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        compiler: [{ cc: gcc, cxx: g++ }, { cc: clang, cxx: clang++ }]
-        build_type: [Debug]
-        binary: [linux-binary]
-        include:
-          - os: windows-latest
-            build_type: Debug
-            binary: windows-binary
-
+  windows-visual-studio:
+    runs-on: windows-latest
     steps:
-      - if: matrix.os == 'ubuntu-latest'
-        name: Installing Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install ${{ matrix.compiler.cc }} cmake ninja-build libglu1-mesa-dev mesa-common-dev xorg-dev
+      - uses: actions/checkout@v4
+
+      - name: "Setup Visual Studio"
+        uses: egor-tensin/vs-shell@v2
 
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Check Format
-        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang'
+      - name: "Setup cmake"
         run: |
-          find src/ include/ test/ assets/shaders/ -name "*.*" -print0 | \
-            xargs -0 clang-format --dry-run --Werror --ferror-limit=15
+          cmake -B build -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build
+        
+  windows-mingw:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: seanmiddleditch/gha-setup-ninja@master
 
-      - name: Building Project
-        if: matrix.os == 'ubuntu-latest'
-        env:
-          CC: ${{ matrix.compiler.cc }}
-          CXX: ${{ matrix.compiler.cxx }}
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+    
+      - name: "Build"
         run: |
-          cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          cmake -B build -DCMAKE_BUILD_TYPE=Debug -G "MinGW Makefiles"
+          # cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Setup required packages"
+        run: brew install cmake ninja mesa-glu mesa xorg-server
+
+      
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+        
+      - name: Building Project
+        run: |
+          cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug
           cmake --build build
 
-      - name: Run Linter
-        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang'
+  linux-clang:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Setup required packages"
+        run: sudo apt-get -y install clang cmake ninja-build libglu1-mesa-dev mesa-common-dev xorg-dev
+
+      - name: "Setup clang"
+        uses: egor-tensin/setup-clang@v1
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+        
+      - name: Building Project
+        env:
+          CC: clang
+          CXX: clang++
         run: |
-          find src/ include/ test/ -name "*.*" -print0 | \
-            xargs -0 run-clang-tidy true -p build
+          cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build
+          
+  linux-gcc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installing Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install gcc cmake ninja-build libglu1-mesa-dev mesa-common-dev xorg-dev
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Building Project
-        if: matrix.os == 'windows-latest'
+        env:
+          CC: gcc
+          CXX: g++
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          cmake --build build --config ${{ matrix.build_type }}
+          cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build
