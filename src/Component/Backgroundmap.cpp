@@ -20,7 +20,7 @@ void Backgroundmap::SetImageToMap(const bool &visable) {
             std::shared_ptr<ImageObject> Block = std::make_shared<ImageObject>(Image_path+"/BackGround/"+std::to_string(map_num[i][j])+".png");
             Block->SetScale({3,3});
             Block->SetZIndex(-10);
-            Block->SetPosition(Tilemap::GetTilePosition(i,j));
+            Block->SetPosition(Tilemap::GetTilePosition(j,i));
             Block->SetVisible(visable);
             tmp.push_back(Block);
         }

@@ -4,6 +4,8 @@
 #include "Component/AnimatedObject.hpp"
 #include "Component/Backgroundmap.hpp"
 #include "Component/ImageObject.hpp"
+#include "Component/Txtconverter.hpp"
+
 #include "Util/GameObject.hpp"
 #include "Util/Root.hpp"
 #include "pch.hpp" // IWYU pragma: export
@@ -37,7 +39,7 @@ private:
     std::shared_ptr<ImageObject> m_Tile;
 
     std::shared_ptr<Backgroundmap> m_Map;
-
+    std::shared_ptr<Txtconverter> m_converter;
 
 };
 

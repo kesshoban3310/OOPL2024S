@@ -20,7 +20,7 @@ void App::Start() {
         m_StartBackground->SetScale({3, 3});
         m_Root.AddChild(m_StartBackground);
     }
-
+    m_converter = std::make_shared<Txtconverter>(RESOURCE_DIR "/Map/test.txt");
     // render windows
     m_Root.Update();
 
@@ -41,11 +41,11 @@ void App::Update() {
     /*
      * Initial Map.
      */
-
     std::vector<std::vector<int>> a(16,std::vector<int>(14,3)); //Test spawning map.
-    m_Map = std::make_shared<Backgroundmap>(a,"Bomb Man Stage");
+    m_Map = std::make_shared<Backgroundmap>(m_converter->convert(),"Bomb Man Stage");
     m_Map->SetImageToMap(true);
     m_Root.AddChildren(m_Map->GetChildren());
+
 
     if(Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
 
