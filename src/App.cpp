@@ -1,11 +1,16 @@
 #include "App.hpp"
 
-#include "Component/Tilemap.hpp"
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
 
+#include "pch.hpp"
+
 void App::Start() {
+
+    LOG_TRACE("Start");
+
+
     // if m_StartBackground not loaded
     if (!m_StartBackground) {
         m_StartBackground = std::make_shared<AnimatedObject>(
@@ -27,39 +32,33 @@ void App::Start() {
         m_Root.RemoveChild(m_StartBackground);
         m_StartBackground.reset();
     }
+
+
+
 }
 
 void App::Update() {
-    if(!m_BackGround) {
-        m_BackGround = std::make_shared<BackGroundImage>(RESOURCE_DIR"/Picture/Map/Bomb Man Stage.png");
-        m_BackGround->SetZIndex(-10);
-        m_BackGround->SetVisible(0);
-        m_Root.AddChild(m_BackGround);
-        std::vector<std::vector<int>> a ={{2,2},{2,2}};
-        m_Map = std::make_shared<BackGroundMap>(a,"Bomb Man Stage");
-        m_Map->SetImageToMap();
-        m_Root.AddChildren(m_Map->GetChildren());
-    }
+    /*
+     * Initial Map.
+     */
+
+    std::vector<std::vector<int>> a(16,std::vector<int>(14,3)); //Test spawning map.
+    m_Map = std::make_shared<Backgroundmap>(a,"Bomb Man Stage");
+    m_Map->SetImageToMap(true);
+    m_Root.AddChildren(m_Map->GetChildren());
 
     if(Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-        auto tmp = m_BackGround->GetPosition();
-        tmp.x += 5;
-        m_BackGround->SetPosition({tmp.x, tmp.y});
+
     }
     if(Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-        auto tmp = m_BackGround->GetPosition();
-        tmp.x -= 5;
-        m_BackGround->SetPosition({tmp.x, tmp.y});
+
+
     }
     if(Util::Input::IsKeyPressed(Util::Keycode::UP)) {
-        auto tmp = m_BackGround->GetPosition();
-        tmp.y -= 5;
-        m_BackGround->SetPosition({tmp.x, tmp.y});
+
     }
     if(Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
-        auto tmp = m_BackGround->GetPosition();
-        tmp.y += 5;
-        m_BackGround->SetPosition({tmp.x, tmp.y});
+
     }
     m_Root.Update();
 
