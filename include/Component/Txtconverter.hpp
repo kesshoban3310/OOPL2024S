@@ -5,18 +5,19 @@
 #include <string>
 #include <vector>
 
-class Txtconverter{
+class Txtconverter {
 public:
     /**
-    *  @brief Constructor
-    *  @param path Give path to convert txt file.
-    */
+     *  @brief Constructor
+     *  @param path Give path to convert txt file.
+     */
     Txtconverter(const std::string &path);
     /**
-    *  @brief convert a txtfile into a vector
-    *  @return a vector that stored integer
-    */
+     *  @brief convert a txtfile into a vector
+     *  @return a vector that stored integer
+     */
     std::vector<std::vector<int>> convert();
+
 private:
     std::string Tilepath;
 };

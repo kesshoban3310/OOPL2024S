@@ -12,8 +12,20 @@ int main(int, char **) {
             app.Start();
             break;
 
-        case App::State::UPDATE:
-            app.Update();
+        case App::State::GAME_STAGE_SELECT:
+            app.GameStageSelect();
+            break;
+
+        case App::State::GAME_STAGE:
+            app.GameStage();
+            break;
+
+        case App::State::GAME_LOSE:
+            app.GameLose();
+            break;
+
+        case App::State::ENDING_ANIMATION:
+            app.EndingAnimation();
             break;
 
         case App::State::END:
