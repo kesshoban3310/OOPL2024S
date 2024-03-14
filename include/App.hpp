@@ -14,7 +14,10 @@ class App {
 public:
     enum class State {
         START,
-        UPDATE,
+        GAME_STAGE_SELECT,
+        GAME_STAGE,
+        GAME_LOSE,
+        ENDING_ANIMATION,
         END,
     };
 
@@ -22,17 +25,19 @@ public:
 
     void Start();
 
-    void Update();
+    void GameStageSelect();
+
+    void GameStage();
+
+    void GameLose();
+
+    void EndingAnimation();
 
     void End(); // NOLINT(readability-convert-member-functions-to-static)
 
 private:
-    void ValidTask();
-
-private:
     Util::Root m_Root;
     State m_CurrentState = State::START;
-
 
     // game objects
     std::shared_ptr<AnimatedObject> m_StartBackground;
@@ -41,6 +46,9 @@ private:
     std::shared_ptr<Backgroundmap> m_Map;
     std::shared_ptr<Txtconverter> m_converter;
 
+    bool scrolling = true;
+    std::shared_ptr<ImageObject> m_EndAnimationBackground;
+    std::shared_ptr<AnimatedObject> m_EndAnimationCharacter;
 };
 
 #endif
