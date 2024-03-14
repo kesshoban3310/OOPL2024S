@@ -40,7 +40,7 @@ void AnimatedObject::SetAnimation(const std::vector<std::string> &ImagePaths,
 }
 
 void AnimatedObject::SetPosition(const glm::vec2 &Position) {
-    m_Transform.scale = Position;
+    m_Transform.translation = Position;
 }
 
 void AnimatedObject::SetScale(const glm::vec2 &Scale) {
