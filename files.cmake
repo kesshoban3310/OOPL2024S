@@ -5,6 +5,7 @@ set(SRC_FILES
     Component/Tilemap.cpp
     Component/Backgroundmap.cpp
     Component/Txtconverter.cpp
+    Component/Rockman.cpp
 )
 
 set(INCLUDE_FILES
@@ -14,6 +15,8 @@ set(INCLUDE_FILES
     Component/Tilemap.hpp
     Component/Backgroundmap.hpp
     Component/Txtconverter.hpp
+    Component/Characterattribute.hpp
+    Component/Rockman.hpp
 )
 
 set(TEST_FILES
