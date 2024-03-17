@@ -13,7 +13,7 @@ Rockman::Rockman() {
 }
 
 void Rockman::Initialize() {
-    std::vector<std::string> Idlevec, Walkvec, Climbvec,Climbfinvec,Jumpvec;
+    std::vector<std::string> Idlevec, Walkvec,Walkrightvec, Climbvec,Climbfinvec,Jumpvec;
     for (int i = 1; i <= 2; i++) {
         std::string path = RESOURCE_DIR "/Picture/Character/Normal/Idle" +
                            std::to_string(i) + ".png";
@@ -26,6 +26,13 @@ void Rockman::Initialize() {
     }
     Walkvec.push_back(RESOURCE_DIR "/Picture/Character/Normal/Walk" +
                           std::to_string(2) + ".png");
+    for (int i = 1; i <= 3; i++) {
+        std::string path = RESOURCE_DIR "/Picture/Character/Normal/Walkright" +
+                           std::to_string(i) + ".png";
+        Walkrightvec.push_back(path);
+    }
+    Walkrightvec.push_back(RESOURCE_DIR "/Picture/Character/Normal/Walkright" +
+                      std::to_string(2) + ".png");
     for (int i = 1; i <= 2; i++) {
         std::string path = RESOURCE_DIR "/Picture/Character/Normal/Climb" +
                            std::to_string(i) + ".png";
@@ -48,6 +55,13 @@ void Rockman::Initialize() {
     Walk->SetPosition(position);
     Walk->SetVisible(false);
 
+    std::shared_ptr<AnimatedObject> Walkright =
+        std::make_shared<AnimatedObject>(Walkrightvec, 1, 160);
+    Walkright->SetZIndex(3);
+    Walkright->SetScale({3,3});
+    Walkright->SetPosition(position);
+    Walkright->SetVisible(false);
+
     std::shared_ptr<AnimatedObject> Climb =
         std::make_shared<AnimatedObject>(Climbvec, 1, 320);
     Climb->SetZIndex(3);
@@ -68,7 +82,7 @@ void Rockman::Initialize() {
     Jump->SetScale({3,3});
     Jump->SetPosition(position);
     Jump->SetVisible(false);
-    character = {Idle,Walk,Climb,Climbfin,Jump};
+    character = {Idle,Walk,Walkright,Climb,Climbfin,Jump};
 }
 
 void Rockman::Setposition(glm::vec2 position) {
@@ -92,7 +106,7 @@ void Rockman::move() {
     glm::vec2 pos = Getposition();
     if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
         pos.y = Util::Time::GetDeltaTime() * 800 + pos.y;
-        Setvisable(4);
+        Setvisable(5);
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
         pos.y = Util::Time::GetDeltaTime() * (-160) + pos.y;
@@ -103,6 +117,7 @@ void Rockman::move() {
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
         pos.x = Util::Time::GetDeltaTime() * 160 + pos.x;
+        Setvisable(2);
     }
     Setposition(pos);
 }
