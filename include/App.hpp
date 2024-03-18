@@ -50,7 +50,7 @@ private:
     std::shared_ptr<ImageObject> m_Tile;
 
     std::shared_ptr<Backgroundmap> m_Map;
-    std::shared_ptr<Txtconverter> m_converter;
+    std::shared_ptr<Txtconverter> m_Converter;
     std::shared_ptr<Rockman> m_Rockman;
     std::shared_ptr<AnimatedObject> m_animate;
     
