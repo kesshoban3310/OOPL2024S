@@ -46,8 +46,7 @@ public:
     }
 
 private:
-    std::vector<std::vector<std::shared_ptr<ImageObject>>>
-        Map; // Beta Version. Change After the Map Made.
+    std::vector<std::vector<std::shared_ptr<ImageObject>>> Map; // Beta Version. Change After the Map Made.
     std::vector<std::vector<int>> map_num; // Change Number to Image.
     std::string stage;                     // Initial Stage to change Image;
     int left_up, right_down;
