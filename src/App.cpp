@@ -72,6 +72,7 @@ void App::GameStage() {
     // render windows
     m_Root.Update();
 
+
     // TODO: win game -> ENDING_ANIMATION
     // lose game -> GAME_LOSE
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) || Util::Input::IfExit()) {
@@ -94,9 +95,54 @@ void App::GameLose() {
     m_CurrentState = State::ENDING_ANIMATION;
 }
 
+// TODO : clean up code here, it's messy
 void App::EndingAnimation() {
-    m_CurrentState = State::END;
+    if (!m_EndAnimationBackground) {
+        m_EndAnimationBackground = std::make_shared<ImageObject>(
+            RESOURCE_DIR "/Picture/UI/Credits/background.png");
+        m_EndAnimationBackground->SetScale({3, 3});
+        m_EndAnimationBackground->SetPosition({-3840, 0});
+        m_EndAnimationBackground->SetZIndex(0);
+        m_Root.AddChild(m_EndAnimationBackground);
+    }
+    if (!m_EndAnimationCharacter) {
+        m_EndAnimationCharacter = std::make_shared<AnimatedObject>(
+            std::vector<std::string>{
+                RESOURCE_DIR "/Picture/Character/Normal/Walk2.png",
+                RESOURCE_DIR "/Picture/Character/Normal/Walk1.png",
+                RESOURCE_DIR "/Picture/Character/Normal/Walk2.png",
+                RESOURCE_DIR "/Picture/Character/Normal/Walk3.png",
+            },
+            true, 120);
+        m_EndAnimationCharacter->SetScale({3, 3});
+        m_EndAnimationCharacter->SetZIndex(10);
+        m_EndAnimationCharacter->SetPosition({0, 30});
+        m_Root.AddChild(m_EndAnimationCharacter);
+    }
+    if (m_EndAnimationBackground->GetPosition().x +
+            Util::Time::GetDeltaTime() * 120 >=
+        3840) {
+        m_EndAnimationBackground->SetPosition({3840.0, 0});
+        m_EndAnimationCharacter->SetAnimation(
+            std::vector<std::string>{
+                RESOURCE_DIR "/Picture/Character/Normal/Idle1.png"},
+            false, -1);
+        scrolling = false;
+    }
+    if (scrolling) {
+        m_EndAnimationBackground->SetPosition(
+            {m_EndAnimationBackground->GetPosition().x +
+                 Util::Time::GetDeltaTime() * 120,
+             0});
+    }
+    m_Root.Update();
+    if (Util::Input::IsKeyUp(Util::Keycode::RETURN)) {
+        m_CurrentState = State::END;
+        m_Root.RemoveChild(m_EndAnimationBackground);
+        m_EndAnimationBackground.reset();
+    }
 }
+
 
 void App::End() { // NOLINT(this method will mutate members in the future)
     LOG_DEBUG("End");

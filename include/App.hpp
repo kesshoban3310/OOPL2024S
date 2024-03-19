@@ -51,9 +51,12 @@ private:
 
     std::shared_ptr<Backgroundmap> m_Map;
     std::shared_ptr<Txtconverter> m_Converter;
-
     std::shared_ptr<Rockman> m_Rockman;
     std::shared_ptr<AnimatedObject> m_animate;
+    
+    bool scrolling = true;
+    std::shared_ptr<ImageObject> m_EndAnimationBackground;
+    std::shared_ptr<AnimatedObject> m_EndAnimationCharacter;
 };
 
 #endif
