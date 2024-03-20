@@ -9,7 +9,7 @@
 
 
 #include "Util/GameObject.hpp"
-#include "Util/Root.hpp"
+#include "Util/Renderer.hpp"
 #include "pch.hpp" // IWYU pragma: export
 
 class App {
@@ -42,7 +42,7 @@ public:
     bool NoKeyPress();
 
 private:
-    Util::Root m_Root;
+    Util::Renderer m_Root;
     State m_CurrentState = State::START;
 
     // game objects
