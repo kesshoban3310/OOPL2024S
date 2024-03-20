@@ -1,29 +1,39 @@
-#include "Util/Root.hpp"
-
+#include "Util/Renderer.hpp"
 #include <queue>
 
-#include "Util/Logger.hpp"
-
 namespace Util {
-Root::Root(const std::vector<std::shared_ptr<GameObject>> &children)
+Renderer::Renderer(const std::vector<std::shared_ptr<GameObject>> &children)
     : m_Children(children) {}
 
-void Root::AddChild(const std::shared_ptr<GameObject> &child) {
+void Renderer::AddChild(const std::shared_ptr<GameObject> &child) {
     m_Children.push_back(child);
 }
 
-void Root::RemoveChild(std::shared_ptr<GameObject> child) {
+void Renderer::RemoveChild(std::shared_ptr<GameObject> child) {
     m_Children.erase(std::remove(m_Children.begin(), m_Children.end(), child),
                      m_Children.end());
 }
 
-void Root::AddChildren(
+void Renderer::AddChildren(
     const std::vector<std::shared_ptr<GameObject>> &children) {
     m_Children.reserve(m_Children.size() + children.size());
     m_Children.insert(m_Children.end(), children.begin(), children.end());
 }
 
-void Root::Update() {
+void Renderer::RemoveChildren(
+    const std::vector<std::shared_ptr<GameObject>> &children) {
+    for (const auto &child : children) {
+        m_Children.erase(
+            std::remove(m_Children.begin(), m_Children.end(), child),
+            m_Children.end());
+    }
+}
+
+void Renderer::RemoveAllChildren() {
+    m_Children.clear();
+}
+
+void Renderer::Update(const glm::vec2 &renderOffset) {
     struct StackInfo {
         std::shared_ptr<GameObject> m_GameObject;
         Transform m_ParentTransform;
@@ -58,7 +68,7 @@ void Root::Update() {
         auto curr = renderQueue.top();
         renderQueue.pop();
 
-        curr.m_GameObject->Draw();
+        curr.m_GameObject->Draw(renderOffset);
     }
 }
 } // namespace Util

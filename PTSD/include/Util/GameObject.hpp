@@ -132,7 +132,7 @@ public:
             m_Children.end());
     }
 
-    void Draw();
+    void Draw(const glm::vec2 &offset = {0, 0});
 
 protected:
     Util::Transform m_Transform; // IDK if this should be here.
