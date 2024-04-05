@@ -1,37 +1,46 @@
 #include "Component/Backgroundmap.hpp"
 #include "Component/Tilemap.hpp"
 #include "Util/Logger.hpp"
+#include "config.hpp"
 
-Backgroundmap::Backgroundmap(const std::vector<std::vector<int>> &v,
-                             const std::string &stage) {
-    this->map_num = v;
+Backgroundmap::Backgroundmap(const std::string &stage) {
     this->stage = stage;
 }
 
-void Backgroundmap::SetImageToMap(const bool &visible) {
-    std::string Image_path = RESOURCE_DIR "/Picture/Tiles/" + stage;
-    for (int i = 0; i < (int)map_num.size(); i++) {
-        std::vector<std::shared_ptr<ImageObject>> tmp;
-        for (int j = 0; j < (int)map_num[i].size(); j++) {
-            std::shared_ptr<ImageObject> Block = std::make_shared<ImageObject>(
-                Image_path + "/BackGround/" + std::to_string(map_num[i][j]) +
-                ".png");
-            Block->SetScale({3, 3});
-            Block->SetZIndex(-10);
-            Block->SetPosition(Tilemap::GetTilePosition(i, j));
-            Block->SetVisible(visible);
-            tmp.push_back(Block);
-        }
-        Map.push_back(tmp);
+void Backgroundmap::SetImagetoBackgroundObject() {
+    Map = TileMap::GetBackgroundObjects(stage);
+    // TODO IDK if we should this
+    // SetObjectCollisonBox();
+}
+void Backgroundmap::SetImagetoForegroundObject() {
+    Map = TileMap::GetForegroundObjects(stage);
+    SetObjectCollisonBox();
+}
+void Backgroundmap::SetObjectCollisonBox() {
+    for (auto i : Map) {
+        std::shared_ptr<glm::vec2> position =
+            std::make_shared<glm::vec2>(i->GetPosition());
+        std::shared_ptr<Collider> Collisonbox;
+        if (i->GetImagePath() ==
+            (RESOURCE_DIR "/Picture/Tiles/Bomb Man Stage/Object/15.png"))
+            Collisonbox = std::make_shared<Collider>(
+                position, glm::vec2{8 * 3, 8 * 3}, glm::vec2{0, 0});
+        else
+            Collisonbox = std::make_shared<Collider>(
+                position, glm::vec2{16 * 3, 16 * 3}, glm::vec2{0, 0});
+        MapCollisonBox.push_back(Collisonbox);
     }
 }
-void Backgroundmap::Move(const int dx, const int dy) {
-    int n = map_num.size(), m = map_num[0].size();
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            auto Image_block = Map[i][j];
-            auto pos = Image_block->GetPosition();
-            Image_block->SetPosition({pos.x + dx, pos.y + dy});
-        }
+
+std::vector<std::shared_ptr<Collider>>
+Backgroundmap::GetCollisonBox(glm::vec2 camerapos) {
+    std::vector<std::shared_ptr<Collider>> CollisonBox;
+    for (int i = 0; i < Map.size(); i++) {
+        glm::vec2 pos = Map[i]->GetPosition();
+        if (pos.x + 24 < WINDOW_WIDTH || pos.x - 24 > WINDOW_WIDTH ||
+            pos.y + 24 < WINDOW_HEIGHT || pos.y - 24 > WINDOW_HEIGHT)
+            continue;
+        CollisonBox.push_back(MapCollisonBox[i]);
     }
+    return CollisonBox;
 }

@@ -1,22 +1,50 @@
 set(SRC_FILES
-    App.cpp
-    Component/ImageObject.cpp
-    Component/AnimatedObject.cpp
-    Component/Tilemap.cpp
-    Component/Backgroundmap.cpp
-    Component/Txtconverter.cpp
-    Component/Rockman.cpp
+        # Phases
+        PhaseTitle.cpp
+        PhaseMenu.cpp
+        PhaseStage.cpp
+        PhaseLose.cpp
+        PhaseEndingAnimation.cpp
+
+        # Components
+        Component/App.cpp
+        Component/Ammo.cpp
+        Component/AnimatedObject.cpp
+        Component/Backgroundmap.cpp
+        Component/Collider.cpp
+        Component/Healthbar.cpp
+        Component/ImageObject.cpp
+        Component/Phase.cpp
+        Component/Rockman.cpp
+        Component/Scorebar.cpp
+        Component/TestBox.cpp
+        Component/TileMap.cpp
 )
 
 set(INCLUDE_FILES
-    App.hpp
-    Component/ImageObject.hpp
-    Component/AnimatedObject.hpp
-    Component/Tilemap.hpp
-    Component/Backgroundmap.hpp
-    Component/Txtconverter.hpp
-    Component/Characterattribute.hpp
-    Component/Rockman.hpp
+        # Phases
+        PhaseTitle.hpp
+        PhaseMenu.hpp
+        PhaseStage.hpp
+        PhaseLose.hpp
+        PhaseEndingAnimation.hpp
+
+        # Components
+        Component/App.hpp
+        Component/Ammo.hpp
+        Component/AnimatedObject.hpp
+        Component/Backgroundmap.hpp
+        Component/Collider.hpp
+        Component/Healthbar.hpp
+        Component/ImageObject.hpp
+        Component/Phase.hpp
+        Component/Rockman.hpp
+        Component/Scorebar.hpp
+        Component/TestBox.hpp
+        Component/TileMap.hpp
+
+        #other
+        IncludeComponent.hpp
 )
 
 set(TEST_FILES

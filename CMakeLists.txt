@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(ROCKMAN)
 
-
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(PTSD)
@@ -17,9 +16,9 @@ list(TRANSFORM INCLUDE_FILES PREPEND ${INCLUDE_DIR}/)
 # file(GLOB_RECURSE HEADER_FILES include/*)
 
 add_executable(${PROJECT_NAME}
-    ${SRC_DIR}/main.cpp
-    ${SRC_FILES}
-    ${HEADER_FILES}
+        ${SRC_DIR}/main.cpp
+        ${SRC_FILES}
+        ${HEADER_FILES}
 )
 
 if(MSVC)
@@ -40,10 +39,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/P
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(Framework
-    ${DEPENDENCY_LINK_LIBRARIES}
+        ${DEPENDENCY_LINK_LIBRARIES}
 )
 
 target_link_libraries(${PROJECT_NAME}
-    SDL2::SDL2main
-    Framework
+        SDL2::SDL2main
+        Framework
 )

@@ -1,10 +1,11 @@
 #ifndef BACK_GROUND_MAP_HPP
 #define BACK_GROUND_MAP_HPP
 
-#include "Component/Tilemap.hpp"
+#include "Component/TileMap.hpp"
 #include "ImageObject.hpp"
 #include "Util/GameObject.hpp"
 #include "pch.hpp"
+#include "Component/Collider.hpp"
 
 class Backgroundmap {
 public:
@@ -13,23 +14,19 @@ public:
      *  @param v Give a 2D matrix to get map.
      *  @param stage Give stage name to load Tile file.
      */
-    Backgroundmap(const std::vector<std::vector<int>> &v,
-                  const std::string &stage);
+    Backgroundmap(const std::string &stage);
 
     /**
-     *  @brief Convert map_num to Map
-     *  @param visible Set map visible or unvisable
+     *  @brief Get map objects
      */
 
-    void SetImageToMap(const bool &visible);
+    void SetImagetoBackgroundObject();
 
     /**
-     *  @brief Move map by camara
-     *  @param dx Move map horizontal by dx
-     *  @param dy Move map vertical by dy
+     *  @brief Get map objects
      */
 
-    void Move(const int dx, const int dy);
+    void SetImagetoForegroundObject();
 
     /**
      *  @brief Get all ImageObject in Map
@@ -40,16 +37,15 @@ public:
     GetChildren() const {
         std::vector<std::shared_ptr<Util::GameObject>> ans;
         for (auto i : Map)
-            for (auto j : i)
-                ans.push_back(j);
+            ans.push_back(i);
         return ans;
     }
-
+    void SetObjectCollisonBox();
+    std::vector<std::shared_ptr<Collider>> GetCollisonBox(glm::vec2 camerapos);
 private:
-    std::vector<std::vector<std::shared_ptr<ImageObject>>> Map; // Beta Version. Change After the Map Made.
-    std::vector<std::vector<int>> map_num; // Change Number to Image.
+    std::vector<std::shared_ptr<ImageObject>> Map; // Beta Version. Change After the Map Made.
+    std::vector<std::shared_ptr<Collider>> MapCollisonBox;
     std::string stage;                     // Initial Stage to change Image;
-    int left_up, right_down;
 };
 
 #endif
