@@ -14,10 +14,10 @@ void GameObject::Draw(const glm::vec2 &offset) {
 
     // Check if out of screen
     glm::vec2 size = GetScaledSize();
-    if ((transform.translation.x + size.x / 2 < WINDOW_WIDTH / -2.0) ||
-        (transform.translation.x - size.x / 2 > WINDOW_WIDTH / 2.0) ||
-        (transform.translation.y + size.y / 2 < WINDOW_HEIGHT / -2.0) ||
-        (transform.translation.y - size.y / 2 > WINDOW_HEIGHT / 2.0)) {
+    if ((transform.translation.x + size.x / 2 < WINDOW_WIDTH / -1.0) ||
+        (transform.translation.x - size.x / 2 > WINDOW_WIDTH / 1.0) ||
+        (transform.translation.y + size.y / 2 < WINDOW_HEIGHT / -1.0) ||
+        (transform.translation.y - size.y / 2 > WINDOW_HEIGHT / 1.0)) {
         return;
     }
 
