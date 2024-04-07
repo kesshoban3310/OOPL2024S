@@ -21,7 +21,6 @@ jobs:
 
       - name: "Setup cmake"
         run: |
-          sudo apt-get update
           cmake -B build -DCMAKE_BUILD_TYPE=Debug
           cmake --build build
 
@@ -38,7 +37,6 @@ jobs:
 
       - name: "Build"
         run: |
-          sudo apt-get update
           cmake -B build -DCMAKE_BUILD_TYPE=Debug -G "MinGW Makefiles"
           # cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug
           cmake --build build
@@ -67,7 +65,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: "Setup required packages"
-        run: sudo apt-get -y install clang cmake ninja-build libglu1-mesa-dev mesa-common-dev xorg-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install clang cmake ninja-build libglu1-mesa-dev mesa-common-dev xorg-dev
 
       - name: "Setup clang"
         uses: egor-tensin/setup-clang@v1
