@@ -1,9 +1,9 @@
 #ifndef APP_HPP
 #define APP_HPP
 
+#include "Component/Rockman.hpp"
 #include "Core/Context.hpp"
 #include "Util/Renderer.hpp"
-#include "Component/Rockman.hpp"
 
 class Phase;
 

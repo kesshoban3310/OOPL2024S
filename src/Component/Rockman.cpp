@@ -8,14 +8,17 @@
 #include "Util/Time.hpp"
 #include "pch.hpp"
 
-Rockman::Rockman(glm::vec2 pos,State Rockmanstate){
+Rockman::Rockman(glm::vec2 pos, State Rockmanstate) {
     this->health = 28;
     this->Rockmanstate = Rockmanstate;
-    this->position = std::make_shared<glm::vec2>(glm::vec2 {pos.x-36,pos.y-133});
+    this->position =
+        std::make_shared<glm::vec2>(glm::vec2{pos.x - 36, pos.y - 133});
     healthbar = std::make_shared<Healthbar>(pos);
     collider.resize(2);
-    collider[0] = std::make_shared<Collider>(position,glm::vec2 {20*3,12*3},glm::vec2 {0,18});
-    collider[1] = std::make_shared<Collider>(position,glm::vec2 {20*3,12*3},glm::vec2 {0,-18});
+    collider[0] = std::make_shared<Collider>(
+        position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 18});
+    collider[1] = std::make_shared<Collider>(
+        position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -18});
 }
 
 void Rockman::Initialize() {
@@ -195,10 +198,10 @@ void Rockman::Initialize() {
     Jumprightshoot->SetPosition(pos);
     Jumprightshoot->SetVisible(false);
 
-
-    if(!character_spawn.size()){
-        for(int i=1;i<=3;i++){
-            std::string path = RESOURCE_DIR "/Picture/Character/Spawn/Initial" + std::to_string(i) + ".png";
+    if (!character_spawn.size()) {
+        for (int i = 1; i <= 3; i++) {
+            std::string path = RESOURCE_DIR "/Picture/Character/Spawn/Initial" +
+                               std::to_string(i) + ".png";
             std::shared_ptr<ImageObject> Initial =
                 std::make_shared<ImageObject>(path);
             Initial->SetPosition(pos);
@@ -212,33 +215,31 @@ void Rockman::Initialize() {
     character = {Idle, Walk, Walkright, Climb, Jump, Jumpright, Climbfin};
     character_shoot = {Idleshoot,  Walkshoot, Walkrightshoot,
                        Climbshoot, Jumpshoot, Jumprightshoot};
-    LOG_DEBUG("Here");
     Rockmanstate = State::Normal;
 }
 
 void Rockman::Spawn() {
-    LOG_DEBUG("There");
 
-    if(!character_spawn[0]->GetVisibility() && position->y == 430)
+    if (!character_spawn[0]->GetVisibility() && position->y == 430)
         character_spawn[0]->SetVisible(true);
 
-    if(position->y>-145){
+    if (position->y > -145) {
         position->y += -25;
         character_spawn[0]->SetPosition(*position);
     }
-    else{
-        for(int i=0;i<=2;i++){
-            if(character_spawn[i]->GetVisibility()){
+    else {
+        for (int i = 0; i <= 2; i++) {
+            if (character_spawn[i]->GetVisibility()) {
                 switch (i) {
                 case 0:
                     character_spawn[1]->SetVisible(true);
                     character_spawn[1]->SetPosition(*position);
                     character_spawn[0]->SetVisible(false);
-                    if(movetimer == -1)
+                    if (movetimer == -1)
                         movetimer = Util::Time::GetElapsedTimeMs();
                     break;
                 case 1:
-                    if(Util::Time::GetElapsedTimeMs()-movetimer<15)
+                    if (Util::Time::GetElapsedTimeMs() - movetimer < 15)
                         break;
                     position->y = -169;
                     character_spawn[2]->SetVisible(true);
@@ -246,7 +247,7 @@ void Rockman::Spawn() {
                     character_spawn[1]->SetVisible(false);
                     break;
                 case 2:
-                    if(Util::Time::GetElapsedTimeMs()-movetimer<30)
+                    if (Util::Time::GetElapsedTimeMs() - movetimer < 30)
                         break;
                     position->y = -145;
                     character_spawn[0]->SetVisible(true);
@@ -263,27 +264,25 @@ void Rockman::Spawn() {
 
 void Rockman::behavior() {
     switch (Rockmanstate) {
-        case State::Initial:
-            Initialize();
-            break;
+    case State::Initial:
+        Initialize();
+        break;
 
-        case State::Spawn:
-            Spawn();
-            break;
+    case State::Spawn:
+        Spawn();
+        break;
 
-        case State::Normal:
-            //if(character_spawn.size())
-              //  character_spawn.clear();
-            move();
-            shoot();
-            break;
+    case State::Normal:
+        // if(character_spawn.size())
+        //   character_spawn.clear();
+        move();
+        shoot();
+        break;
 
-        case State::Death:
-            death();
-            break;
-
+    case State::Death:
+        death();
+        break;
     }
-
 }
 
 glm::vec2 Rockman::Getposition() {
@@ -325,15 +324,14 @@ void Rockman::move() { // Adjust Jump.
         }
     }
 
-    if (Util::Input::IsKeyPressed(Util::Keycode::UP) ) {
+    if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
         // if no ledder is collision,then use this
         pos.y = Util::Time::GetDeltaTime() * (160) + pos.y;
         is_jumping = 1; // jumping 138 pixel.
     }
     /*
-    if(is_jumping && Util::Input::IsKeyPressed(Util::Keycode::UP) && pos.y<=initial_pos.y+140){
-        if (visable == 1) {
-            Setvisable(4);
+    if(is_jumping && Util::Input::IsKeyPressed(Util::Keycode::UP) &&
+    pos.y<=initial_pos.y+140){ if (visable == 1) { Setvisable(4);
         }
         else if(visable == 2 || visable == 0) {
             Setvisable(5);
@@ -422,32 +420,32 @@ void Rockman::death() {
     }
 }
 
-
 int Rockman::Gethealth() {
     return health;
 }
 void Rockman::Sethealth(int hp) {
-    if(hp<0 || hp>28)
+    if (hp < 0 || hp > 28)
         return;
     health = hp;
     healthbar->SetVisable(health);
-    if(!health){
+    if (!health) {
         Rockmanstate = State::Death;
     }
 }
 
 void Rockman::shoot() {
-    if(Util::Input::IsKeyDown(Util::Keycode::X)) {
+    if (Util::Input::IsKeyDown(Util::Keycode::X)) {
         Setshootvisable(visable, true);
         int direction = 0;
-        if(visable == 2 || visable == 5)
+        if (visable == 2 || visable == 5)
             direction = 1;
-        std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(*position,direction);
+        std::shared_ptr<Ammo> ammo =
+            std::make_shared<Ammo>(*position, direction);
         magazine.push_back(ammo);
         shoottimer = Util::Time::GetElapsedTimeMs();
         return;
     }
-    if(Util::Time::GetElapsedTimeMs()-shoottimer>35) {
+    if (Util::Time::GetElapsedTimeMs() - shoottimer > 35) {
         Setshootvisable(visable, false);
         shoottimer = -1;
     }
@@ -462,9 +460,9 @@ Rockman::State Rockman::Getcurrentstate() {
     return Rockmanstate;
 }
 
-
 std::vector<std::shared_ptr<Util::GameObject>> Rockman::GetAllchildren() {
-    std::vector<std::shared_ptr<Util::GameObject>> Object,Barobject = healthbar->GetChildren();
+    std::vector<std::shared_ptr<Util::GameObject>> Object,
+        Barobject = healthbar->GetChildren();
     for (auto i : character_spawn)
         Object.push_back(i);
     for (auto i : character)
@@ -473,20 +471,21 @@ std::vector<std::shared_ptr<Util::GameObject>> Rockman::GetAllchildren() {
         Object.push_back(i);
     for (auto i : character_shoot)
         Object.push_back(i);
-    for(auto i:Barobject)
+    for (auto i : Barobject)
         Object.push_back(i);
     return Object;
 }
-[[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> Rockman::Getchildren(Rockman::State state) {
+[[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>>
+Rockman::Getchildren(Rockman::State state) {
     std::vector<std::shared_ptr<Util::GameObject>> Object;
     switch (state) {
     case State::Spawn:
-        for(auto i:character_spawn)
+        for (auto i : character_spawn)
             Object.push_back(i);
         break;
 
     case State::Normal:
-        for(auto i:character)
+        for (auto i : character)
             Object.push_back(i);
         for (auto i : character_shoot)
             Object.push_back(i);
@@ -496,7 +495,6 @@ std::vector<std::shared_ptr<Util::GameObject>> Rockman::GetAllchildren() {
         for (auto i : character_death)
             Object.push_back(i);
         break;
-
     }
     return Object;
 }

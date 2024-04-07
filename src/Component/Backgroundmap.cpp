@@ -1,5 +1,5 @@
 #include "Component/Backgroundmap.hpp"
-#include "Component/Tilemap.hpp"
+#include "Component/TileMap.hpp"
 #include "Util/Logger.hpp"
 #include "config.hpp"
 
@@ -30,17 +30,4 @@ void Backgroundmap::SetObjectCollisonBox() {
                 position, glm::vec2{16 * 3, 16 * 3}, glm::vec2{0, 0});
         MapCollisonBox.push_back(Collisonbox);
     }
-}
-
-std::vector<std::shared_ptr<Collider>>
-Backgroundmap::GetCollisonBox(glm::vec2 camerapos) {
-    std::vector<std::shared_ptr<Collider>> CollisonBox;
-    for (int i = 0; i < Map.size(); i++) {
-        glm::vec2 pos = Map[i]->GetPosition();
-        if (pos.x + 24 < WINDOW_WIDTH || pos.x - 24 > WINDOW_WIDTH ||
-            pos.y + 24 < WINDOW_HEIGHT || pos.y - 24 > WINDOW_HEIGHT)
-            continue;
-        CollisonBox.push_back(MapCollisonBox[i]);
-    }
-    return CollisonBox;
 }

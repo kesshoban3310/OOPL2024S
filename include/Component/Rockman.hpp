@@ -1,17 +1,16 @@
 #ifndef ROCKMAN_HPP
 #define ROCKMAN_HPP
 
-#include "AnimatedObject.hpp"
-#include "pch.hpp"
 #include "Ammo.hpp"
-#include "Component/Healthbar.hpp"
+#include "AnimatedObject.hpp"
 #include "Component/Collider.hpp"
+#include "Component/Healthbar.hpp"
+#include "pch.hpp"
 #include <queue>
-
 
 class Rockman {
 public:
-    enum class State{
+    enum class State {
         Spawn,
         Initial,
         Normal,
@@ -20,7 +19,7 @@ public:
     /**
      * @brief Constructor.
      */
-    Rockman(glm::vec2 pos,State Rockmanstate);
+    Rockman(glm::vec2 pos, State Rockmanstate);
     /**
      * @brief Initialize the object.
      * Include all Image into this class.
@@ -86,16 +85,26 @@ public:
      * @brief collect all object in character.
      * @return All object in character.
      */
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetAllchildren();
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> Getchildren(State state) ;
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> Gethealthbar(){ return healthbar->GetChildren(); };
-    [[nodiscard]] std::vector<std::shared_ptr<Ammo>> Getammo(){
+    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>>
+    GetAllchildren();
+    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>>
+    Getchildren(State state);
+    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>>
+    Gethealthbar() {
+        return healthbar->GetChildren();
+    };
+    [[nodiscard]] std::vector<std::shared_ptr<Ammo>> Getammo() {
         auto Object = magazine;
         magazine.clear();
         return Object;
     }
-    [[nodiscard]] std::shared_ptr<Healthbar> GetHealthbar(){ return healthbar;}  // Need 封裝
-    [[nodiscard]] std::vector<std::shared_ptr<Collider>> GetCollider(){return collider;}
+    [[nodiscard]] std::shared_ptr<Healthbar> GetHealthbar() {
+        return healthbar;
+    } // Need 封裝
+    [[nodiscard]] std::vector<std::shared_ptr<Collider>> GetCollider() {
+        return collider;
+    }
+
 private:
     std::vector<std::shared_ptr<AnimatedObject>> character;
     std::vector<std::shared_ptr<AnimatedObject>> character_shoot;
@@ -103,19 +112,20 @@ private:
     std::vector<std::shared_ptr<ImageObject>> character_spawn;
     std::vector<std::shared_ptr<Ammo>> magazine;
     // timer to make animation smoothly.
-    unsigned long movetimer = -1,shoottimer = -1;
+    unsigned long movetimer = -1, shoottimer = -1;
     int health = 28;
     int visable = 0;
 
     std::shared_ptr<glm::vec2> position;
-    glm::vec2 scale = {3,3},inversescale = {-3,3};
+    glm::vec2 scale = {3, 3}, inversescale = {-3, 3};
     float ZIndex = 70;
 
-    glm::vec2 initial_pos = {-1,-1}; //when Using Jumping module, to calculate the moving.
+    glm::vec2 initial_pos = {
+        -1, -1}; // when Using Jumping module, to calculate the moving.
     State Rockmanstate;
-    void Setshootvisable(const int &idx,bool visable);
-    bool is_jumping = 0,is_falling = 0;
-    double speed = 20.0,acclerator = 10.0,power = 175.0;
+    void Setshootvisable(const int &idx, bool visable);
+    bool is_jumping = false, is_falling = false;
+    double speed = 20.0, acclerator = 10.0, power = 175.0;
     int Jump_bar = -1;
     std::vector<std::shared_ptr<Collider>> collider;
     std::shared_ptr<Healthbar> healthbar;

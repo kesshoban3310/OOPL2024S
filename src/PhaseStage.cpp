@@ -4,23 +4,27 @@
 
 void PhaseStage::Init(App *app) {
     // Load the map
-    m_BackgroundObjects = std::make_shared<Backgroundmap>("Bomb Man Stage");;
-    m_ForegroundObjects = std::make_shared<Backgroundmap>("Bomb Man Stage");;
-    //Load Rockman
-    m_Rockman = std::make_shared<Rockman>(glm::vec2 {360, -3408},Rockman::State::Initial);
-    //Load Scorebar
-    m_Scorebar = std::make_shared<Scorebar>(glm::vec2 {360,-3408});
-    //m_Testbox = std::make_shared<TestBox>(glm::vec2 {415,-3408},glm::vec2 {3,3});
+    m_BackgroundObjects = std::make_shared<Backgroundmap>("Bomb Man Stage");
+    ;
+    m_ForegroundObjects = std::make_shared<Backgroundmap>("Bomb Man Stage");
+    ;
+    // Load Rockman
+    m_Rockman = std::make_shared<Rockman>(glm::vec2{360, -3408},
+                                          Rockman::State::Initial);
+    // Load Scorebar
+    m_Scorebar = std::make_shared<Scorebar>(glm::vec2{360, -3408});
+    // m_Testbox = std::make_shared<TestBox>(glm::vec2 {415,-3408},glm::vec2
+    // {3,3});
 
-    m_BackgroundObjects -> SetImagetoBackgroundObject();
-    m_ForegroundObjects -> SetImagetoForegroundObject();
+    m_BackgroundObjects->SetImagetoBackgroundObject();
+    m_ForegroundObjects->SetImagetoForegroundObject();
 
     // Add the root
     m_Rockman->behavior();
-    m_Scorebar->Show({360,-3408});
-    //app->GetRoot()->AddChild(m_Testbox->Getchild());
-    app->GetRoot()->AddChildren(m_BackgroundObjects -> GetChildren());
-    app->GetRoot()->AddChildren(m_ForegroundObjects -> GetChildren());
+    m_Scorebar->Show({360, -3408});
+    // app->GetRoot()->AddChild(m_Testbox->Getchild());
+    app->GetRoot()->AddChildren(m_BackgroundObjects->GetChildren());
+    app->GetRoot()->AddChildren(m_ForegroundObjects->GetChildren());
 
     app->GetRoot()->AddChildren(m_Rockman->GetAllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->Getchildren());
@@ -29,8 +33,8 @@ void PhaseStage::Init(App *app) {
 }
 
 void PhaseStage::Update(App *app) {
-    //m_Rockman->behavior();
-    //m_Testbox->Move();
+    // m_Rockman->behavior();
+    // m_Testbox->Move();
 
     // TODO: remove camera movement in the future
     if (Util::Input::IsKeyPressed(Util::Keycode::W)) {
@@ -57,13 +61,12 @@ void PhaseStage::Update(App *app) {
     m_Rockman->GetHealthbar()->SetPosition(app->GetCameraPosition());
     m_Scorebar->Show(app->GetCameraPosition());
 
-
     /*
     LOG_DEBUG("Camera Position");
-    LOG_DEBUG(std::to_string(app->GetCameraPosition().x)+" "+std::to_string(app->GetCameraPosition().y));
-    LOG_DEBUG("Rockman Position");
-    LOG_DEBUG(std::to_string(m_Rockman->Getposition().x)+" "+std::to_string(m_Rockman->Getposition().y));
-    LOG_DEBUG("Root Size");
+    LOG_DEBUG(std::to_string(app->GetCameraPosition().x)+"
+    "+std::to_string(app->GetCameraPosition().y)); LOG_DEBUG("Rockman
+    Position"); LOG_DEBUG(std::to_string(m_Rockman->Getposition().x)+"
+    "+std::to_string(m_Rockman->Getposition().y)); LOG_DEBUG("Root Size");
     LOG_DEBUG(std::to_string(app->GetRoot()->size()));
     */
 
@@ -79,13 +82,13 @@ void PhaseStage::Update(App *app) {
     */
 
     // TODO : change this to win
-    if(Util::Input::IsKeyUp(Util::Keycode::I)) {
+    if (Util::Input::IsKeyUp(Util::Keycode::I)) {
         app->ChangeState(App::State::ENDING_ANIMATION);
         return;
     }
 
     // TODO : change this to lose
-    if(Util::Input::IsKeyUp(Util::Keycode::O)) {
+    if (Util::Input::IsKeyUp(Util::Keycode::O)) {
         app->ChangeState(App::State::LOSE);
         return;
     }

@@ -18,7 +18,7 @@ set(SRC_FILES
         Component/Rockman.cpp
         Component/Scorebar.cpp
         Component/TestBox.cpp
-        Component/Tilemap.cpp
+        Component/TileMap.cpp
 )
 
 set(INCLUDE_FILES
@@ -41,7 +41,7 @@ set(INCLUDE_FILES
         Component/Rockman.hpp
         Component/Scorebar.hpp
         Component/TestBox.hpp
-        Component/Tilemap.hpp
+        Component/TileMap.hpp
 
         #other
         IncludeComponent.hpp

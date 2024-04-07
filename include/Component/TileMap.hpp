@@ -1,9 +1,9 @@
 #ifndef TILE_MAP_HPP
 #define TILE_MAP_HPP
 
+#include "ImageObject.hpp"
 #include "Util/GameObject.hpp"
 #include "pch.hpp"
-#include "ImageObject.hpp"
 #include <string>
 #include <vector>
 

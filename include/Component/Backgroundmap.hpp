@@ -1,11 +1,11 @@
 #ifndef BACK_GROUND_MAP_HPP
 #define BACK_GROUND_MAP_HPP
 
+#include "Component/Collider.hpp"
 #include "Component/TileMap.hpp"
 #include "ImageObject.hpp"
 #include "Util/GameObject.hpp"
 #include "pch.hpp"
-#include "Component/Collider.hpp"
 
 class Backgroundmap {
 public:
@@ -42,10 +42,12 @@ public:
     }
     void SetObjectCollisonBox();
     std::vector<std::shared_ptr<Collider>> GetCollisonBox(glm::vec2 camerapos);
+
 private:
-    std::vector<std::shared_ptr<ImageObject>> Map; // Beta Version. Change After the Map Made.
+    std::vector<std::shared_ptr<ImageObject>>
+        Map; // Beta Version. Change After the Map Made.
     std::vector<std::shared_ptr<Collider>> MapCollisonBox;
-    std::string stage;                     // Initial Stage to change Image;
+    std::string stage; // Initial Stage to change Image;
 };
 
 #endif

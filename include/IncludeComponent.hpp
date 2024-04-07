@@ -11,8 +11,8 @@
 #include "Component/ImageObject.hpp"
 #include "Component/Rockman.hpp"
 
-#include "Component/TestBox.hpp"
 #include "Component/Scorebar.hpp"
+#include "Component/TestBox.hpp"
 #include "Component/TileMap.hpp"
 
 #endif
