@@ -21,6 +21,7 @@ jobs:
 
       - name: "Setup cmake"
         run: |
+          sudo apt-get update
           cmake -B build -DCMAKE_BUILD_TYPE=Debug
           cmake --build build
 
@@ -37,6 +38,7 @@ jobs:
 
       - name: "Build"
         run: |
+          sudo apt-get update
           cmake -B build -DCMAKE_BUILD_TYPE=Debug -G "MinGW Makefiles"
           # cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug
           cmake --build build
