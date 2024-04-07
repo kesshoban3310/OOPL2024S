@@ -60,6 +60,8 @@ public:
      */
     void Update(const glm::vec2 &renderOffset = {0.0f, 0.0f});
 
+    int size() {return m_Children.size();}
+
 private:
     std::vector<std::shared_ptr<GameObject>> m_Children;
 };
