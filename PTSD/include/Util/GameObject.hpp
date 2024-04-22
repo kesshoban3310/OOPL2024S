@@ -1,10 +1,10 @@
 #ifndef UTIL_GAME_OBJECT_HPP
 #define UTIL_GAME_OBJECT_HPP
 
-#include <memory>
-#include <vector>
+#include "pch.hpp" // IWYU pragma: export
 
 #include "Core/Drawable.hpp"
+
 #include "Util/Transform.hpp"
 
 namespace Util {
@@ -19,6 +19,9 @@ namespace Util {
  */
 class GameObject {
 public:
+    Util::Transform m_Transform; // IDC if this should be here.
+
+public:
     /**
      * @brief Default constructor.
      */
@@ -32,20 +35,30 @@ public:
      * @param visible The visibility of the game object.
      * @param children The children of the game object.
      */
-    GameObject(std::unique_ptr<Core::Drawable> drawable, const float zIndex,
+    GameObject(const std::shared_ptr<Core::Drawable> &drawable,
+               const float zIndex, const glm::vec2 &pivot = {0, 0},
                const bool visible = true,
                const std::vector<std::shared_ptr<GameObject>> &children =
                    std::vector<std::shared_ptr<GameObject>>())
-        : m_Drawable(std::move(drawable)),
+        : m_Drawable(drawable),
           m_Children(children),
           m_ZIndex(zIndex),
-          m_Visible(visible) {}
+          m_Visible(visible),
+          m_Pivot(pivot) {}
 
-    // Deleted copy constructor.
-    GameObject(const GameObject &other) = delete;
+    /**
+     * @brief Copy constructor.
+     * @param other
+     *
+     * @note This is a shallow copy constructor, meaning the m_Drawable points
+     * to the same reference as same as `other`'s does.
+     */
+    GameObject(const GameObject &other) = default;
 
-    // Deleted move constructor.
-    GameObject(GameObject &&other) = delete;
+    /**
+     * @brief Default move constructor..
+     */
+    GameObject(GameObject &&other) = default;
 
     /**
      * @brief Default destructor.
@@ -86,6 +99,13 @@ public:
     const std::vector<std::shared_ptr<GameObject>> &GetChildren() const {
         return m_Children;
     }
+
+    /**
+     * @brief Set the pivot of the game object.
+     *
+     * @param pivot The pivot of the game object.
+     */
+    void SetPivot(const glm::vec2 &pivot) { m_Pivot = pivot; }
 
     /**
      * @brief Set the z-index of the game object.
@@ -132,16 +152,15 @@ public:
             m_Children.end());
     }
 
-    void Draw(const glm::vec2 &offset = {0, 0});
+    void Draw();
 
 protected:
-    Util::Transform m_Transform; // IDK if this should be here.
-
     std::shared_ptr<Core::Drawable> m_Drawable = nullptr;
     std::vector<std::shared_ptr<GameObject>> m_Children;
 
     float m_ZIndex = 0;
     bool m_Visible = true;
+    glm::vec2 m_Pivot = {0, 0};
 };
 } // namespace Util
 #endif
