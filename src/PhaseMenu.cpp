@@ -64,13 +64,13 @@ void PhaseMenu::Update(App *app) {
     // change stage
     if(Util::Input::IsKeyDown(Util::Keycode::LEFT)) {
         m_Stage = m_PreviousStage[m_Stage];
-        m_Screen->ResetAnimation();
-        m_SelectBox->ResetAnimation();
+        m_Screen->PlayAnimation();
+        m_SelectBox->PlayAnimation();
     }
     if(Util::Input::IsKeyDown(Util::Keycode::RIGHT)) {
         m_Stage = m_NextStage[m_Stage];
-        m_Screen->ResetAnimation();
-        m_SelectBox->ResetAnimation();
+        m_Screen->PlayAnimation();
+        m_SelectBox->PlayAnimation();
     }
 
     // set position
