@@ -144,23 +144,6 @@ if(NOT PROJECT_IS_TOP_LEVEL)
     set(DEPENDENCY_LINK_LIBRARIES ${DEPENDENCY_LINK_LIBRARIES} PARENT_SCOPE)
 endif()
 
-add_executable(Example EXCLUDE_FROM_ALL
-        ${EXAMPLE_FILES}
-)
-target_link_libraries(Example
-        SDL2::SDL2main # IDK what happens if we don't link SDL2main
-        ${PROJECT_NAME}
-)
-target_include_directories(Example SYSTEM PRIVATE
-        ${INCLUDE_DIR}
-        ${DEPENDENCY_INCLUDE_DIRS}
-)
-target_include_directories(Example PRIVATE
-        ${EXAMPLE_DIR}/include
-)
-
-target_compile_definitions(Example PRIVATE ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets")
-
 enable_testing()
 
 add_executable(Tests EXCLUDE_FROM_ALL
