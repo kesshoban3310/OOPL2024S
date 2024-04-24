@@ -57,8 +57,9 @@ void App::Update() {
     // update the context
     m_Context->Update();
 
-    // if pressed ESC, exit the app
-    if (Util::Input::IsKeyPressed(Util::Keycode::ESCAPE)) {
+    // if pressed ESC or exit button, exit the app
+    if (Util::Input::IsKeyPressed(Util::Keycode::ESCAPE) ||
+        Util::Input::IfExit()) {
         m_Context->SetExit(true);
     }
 }
