@@ -40,8 +40,6 @@ public:
 
     void PlayAnimation();
 
-    void ResetAnimation();
-
     void PauseAnimation();
 
 private:

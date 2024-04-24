@@ -3,6 +3,7 @@
 #include "Core/Texture.hpp"
 #include "Core/TextureUtils.hpp"
 
+#include "Util/Logger.hpp"
 #include "Util/Text.hpp"
 #include "Util/TransformUtils.hpp"
 
@@ -19,16 +20,11 @@ Text::Text(const std::string &font, int fontSize, const std::string &text,
     if (s_VertexArray == nullptr) {
         InitVertexArray();
     }
-    if (s_UniformBuffer == nullptr) {
-        InitUniformBuffer();
-    }
+
+    m_UniformBuffer = std::make_unique<Core::UniformBuffer<Core::Matrices>>(
+        *s_Program, "Matrices", 0);
 
     m_Font = {TTF_OpenFont(font.c_str(), fontSize), TTF_CloseFont};
-
-    if (m_Font == nullptr) {
-        LOG_ERROR("Failed to load font: '{}'", text);
-        LOG_ERROR("{}", TTF_GetError());
-    }
 
     auto surface =
         std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface *)>>{
@@ -48,9 +44,8 @@ Text::Text(const std::string &font, int fontSize, const std::string &text,
     m_Size = {surface->pitch / surface->format->BytesPerPixel, surface->h};
 }
 
-void Text::Draw(const Util::Transform &transform, const float zIndex) {
-    auto data = Util::ConvertToUniformBufferData(transform, m_Size, zIndex);
-    s_UniformBuffer->SetData(0, data);
+void Text::Draw(const Core::Matrices &data) {
+    m_UniformBuffer->SetData(0, data);
 
     m_Texture->Bind(UNIFORM_SURFACE_LOCATION);
     s_Program->Bind();
@@ -62,8 +57,9 @@ void Text::Draw(const Util::Transform &transform, const float zIndex) {
 
 void Text::InitProgram() {
     // TODO: Create `BaseProgram` from `Program` and pass it into `Drawable`
-    s_Program = std::make_unique<Core::Program>(PTSD_DIR"/assets/shaders/Base.vert",
-                                                PTSD_DIR"/assets/shaders/Base.frag");
+    s_Program =
+        std::make_unique<Core::Program>(PTSD_ASSETS_DIR "/shaders/Base.vert",
+                                        PTSD_ASSETS_DIR "/shaders/Base.frag");
     s_Program->Bind();
 
     GLint location = glGetUniformLocation(s_Program->GetId(), "surface");
@@ -106,11 +102,6 @@ void Text::InitVertexArray() {
     // NOLINTEND
 }
 
-void Text::InitUniformBuffer() {
-    s_UniformBuffer = std::make_unique<Core::UniformBuffer<Core::Matrices>>(
-        *s_Program, "Matrices", 0);
-}
-
 void Text::ApplyTexture() {
     auto surface =
         std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface *)>>{
@@ -130,7 +121,5 @@ void Text::ApplyTexture() {
 
 std::unique_ptr<Core::Program> Text::s_Program = nullptr;
 std::unique_ptr<Core::VertexArray> Text::s_VertexArray = nullptr;
-std::unique_ptr<Core::UniformBuffer<Core::Matrices>> Text::s_UniformBuffer =
-    nullptr;
 
 } // namespace Util

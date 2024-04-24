@@ -64,10 +64,6 @@ void AnimatedObject::PlayAnimation() {
     std::dynamic_pointer_cast<Util::Animation>(m_Drawable)->Play();
 }
 
-void AnimatedObject::ResetAnimation() {
-    std::dynamic_pointer_cast<Util::Animation>(m_Drawable)->Reset();
-}
-
 void AnimatedObject::PauseAnimation() {
     std::dynamic_pointer_cast<Util::Animation>(m_Drawable)->Pause();
 }

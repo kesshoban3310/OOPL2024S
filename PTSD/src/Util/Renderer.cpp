@@ -1,5 +1,8 @@
 #include "Util/Renderer.hpp"
+
 #include <queue>
+
+#include "Util/Logger.hpp"
 
 namespace Util {
 Renderer::Renderer(const std::vector<std::shared_ptr<GameObject>> &children)
@@ -14,26 +17,17 @@ void Renderer::RemoveChild(std::shared_ptr<GameObject> child) {
                      m_Children.end());
 }
 
+void Renderer::RemoveAllChildren() {
+    m_Children.clear();
+}
+
 void Renderer::AddChildren(
     const std::vector<std::shared_ptr<GameObject>> &children) {
     m_Children.reserve(m_Children.size() + children.size());
     m_Children.insert(m_Children.end(), children.begin(), children.end());
 }
 
-void Renderer::RemoveChildren(
-    const std::vector<std::shared_ptr<GameObject>> &children) {
-    for (const auto &child : children) {
-        m_Children.erase(
-            std::remove(m_Children.begin(), m_Children.end(), child),
-            m_Children.end());
-    }
-}
-
-void Renderer::RemoveAllChildren() {
-    m_Children.clear();
-}
-
-void Renderer::Update(const glm::vec2 &renderOffset) {
+void Renderer::Update(const glm::vec2 &offset) {
     struct StackInfo {
         std::shared_ptr<GameObject> m_GameObject;
         Transform m_ParentTransform;
@@ -68,7 +62,9 @@ void Renderer::Update(const glm::vec2 &renderOffset) {
         auto curr = renderQueue.top();
         renderQueue.pop();
 
-        curr.m_GameObject->Draw(renderOffset);
+        curr.m_GameObject->m_Transform.translation += offset;
+        curr.m_GameObject->Draw();
+        curr.m_GameObject->m_Transform.translation -= offset;
     }
 }
 } // namespace Util
