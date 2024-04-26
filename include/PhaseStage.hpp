@@ -2,10 +2,9 @@
 #define PHASE_STAGE_HPP
 
 #include "Component/Phase.hpp"
-#include "Component/TileMap.hpp"
 #include "Component/SceneManager.hpp"
+#include "Component/TileMap.hpp"
 #include "IncludeComponent.hpp"
-
 
 class PhaseStage final : public Phase {
 public:

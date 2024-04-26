@@ -4,8 +4,8 @@
 #include "Component/AnimatedObject.hpp"
 #include "Component/ImageObject.hpp"
 #include "Component/Phase.hpp"
-#include "Util/GameObject.hpp"
 #include "Util/BGM.hpp"
+#include "Util/GameObject.hpp"
 
 class PhaseEndingAnimation final : public Phase {
 public:

@@ -1,8 +1,8 @@
 #ifndef PHASE_LOSE_HPP
 #define PHASE_LOSE_HPP
 
-#include "Component/Phase.hpp"
 #include "Component/ImageObject.hpp"
+#include "Component/Phase.hpp"
 #include "Util/BGM.hpp"
 
 class PhaseLose final : public Phase {

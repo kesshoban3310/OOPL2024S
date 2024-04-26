@@ -5,7 +5,7 @@
 #include "Component/Phase.hpp"
 #include "Util/BGM.hpp"
 
-class PhaseTitle final : public Phase  {
+class PhaseTitle final : public Phase {
 public:
     void Init(App *app) override;
 
