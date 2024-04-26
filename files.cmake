@@ -19,6 +19,7 @@ set(SRC_FILES
         Component/Scorebar.cpp
         Component/TestBox.cpp
         Component/TileMap.cpp
+        Component/SceneManager.cpp
 )
 
 set(INCLUDE_FILES
@@ -42,6 +43,7 @@ set(INCLUDE_FILES
         Component/Scorebar.hpp
         Component/TestBox.hpp
         Component/TileMap.hpp
+        Component/SceneManager.hpp
 
         #other
         IncludeComponent.hpp
