@@ -3,7 +3,7 @@
 
 #include "Component/Phase.hpp"
 #include "Component/TileMap.hpp"
-
+#include "Component/SceneManager.hpp"
 #include "IncludeComponent.hpp"
 
 
@@ -24,6 +24,7 @@ private:
     std::shared_ptr<Rockman> m_Rockman;
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<TestBox> m_Testbox;
+    SceneManager m_SceneManager;
 };
 
 #endif // PHASE_STAGE_HPP
