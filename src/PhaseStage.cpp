@@ -58,8 +58,7 @@ void PhaseStage::Update(App *app) {
         return;
     }
 
-    m_Rockman->behavior();
-    LOG_DEBUG("{}, {}", m_Rockman->Getposition().x, m_Rockman->Getposition().y);
+    // m_Rockman->behavior();
 
     // m_Testbox->Move();
 
