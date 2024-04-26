@@ -6,7 +6,7 @@
 #include "Component/AnimatedObject.hpp"
 #include "Util/BGM.hpp"
 
-class PhaseMenu : public Phase {
+class PhaseMenu final : public Phase {
 public:
     void Init(App *app) override;
 

@@ -7,7 +7,7 @@
 #include "Util/GameObject.hpp"
 #include "Util/BGM.hpp"
 
-class PhaseEndingAnimation : public Phase {
+class PhaseEndingAnimation final : public Phase {
 public:
     void Init(App *app) override;
 

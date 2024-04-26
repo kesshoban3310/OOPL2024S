@@ -7,7 +7,7 @@
 #include "IncludeComponent.hpp"
 
 
-class PhaseStage : public Phase {
+class PhaseStage final : public Phase {
 public:
     void Init(App *app) override;
 
