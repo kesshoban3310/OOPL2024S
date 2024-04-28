@@ -13,15 +13,13 @@ public:
 
     explicit Phase(App::State lastState);
 
-    Phase() = default;
-
-    ~Phase() = default;
+    virtual ~Phase() = default;
 
 protected:
     [[nodiscard]] App::State GetLastState() const;
 
 private:
-    App::State m_LastState;
+    App::State m_LastState = App::State::TITLE;
 };
 
 #endif // PHASE_HPP

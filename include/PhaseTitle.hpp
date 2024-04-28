@@ -5,7 +5,7 @@
 #include "Component/Phase.hpp"
 #include "Util/BGM.hpp"
 
-class PhaseTitle : public Phase {
+class PhaseTitle final : public Phase {
 public:
     void Init(App *app) override;
 
@@ -15,6 +15,8 @@ public:
 
     explicit PhaseTitle(App::State lastState)
         : Phase(lastState){};
+
+    ~PhaseTitle() = default;
 
 private:
     std::shared_ptr<AnimatedObject> m_Background = nullptr;

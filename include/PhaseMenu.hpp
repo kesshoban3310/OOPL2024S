@@ -1,12 +1,12 @@
 #ifndef PHASE_MENU_HPP
 #define PHASE_MENU_HPP
 
-#include "Component/Phase.hpp"
-#include "Component/ImageObject.hpp"
 #include "Component/AnimatedObject.hpp"
+#include "Component/ImageObject.hpp"
+#include "Component/Phase.hpp"
 #include "Util/BGM.hpp"
 
-class PhaseMenu : public Phase {
+class PhaseMenu final : public Phase {
 public:
     void Init(App *app) override;
 

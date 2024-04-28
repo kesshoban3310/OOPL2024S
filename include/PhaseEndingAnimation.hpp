@@ -4,10 +4,10 @@
 #include "Component/AnimatedObject.hpp"
 #include "Component/ImageObject.hpp"
 #include "Component/Phase.hpp"
-#include "Util/GameObject.hpp"
 #include "Util/BGM.hpp"
+#include "Util/GameObject.hpp"
 
-class PhaseEndingAnimation : public Phase {
+class PhaseEndingAnimation final : public Phase {
 public:
     void Init(App *app) override;
 
