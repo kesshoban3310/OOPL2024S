@@ -5,11 +5,19 @@
 
 class Collider {
 public:
+    enum class Bound {
+        LEFT,
+        RIGHT,
+        TOP,
+        BOTTOM,
+    };
     Collider(std::shared_ptr<glm::vec2> position, glm::vec2 size,
              glm::vec2 offset);
-
     friend bool IsColliding(const Collider &self, const Collider &other);
-
+    friend std::set<Collider::Bound> WhereIsColliding(const Collider &self,
+                                                         const Collider &other);
+    friend bool IfColliginIsInside(const Collider &self,
+                                  const Collider &other);
     [[nodiscard]] glm::vec2 GetPosition() const;
 
     [[nodiscard]] glm::vec2 GetSize() const;
