@@ -328,7 +328,7 @@ void Rockman::Setvisable(const int &idx) {
 void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
                            std::vector<std::shared_ptr<TileBox>> collisonbox) {
     // TODO: Modify Climb System, Import Shoot.
-    Ladder_Pos = {-2000,-2000};
+    Ladder_Pos = {-2000, -2000};
     if (MoveState == PhysicState::MOVE)
         Setvisable(0);
     if (MoveState == PhysicState::JUMP) {
@@ -353,7 +353,7 @@ void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
                 if (collison.count(RockmanCollison::UPLEFT) &&
                     collison.count(RockmanCollison::DOWNLEFT))
                     break;
-                pos.x = Util::Time::GetDeltaTime() * (-16) + pos.x;
+                pos.x = Util::Time::GetDeltaTimeMs() / 1000 * (-16) + pos.x;
                 Setposition(pos);
             }
         }
@@ -363,7 +363,7 @@ void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
                 if (collison.count(RockmanCollison::UPRIGHT) &&
                     collison.count(RockmanCollison::DOWNRIGHT))
                     break;
-                pos.x = Util::Time::GetDeltaTime() * 16 + pos.x;
+                pos.x = Util::Time::GetDeltaTimeMs() / 1000 * 16 + pos.x;
                 Setposition(pos);
             }
         }
@@ -375,7 +375,7 @@ void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
             Jump(collisonbox);
     }
     if (!Util::Input::IsKeyPressed(Util::Keycode::X) && // De-jumping
-        MoveState  == PhysicState::JUMPBEFOREMOVE) {
+        MoveState == PhysicState::JUMPBEFOREMOVE) {
         MoveState = PhysicState::MOVE;
     }
     collison = GetCollison(collisonbox);
@@ -384,19 +384,19 @@ void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
             MoveState = PhysicState::FALL;
         }
         if (MoveState == PhysicState::MOVE) {
-            if(collison.count(RockmanCollison::BOTTEMINLADDER)) {
-                if(collison.count(RockmanCollison::ROCKMANINLADDER))
+            if (collison.count(RockmanCollison::BOTTEMINLADDER)) {
+                if (collison.count(RockmanCollison::ROCKMANINLADDER))
                     MoveState = PhysicState::FALL;
             }
-            else if(!collison.count(RockmanCollison::BOTTOM))
+            else if (!collison.count(RockmanCollison::BOTTOM))
                 MoveState = PhysicState::FALL;
         }
         if (MoveState == PhysicState::FALL) {
             Fall(collisonbox);
         }
     }
-    if(MoveState == PhysicState::CLIMBFIN){ //De-Climbing
-        Setposition({position->x,position->y-48});
+    if (MoveState == PhysicState::CLIMBFIN) { // De-Climbing
+        Setposition({position->x, position->y - 48});
         MoveState = PhysicState::MOVE;
     }
     if ((collison.count(RockmanCollison::BOTTOM) &&
@@ -416,8 +416,8 @@ void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
             Climb(collisonbox);
         }
         else {
-            //pos.y = Util::Time::GetDeltaTime() * (-160) + pos.y;
-            //Setposition(pos);
+            // pos.y = Util::Time::GetDeltaTime() * (-160) + pos.y;
+            // Setposition(pos);
         }
     }
 }
@@ -426,22 +426,24 @@ void Rockman::Climb(std::vector<std::shared_ptr<TileBox>> collison) {
     auto CollisonResult = GetCollison(collison);
     if (MoveState != PhysicState::CLIMB) {
         MoveState = PhysicState::CLIMB;
-        Setposition({Ladder_Pos.x,position->y});
-        Ladder_Pos = {-2000,-2000};
+        Setposition({Ladder_Pos.x, position->y});
+        Ladder_Pos = {-2000, -2000};
     }
     glm::vec2 pos = Getposition();
     for (int i = 0; i < 10; i++) {
         CollisonResult = GetCollison(collison);
         if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
-            pos.y += 32 * Util::Time::GetDeltaTime();
+            pos.y += 32 * (Util::Time::GetDeltaTimeMs() / 1000);
         }
 
-        if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) && !CollisonResult.count(RockmanCollison::BOTTOM) ) {
-            pos.y -= 32 * Util::Time::GetDeltaTime();
+        if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) &&
+            !CollisonResult.count(RockmanCollison::BOTTOM)) {
+            pos.y -= 32 * (Util::Time::GetDeltaTimeMs() / 1000);
         }
-        else if(Util::Input::IsKeyPressed(Util::Keycode::DOWN) && CollisonResult.count(RockmanCollison::BOTTOM) ){
+        else if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) &&
+                 CollisonResult.count(RockmanCollison::BOTTOM)) {
             Setvisable(0);
-            Setposition({pos.x,pos.y+72});
+            Setposition({pos.x, pos.y + 72});
             MoveState = PhysicState::CLIMBFIN;
             return;
         }
@@ -458,7 +460,7 @@ void Rockman::Climb(std::vector<std::shared_ptr<TileBox>> collison) {
         }
         if (!CollisonResult.count(RockmanCollison::ROCKMANINLADDER)) {
             Setvisable(0);
-            Setposition({pos.x, pos.y+48});
+            Setposition({pos.x, pos.y + 48});
             MoveState = PhysicState::CLIMBFIN;
             return;
         }
@@ -482,7 +484,7 @@ void Rockman::Death() {
 
     int negative = 1;
     for (int i = 0; i < 4; i++) {
-        auto delta = Util::Time::GetDeltaTime();
+        auto delta = Util::Time::GetDeltaTimeMs() / 1000;
         auto position = character_death[i]->GetPosition();
         if (!(i & 1)) {
             character_death[i]->SetPosition(
@@ -496,7 +498,7 @@ void Rockman::Death() {
     }
     negative = 1;
     for (int i = 4; i < 8; i++) {
-        auto delta = Util::Time::GetDeltaTime();
+        auto delta = Util::Time::GetDeltaTimeMs() / 1000;
         auto position = character_death[i]->GetPosition();
         if (!(i & 1)) {
             character_death[i]->SetPosition(
@@ -510,7 +512,7 @@ void Rockman::Death() {
     }
     int negative_x = 1, negative_y = 1;
     for (int i = 8; i < 12; i++) {
-        auto delta = Util::Time::GetDeltaTime();
+        auto delta = Util::Time::GetDeltaTimeMs() / 1000;
         auto position = character_death[i]->GetPosition();
         if (!(i & 1)) {
             character_death[i]->SetPosition(
@@ -582,17 +584,18 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
         Collider rockmanup = *collider[0], rockmandown = *collider[1];
         if (collison[i]->GetObjectType() == TileBox::ObjectType::CLIMB) {
 
-            if(IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))){
+            if (IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))) {
                 bool OverLap = IfColliginIsInside(
                     rockmandown, *(collison[i]->Getcollisonbox()));
-                auto CollisonResult = WhereIsColliding(rockmandown, *(collison[i]->Getcollisonbox()));
+                auto CollisonResult = WhereIsColliding(
+                    rockmandown, *(collison[i]->Getcollisonbox()));
                 if (OverLap) {
-                    if(glm::vec2 {-2000,-2000} == Ladder_Pos){
+                    if (glm::vec2{-2000, -2000} == Ladder_Pos) {
                         Ladder_Pos = collison[i]->GetPosition();
                     }
                     box.insert(RockmanCollison::ROCKMANINLADDER);
                 }
-                if(CollisonResult.count(Collider::Bound::BOTTOM)){
+                if (CollisonResult.count(Collider::Bound::BOTTOM)) {
                     box.insert(RockmanCollison::BOTTEMINLADDER);
                 }
             }
@@ -698,14 +701,14 @@ void Rockman::Jump(std::vector<std::shared_ptr<TileBox>> collison) {
                 if (!result.count(RockmanCollison::DOWNRIGHT) &&
                     !result.count(RockmanCollison::UPRIGHT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-                    pos.x += 64 * Util::Time::GetDeltaTime();
+                    pos.x += 64 * (Util::Time::GetDeltaTimeMs()/1000);
                 }
                 if (!result.count(RockmanCollison::DOWNLEFT) &&
                     !result.count(RockmanCollison::UPLEFT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-                    pos.x -= 64 * Util::Time::GetDeltaTime();
+                    pos.x -= 64 * (Util::Time::GetDeltaTimeMs() / 1000);
                 }
-                pos.y += 120 * Util::Time::GetDeltaTime();
+                pos.y += 120 * (Util::Time::GetDeltaTimeMs() / 1000);
                 Setposition(pos);
             }
             else {
@@ -725,15 +728,22 @@ void Rockman::Fall(std::vector<std::shared_ptr<TileBox>> collison) {
         falltimer = Util::Time::GetElapsedTimeMs();
         for (int i = 0; i < 6; i++) {
             auto result = GetCollison(collison);
-            DebugMessageCollidor(result,"Fall");
-            bool CanFall = (!result.count(RockmanCollison::BOTTOM) && !result.count(RockmanCollison::BOTTEMINLADDER)) || (result.count(RockmanCollison::BOTTEMINLADDER) && result.count(RockmanCollison::ROCKMANINLADDER));
+            DebugMessageCollidor(result, "Fall");
+            bool CanFall = (!result.count(RockmanCollison::BOTTOM) &&
+                            !result.count(RockmanCollison::BOTTEMINLADDER)) ||
+                           (result.count(RockmanCollison::BOTTEMINLADDER) &&
+                            result.count(RockmanCollison::ROCKMANINLADDER));
             if (CanFall) {
-                pos.y -= 60 * Util::Time::GetDeltaTime();
-                if (!result.count(RockmanCollison::DOWNRIGHT) && !result.count(RockmanCollison::UPRIGHT) && Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-                    pos.x += 64 * Util::Time::GetDeltaTime();
+                pos.y -= 60 * (Util::Time::GetDeltaTimeMs() / 1000);
+                if (!result.count(RockmanCollison::DOWNRIGHT) &&
+                    !result.count(RockmanCollison::UPRIGHT) &&
+                    Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
+                    pos.x += 64 * (Util::Time::GetDeltaTimeMs() / 1000);
                 }
-                if (!result.count(RockmanCollison::DOWNLEFT) && !result.count(RockmanCollison::UPLEFT) && Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-                    pos.x -= 64 * Util::Time::GetDeltaTime();
+                if (!result.count(RockmanCollison::DOWNLEFT) &&
+                    !result.count(RockmanCollison::UPLEFT) &&
+                    Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
+                    pos.x -= 64 * (Util::Time::GetDeltaTimeMs() / 1000);
                 }
                 Setposition(pos);
             }
@@ -748,7 +758,8 @@ void Rockman::Fall(std::vector<std::shared_ptr<TileBox>> collison) {
         }
     }
 }
-void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,std::string locate) {
+void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
+                                   std::string locate) {
     LOG_DEBUG("=========" + locate + "============");
     for (auto test : collidorstate) {
         switch (test) {
