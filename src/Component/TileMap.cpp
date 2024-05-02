@@ -33,11 +33,10 @@ glm::vec2 TileMap::GetTilePosition(const int &x, const int &y) {
     return {positionX, positionY};
 }
 
-std::vector<std::shared_ptr<ImageObject>>
+std::vector<std::shared_ptr<TileBox>>
 TileMap::GetBackgroundObjects(const std::string &stageName) {
     // initialize result
-    std::vector<std::shared_ptr<ImageObject>> result;
-
+    std::vector<std::shared_ptr<TileBox>> result;
     // load tiles
     std::vector<std::vector<int>> tiles =
         ConvertToTiles(RESOURCE_DIR "/Map/BackGround/" + stageName + ".txt");
@@ -50,14 +49,19 @@ TileMap::GetBackgroundObjects(const std::string &stageName) {
                 continue;
 
             // set object
+            glm::vec2 objectpos = GetTilePosition(static_cast<int>(x), static_cast<int>(y));
             std::shared_ptr<ImageObject> object = std::make_shared<ImageObject>(
                 RESOURCE_DIR "/Picture/Tiles/" + stageName + "/BackGround/" +
                 std::to_string(tiles[x][y]) + ".png");
-            object->SetPosition(
-                GetTilePosition(static_cast<int>(x), static_cast<int>(y)));
+            object->SetPosition(objectpos);
             object->SetScale(SCALE);
             object->SetZIndex(0);
-            result.push_back(object);
+
+            //Set object into TileBox, Only for Bomb Man Stage.
+            TileBox::ObjectType type = TileBox::ObjectType::NORMAL;
+            std::shared_ptr<Util::GameObject> boxobject = object;
+            std::shared_ptr<TileBox> box = std::make_shared<TileBox>(objectpos,SCALE,boxobject,type);
+            result.push_back(box);
         }
     }
 
@@ -66,10 +70,10 @@ TileMap::GetBackgroundObjects(const std::string &stageName) {
 }
 
 // TODO: add collision detection object with object
-std::vector<std::shared_ptr<ImageObject>>
+std::vector<std::shared_ptr<TileBox>>
 TileMap::GetForegroundObjects(const std::string &stageName) {
     // initialize result
-    std::vector<std::shared_ptr<ImageObject>> result;
+    std::vector<std::shared_ptr<TileBox>> result;
 
     // load tiles
     std::vector<std::vector<int>> tiles =
@@ -83,14 +87,27 @@ TileMap::GetForegroundObjects(const std::string &stageName) {
                 continue;
 
             // set object
+            glm::vec2 objectpos = GetTilePosition(static_cast<int>(x), static_cast<int>(y));
             std::shared_ptr<ImageObject> object = std::make_shared<ImageObject>(
                 RESOURCE_DIR "/Picture/Tiles/" + stageName + "/Object/" +
                 std::to_string(tiles[x][y]) + ".png");
-            object->SetPosition(
-                GetTilePosition(static_cast<int>(x), static_cast<int>(y)));
+            object->SetPosition(objectpos);
             object->SetScale(SCALE);
             object->SetZIndex(20);
-            result.push_back(object);
+
+            //Set object into TileBox, Only for Bomb Man Stage.
+            TileBox::ObjectType type = TileBox::ObjectType::WALL;
+            switch (tiles[x][y]) {
+            case 15:
+                type = TileBox::ObjectType::CLIMB;
+                break;
+            case 16:
+                type = TileBox::ObjectType::DAMAGE;
+                break;
+            }
+            std::shared_ptr<Util::GameObject> boxobject = object;
+            std::shared_ptr<TileBox> box = std::make_shared<TileBox>(objectpos,SCALE,boxobject,type);
+            result.push_back(box);
         }
     }
 
