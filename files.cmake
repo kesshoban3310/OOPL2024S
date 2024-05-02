@@ -11,15 +11,18 @@ set(SRC_FILES
         Component/Ammo.cpp
         Component/AnimatedObject.cpp
         Component/Backgroundmap.cpp
+        Component/Blaster.cpp
         Component/Collider.cpp
         Component/Healthbar.cpp
         Component/ImageObject.cpp
         Component/Phase.cpp
         Component/Rockman.cpp
         Component/Scorebar.cpp
+        Component/SceneManager.cpp
+        Component/ScrewDriver.cpp
         Component/TestBox.cpp
         Component/TileMap.cpp
-        Component/SceneManager.cpp
+        Component/TileBox.cpp
 )
 
 set(INCLUDE_FILES
@@ -34,16 +37,20 @@ set(INCLUDE_FILES
         Component/App.hpp
         Component/Ammo.hpp
         Component/AnimatedObject.hpp
+        Component/Blaster.hpp
         Component/Backgroundmap.hpp
         Component/Collider.hpp
+        Component/EnemyAttribute.hpp
         Component/Healthbar.hpp
         Component/ImageObject.hpp
         Component/Phase.hpp
         Component/Rockman.hpp
         Component/Scorebar.hpp
+        Component/SceneManager.hpp
+        Component/ScrewDriver.hpp
         Component/TestBox.hpp
         Component/TileMap.hpp
-        Component/SceneManager.hpp
+        Component/TileBox.hpp
 
         #other
         IncludeComponent.hpp
