@@ -9,25 +9,30 @@
 
 Screwdriver::Screwdriver(glm::vec2 pos) {
     this->position = std::make_shared<glm::vec2>(pos);
-    this->Collibox = std::make_shared<Collider>(this->position,glm::vec2 {16*3,16*3},glm::vec2 {0,0} );
+    this->Collibox = std::make_shared<Collider>(
+        this->position, glm::vec2{16 * 3, 16 * 3}, glm::vec2{0, 0});
     Initialize();
 }
 void Screwdriver::Initialize() {
-    for(int i=1;i<=5;i++){
-        std::string path = RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/ScrewDriver/ScrewDriver" + std::to_string(i) + ".png";
+    for (int i = 1; i <= 5; i++) {
+        std::string path =
+            RESOURCE_DIR
+            "/Picture/Enemies/Bomb Man Stage/ScrewDriver/ScrewDriver" +
+            std::to_string(i) + ".png";
         ObjectPath.push_back(path);
     }
     Object = std::make_shared<ImageObject>(ObjectPath[0]);
-    Object->SetScale({3,3});
+    Object->SetScale({3, 3});
     Object->SetPosition(*this->position);
     Object->SetZIndex(70);
     Object->SetVisible(true);
 }
 void Screwdriver::Behavior(glm::vec2 pos) {
-    double Distance = sqrt(((pos.x-position->x)*(pos.x-position->x))+((pos.y-position->y)*(pos.y-position->y)));
-    if(Distance<=250)
+    double Distance = sqrt(((pos.x - position->x) * (pos.x - position->x)) +
+                           ((pos.y - position->y) * (pos.y - position->y)));
+    if (Distance <= 250)
         StartUp = 1;
-    if(StartUp) {
+    if (StartUp) {
         if (Open) {
             if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
                 AnimationInterval) {
@@ -67,15 +72,16 @@ void Screwdriver::Behavior(glm::vec2 pos) {
 }
 void Screwdriver::Shoot() {
     glm::vec2 ammospeed;
-    std::string path = RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/ScrewDriver/ScrewDriver6.png";
-    glm::vec2 ammosize = {8*3,8*3};
+    std::string path = RESOURCE_DIR
+        "/Picture/Enemies/Bomb Man Stage/ScrewDriver/ScrewDriver6.png";
+    glm::vec2 ammosize = {8 * 3, 8 * 3};
     float theta = 0;
-    for(int i=0;i<5;i++) {
-        ammospeed = {40*cos(theta*PI/180.0f),40*sin(theta*PI/180.0f)};
-        std::shared_ptr<Ammo> ammo =
-            std::make_shared<Ammo>(glm::vec2{position->x, position->y},
-                                   ammospeed, path, ammosize);
-        if(i>0 && i<3)
+    for (int i = 0; i < 5; i++) {
+        ammospeed = {40 * cos(theta * PI / 180.0f),
+                     40 * sin(theta * PI / 180.0f)};
+        std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
+            glm::vec2{position->x, position->y}, ammospeed, path, ammosize);
+        if (i > 0 && i < 3)
             theta += 30;
         else
             theta += 60;
