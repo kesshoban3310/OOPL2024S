@@ -1,7 +1,7 @@
-#include <utility>
-#include <cmath>
 #include "Component/Collider.hpp"
 #include "Util/Logger.hpp"
+#include <cmath>
+#include <utility>
 
 Collider::Collider(std::shared_ptr<glm::vec2> position, glm::vec2 size,
                    glm::vec2 offset = {0, 0})
@@ -45,7 +45,7 @@ bool IsColliding(const Collider &self, const Collider &other) {
 }
 
 std::set<Collider::Bound> WhereIsColliding(const Collider &self,
-                                              const Collider &other) {
+                                           const Collider &other) {
     // TODO: Modify algorithm to make it more clear.
     std::set<Collider::Bound> box;
 
@@ -73,17 +73,22 @@ std::set<Collider::Bound> WhereIsColliding(const Collider &self,
     }
     return box;
 }
-bool IfColliginIsInside(const Collider &self,const Collider &other){
+bool IfColliginIsInside(const Collider &self, const Collider &other) {
     float Area = self.GetSize().x * self.GetSize().y;
     float OverLapArea = 0;
-    float OtherXLeft = other.GetLeft(),OtherXRight = other.GetRight(),OtherYBottom = other.GetBottom(),OtherYTop = other.GetTop();
-    float SelfXLeft = self.GetLeft(),SelfXRight = self.GetRight(),SelfYBottom = self.GetBottom(),SelfYTop = self.GetTop();
-    float XMin = std::max(OtherXLeft,SelfXLeft),XMax = std::min(OtherXRight,SelfXRight),YMin = std::max(OtherYBottom,SelfYBottom),YMax = std::min(OtherYTop,SelfYTop);
+    float OtherXLeft = other.GetLeft(), OtherXRight = other.GetRight(),
+          OtherYBottom = other.GetBottom(), OtherYTop = other.GetTop();
+    float SelfXLeft = self.GetLeft(), SelfXRight = self.GetRight(),
+          SelfYBottom = self.GetBottom(), SelfYTop = self.GetTop();
+    float XMin = std::max(OtherXLeft, SelfXLeft),
+          XMax = std::min(OtherXRight, SelfXRight),
+          YMin = std::max(OtherYBottom, SelfYBottom),
+          YMax = std::min(OtherYTop, SelfYTop);
 
-    OverLapArea = (XMax-XMin) * (YMax-YMin);
+    OverLapArea = (XMax - XMin) * (YMax - YMin);
 
-    //LOG_DEBUG(std::to_string(Area));
-    //LOG_DEBUG(std::to_string(OverLapArea));
+    // LOG_DEBUG(std::to_string(Area));
+    // LOG_DEBUG(std::to_string(OverLapArea));
 
     return OverLapArea / Area >= 0.25;
 }
