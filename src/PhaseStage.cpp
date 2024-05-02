@@ -9,17 +9,27 @@ void PhaseStage::Init(App *app) {
 
     // Load Rockman
     m_Rockman = std::make_shared<Rockman>(glm::vec2{360, -3408},
-                                          Rockman::State::Initial);
+                                          Rockman::LiveState::Initial);
     // Load Scorebar
     m_Scorebar = std::make_shared<Scorebar>(glm::vec2{360, -3408});
-    // m_Testbox = std::make_shared<TestBox>(glm::vec2 {415,-3408},glm::vec2
-    // {3,3});
 
     m_BackgroundObjects->SetImagetoBackgroundObject();
     m_ForegroundObjects->SetImagetoForegroundObject();
-
+    //Load Blaster
+    for(int i=0;i<4;i++){
+        int timer = 66;
+        std::shared_ptr<Blaster> blaster = std::make_shared<Blaster>(glm::vec2 {4894,-2832+96*i},timer,i%2);
+        m_Blaster.push_back(blaster);
+        app->GetRoot()->AddChild(blaster->GetChild());
+    }
+    //Load Screwdriver
+    for(int i=0;i<3;i++){
+        std::shared_ptr<Screwdriver> screwdriver = std::make_shared<Screwdriver>(glm::vec2 {4295+301.5*i,-3602});
+        m_Screwdriver.push_back(screwdriver);
+        app->GetRoot()->AddChild(screwdriver->GetChild());
+    }
     // Add the root
-    m_Rockman->behavior();
+    m_Rockman->Behavior(m_ForegroundObjects->GetCollisonBox(glm::vec2{360, -3408}));
     m_Scorebar->Show({360, -3408});
     // app->GetRoot()->AddChild(m_Testbox->Getchild());
     app->GetRoot()->AddChildren(m_BackgroundObjects->GetChildren());
@@ -58,8 +68,17 @@ void PhaseStage::Update(App *app) {
         return;
     }
 
-    // m_Rockman->behavior();
+    m_Rockman->Behavior(m_ForegroundObjects->GetCollisonBox(app->GetCameraPosition()));
 
+    for(int i=0;i<4;i++){
+        m_Blaster[i]->Behavior(m_Rockman->Getposition());
+    }
+    for(int i=0;i<3;i++){
+        m_Screwdriver[i]->Behavior(m_Rockman->Getposition());
+    }
+
+    ReloadMagazine(app);
+    LOG_INFO(std::to_string(Util::Time::GetDeltaTimeMs()));
     // m_Testbox->Move();
 
     /*
@@ -98,4 +117,36 @@ void PhaseStage::Update(App *app) {
 void PhaseStage::Leave(App *app) {
     // clean up root
     app->GetRoot()->RemoveAllChildren();
+}
+void PhaseStage::ReloadMagazine(App *app) {
+    glm::vec2 CameraPosition = app->GetCameraPosition();
+    auto magazine = m_Rockman->Getammo();
+    for(auto Ammo:magazine){
+        m_Magazine.push(Ammo);
+        app->GetRoot()->AddChild(Ammo->GetChild());
+    }
+    for(int i=0;i<4;i++){ //Blaster Magazine
+        magazine = m_Blaster[i]->Getammo();
+        for(auto Ammo:magazine){
+            m_Magazine.push(Ammo);
+            app->GetRoot()->AddChild(Ammo->GetChild());
+        }
+    }
+    for(int i=0;i<3;i++){ //Screwdriver Magazine
+        magazine = m_Screwdriver[i]->Getammo();
+        for(auto Ammo:magazine){
+            m_Magazine.push(Ammo);
+            app->GetRoot()->AddChild(Ammo->GetChild());
+        }
+    }
+    int magazine_size = m_Magazine.size();
+    for(int i=0;i<magazine_size;i++){
+        auto Ammo = m_Magazine.front(); m_Magazine.pop();
+        Ammo->Behavior();
+        if(Ammo->Outofrange(CameraPosition)) {
+            app->GetRoot()->RemoveChild(Ammo->GetChild());
+            continue;
+        }
+        m_Magazine.push(Ammo);
+    }
 }
