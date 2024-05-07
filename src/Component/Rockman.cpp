@@ -14,25 +14,20 @@
  */
 
 Rockman::Rockman(glm::vec2 pos, LiveState Rockmanstate) {
-    this->health = 28;
+    this->Health = 28;
     this->RockmanState = Rockmanstate;
-    this->position = std::make_shared<glm::vec2>(glm::vec2{pos.x, pos.y});
-    healthbar = std::make_shared<Healthbar>(pos);
+    this->Position = std::make_shared<glm::vec2>(glm::vec2{pos.x, pos.y});
     MoveState = PhysicState::MOVE;
-    collider.resize(2);
-    collider[0] = std::make_shared<Collider>(
-        position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 24});
-    collider[1] = std::make_shared<Collider>(
-        position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -24});
+    ColliderBox.resize(2);
+    ColliderBox[0] = std::make_shared<Collider>(Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 24});
+    ColliderBox[1] = std::make_shared<Collider>(Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -24});
 }
 
 void Rockman::Initialize() {
-    std::vector<std::string> Idlevec, Walkvec, Walkrightvec, Climbvec,
-        Climbfinvec, Jumpvec, Deathvec;
-    std::vector<std::string> Idleshootvec, Walkshootvec, Walkrightshootvec,
-        Climbshootvec, Jumpshootvec;
-    movetimer = 0;
-    glm::vec2 pos = *position;
+    std::vector<std::string> Idlevec, Walkvec,  Climbvec, Jumpvec, Deathvec;
+    std::string Idleshootvec, Walkshootvec, Climbshootvec, Jumpshootvec;
+    MoveTimer = 0;
+
     /**
      * @brief Initialize normal.
      */
@@ -41,6 +36,7 @@ void Rockman::Initialize() {
                            std::to_string(i) + ".png";
         Idlevec.emplace_back(path);
     }
+
     for (int i = 1; i <= 3; i++) {
         std::string path = RESOURCE_DIR "/Picture/Character/Normal/Walk" +
                            std::to_string(i) + ".png";
@@ -48,70 +44,45 @@ void Rockman::Initialize() {
     }
     Walkvec.push_back(RESOURCE_DIR "/Picture/Character/Normal/Walk" +
                       std::to_string(2) + ".png");
-    for (int i = 1; i <= 3; i++) {
-        std::string path = RESOURCE_DIR "/Picture/Character/Normal/Walkright" +
-                           std::to_string(i) + ".png";
-        Walkrightvec.emplace_back(path);
-    }
-    Walkrightvec.push_back(RESOURCE_DIR "/Picture/Character/Normal/Walkright" +
-                           std::to_string(2) + ".png");
+
+    Jumpvec.emplace_back(RESOURCE_DIR "/Picture/Character/Normal/Jump.png");
+
+    CharacterAnimatePath = {Idlevec,Walkvec,Jumpvec};
+
     for (int i = 1; i <= 2; i++) {
         std::string path = RESOURCE_DIR "/Picture/Character/Normal/Climb" +
                            std::to_string(i) + ".png";
-        Climbvec.emplace_back(path);
+        CharacterImagePath.emplace_back(path);
     }
-    Climbfinvec.push_back(RESOURCE_DIR "/Picture/Character/Normal/Climb" +
-                          std::to_string(3) + ".png");
-    Jumpvec.emplace_back(RESOURCE_DIR "/Picture/Character/Normal/Jump.png");
 
-    std::shared_ptr<AnimatedObject> Idle =
-        std::make_shared<AnimatedObject>(Idlevec, 1, 250);
-    Idle->SetZIndex(ZIndex);
-    Idle->SetScale(inversescale);
-    Idle->SetPosition(pos);
-    Idle->SetVisible(false);
+    /** @brief Get Shoot Image Path.
+     */
+    Idleshootvec = RESOURCE_DIR "/Picture/Character/Shooting/Idle.png";
 
-    std::shared_ptr<AnimatedObject> Walk =
-        std::make_shared<AnimatedObject>(Walkvec, 1, 160);
-    Walk->SetZIndex(ZIndex);
-    Walk->SetScale(scale);
-    Walk->SetPosition(pos);
-    Walk->SetVisible(false);
+    Walkshootvec = RESOURCE_DIR "/Picture/Character/Shooting/Walk1.png";
 
-    std::shared_ptr<AnimatedObject> Walkright =
-        std::make_shared<AnimatedObject>(Walkrightvec, 1, 160);
-    Walkright->SetZIndex(ZIndex);
-    Walkright->SetScale(scale);
-    Walkright->SetPosition(pos);
-    Walkright->SetVisible(false);
+    Jumpshootvec = RESOURCE_DIR "/Picture/Character/Shooting/Jump.png";
 
-    std::shared_ptr<AnimatedObject> Climb =
-        std::make_shared<AnimatedObject>(Climbvec, 1, 320);
-    Climb->SetZIndex(ZIndex);
-    Climb->SetScale(scale);
-    Climb->SetPosition(pos);
-    Climb->SetVisible(false);
+    Climbshootvec = RESOURCE_DIR "/Picture/Character/Shooting/Climb.png";
 
-    std::shared_ptr<AnimatedObject> Climbfin =
-        std::make_shared<AnimatedObject>(Climbfinvec, 1, 120);
-    Climbfin->SetZIndex(ZIndex);
-    Climbfin->SetScale(scale);
-    Climbfin->SetPosition(pos);
-    Climbfin->SetVisible(false);
+    CharacterShootPath = {Idleshootvec,  Walkshootvec, Jumpshootvec,Climbshootvec};
 
-    std::shared_ptr<AnimatedObject> Jump =
-        std::make_shared<AnimatedObject>(Jumpvec, 1, 120);
-    Jump->SetZIndex(ZIndex);
-    Jump->SetScale(scale);
-    Jump->SetPosition(pos);
-    Jump->SetVisible(false);
+    /** @brief Initialize AnimatedObject.
+     */
+    CharacterAnimate = std::make_shared<AnimatedObject>(Idlevec,true,160,true);
+    CharacterAnimate->SetPosition(*Position);
+    CharacterAnimate->SetVisible(false);
+    CharacterAnimate->SetScale(RightScale);
+    CharacterAnimate->SetZIndex(ZIndex);
 
-    std::shared_ptr<AnimatedObject> Jumpright =
-        std::make_shared<AnimatedObject>(Jumpvec, 1, 120);
-    Jumpright->SetZIndex(ZIndex);
-    Jumpright->SetScale(inversescale);
-    Jumpright->SetPosition(pos);
-    Jumpright->SetVisible(false);
+    /** @brief Initialize ImageObject.
+     */
+
+    CharacterImage = std::make_shared<ImageObject>(CharacterImagePath[0]);
+    CharacterImage->SetPosition(*Position);
+    CharacterImage->SetVisible(false);
+    CharacterImage->SetScale(RightScale);
+    CharacterImage->SetZIndex(ZIndex);
 
     /** @brief Initialize Death.
      */
@@ -130,113 +101,42 @@ void Rockman::Initialize() {
         std::shared_ptr<AnimatedObject> Death =
             std::make_shared<AnimatedObject>(Deathvec, 1, 10);
         Death->SetZIndex(ZIndex);
-        Death->SetScale(inversescale);
-        Death->SetPosition(pos);
+        Death->SetScale(RightScale);
+        Death->SetPosition(*Position);
         Death->SetVisible(false);
-        character_death.emplace_back(Death);
+        CharacterDeath.emplace_back(Death);
     }
-    /** @brief Initialize Shoot.
-     */
-    Idleshootvec.emplace_back(RESOURCE_DIR
-                              "/Picture/Character/Shooting/Idle.png");
 
-    for (int i = 1; i <= 3; i++) {
-        std::string path = RESOURCE_DIR "/Picture/Character/Shooting/Walk" +
-                           std::to_string(i) + ".png";
-        Walkshootvec.emplace_back(path);
-    }
-    Walkshootvec.emplace_back(RESOURCE_DIR
-                              "/Picture/Character/Shooting/Walk2.png");
-
-    for (int i = 1; i <= 3; i++) {
-        std::string path = RESOURCE_DIR
-                           "/Picture/Character/Shooting/Walkright" +
-                           std::to_string(i) + ".png";
-        Walkrightshootvec.emplace_back(path);
-    }
-    Walkrightshootvec.emplace_back(
-        RESOURCE_DIR "/Picture/Character/Shooting/Walkright2.png");
-
-    Climbshootvec.emplace_back(RESOURCE_DIR
-                               "/Picture/Character/Shooting/Climb.png");
-
-    Jumpshootvec.emplace_back(RESOURCE_DIR
-                              "/Picture/Character/Shooting/Jump.png");
-
-    std::shared_ptr<AnimatedObject> Idleshoot =
-        std::make_shared<AnimatedObject>(Idleshootvec, 1, 250);
-    Idleshoot->SetZIndex(ZIndex);
-    Idleshoot->SetScale(inversescale);
-    Idleshoot->SetPosition(pos);
-    Idleshoot->SetVisible(false);
-
-    std::shared_ptr<AnimatedObject> Walkshoot =
-        std::make_shared<AnimatedObject>(Walkshootvec, 1, 160);
-    Walkshoot->SetZIndex(ZIndex);
-    Walkshoot->SetScale(scale);
-    Walkshoot->SetPosition(pos);
-    Walkshoot->SetVisible(false);
-
-    std::shared_ptr<AnimatedObject> Walkrightshoot =
-        std::make_shared<AnimatedObject>(Walkrightshootvec, 1, 160);
-    Walkrightshoot->SetZIndex(ZIndex);
-    Walkrightshoot->SetScale(scale);
-    Walkrightshoot->SetPosition(pos);
-    Walkrightshoot->SetVisible(false);
-
-    std::shared_ptr<AnimatedObject> Climbshoot =
-        std::make_shared<AnimatedObject>(Climbshootvec, 1, 250);
-    Climbshoot->SetZIndex(ZIndex);
-    Climbshoot->SetScale(scale);
-    Climbshoot->SetPosition(pos);
-    Climbshoot->SetVisible(false);
-
-    std::shared_ptr<AnimatedObject> Jumpshoot =
-        std::make_shared<AnimatedObject>(Jumpshootvec, 1, 250);
-    Jumpshoot->SetZIndex(ZIndex);
-    Jumpshoot->SetScale(scale);
-    Jumpshoot->SetPosition(pos);
-    Jumpshoot->SetVisible(false);
-
-    std::shared_ptr<AnimatedObject> Jumprightshoot =
-        std::make_shared<AnimatedObject>(Jumpshootvec, 1, 250);
-    Jumprightshoot->SetZIndex(ZIndex);
-    Jumprightshoot->SetScale(inversescale);
-    Jumprightshoot->SetPosition(pos);
-    Jumprightshoot->SetVisible(false);
-
-    if (character_spawn.empty()) {
+    if (CharacterSpawn.empty()) {
         for (int i = 1; i <= 3; i++) {
             std::string path = RESOURCE_DIR "/Picture/Character/Spawn/Initial" +
                                std::to_string(i) + ".png";
             std::shared_ptr<ImageObject> Initial =
                 std::make_shared<ImageObject>(path);
-            Initial->SetPosition(pos);
+            Initial->SetPosition(*Position);
             Initial->SetZIndex(ZIndex);
-            Initial->SetScale(scale);
+            Initial->SetScale(RightScale);
             Initial->SetVisible(false);
-            character_spawn.emplace_back(Initial);
+            CharacterSpawn.emplace_back(Initial);
         }
-        Sethealth(28);
     }
-    character = {Idle, Walk, Walkright, Climb, Jump, Jumpright, Climbfin};
-    character_shoot = {Idleshoot,  Walkshoot, Walkrightshoot,
-                       Climbshoot, Jumpshoot, Jumprightshoot};
+
+    /* Switch State */
     RockmanState = LiveState::Spawn;
 }
 
 void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
-    if (!character_spawn[0]->GetVisibility() && movetimer == 0)
-        character_spawn[0]->SetVisible(true);
+    if (!CharacterSpawn[0]->GetVisibility() && MoveTimer == 0)
+        CharacterSpawn[0]->SetVisible(true);
     std::set<RockmanCollison> RockmanCollisonState = GetCollison(collison);
     if (!RockmanCollisonState.count(RockmanCollison::BOTTOM)) {
         for (int i = 0; i < 5; i++) {
             std::set<RockmanCollison> RockmanCollisonState =
                 GetCollison(collison);
             if (!RockmanCollisonState.count(RockmanCollison::BOTTOM)) {
-                position->y -= 16;
-                Setposition(*position);
-                character_spawn[0]->SetPosition(*position);
+                Position->y -= 320 * (Util::Time::GetDeltaTimeMs()/1000);
+                SetPosition(*Position);
+                CharacterSpawn[0]->SetPosition(*Position);
             }
             else
                 break;
@@ -244,34 +144,34 @@ void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
     }
     else {
         for (int i = 0; i <= 2; i++) {
-            if (character_spawn[i]->GetVisibility()) {
+            if (CharacterSpawn[i]->GetVisibility()) {
                 switch (i) {
                 case 0:
-                    character_spawn[1]->SetVisible(true);
-                    character_spawn[1]->SetPosition(*position);
-                    character_spawn[0]->SetVisible(false);
-                    if (movetimer == 0)
-                        movetimer = Util::Time::GetElapsedTimeMs();
+                    CharacterSpawn[1]->SetVisible(true);
+                    CharacterSpawn[1]->SetPosition(*Position);
+                    CharacterSpawn[0]->SetVisible(false);
+                    if (MoveTimer == 0)
+                        MoveTimer = Util::Time::GetElapsedTimeMs();
                     break;
                 case 1:
-                    if (Util::Time::GetElapsedTimeMs() - movetimer < 33)
+                    if (Util::Time::GetElapsedTimeMs() - MoveTimer < 33)
                         break;
-                    character_spawn[2]->SetVisible(true);
-                    character_spawn[2]->SetPosition(*position);
-                    character_spawn[1]->SetVisible(false);
+                    CharacterSpawn[2]->SetVisible(true);
+                    CharacterSpawn[2]->SetPosition(*Position);
+                    CharacterSpawn[1]->SetVisible(false);
                     break;
                 case 2:
-                    if (Util::Time::GetElapsedTimeMs() - movetimer < 50)
+                    if (Util::Time::GetElapsedTimeMs() - MoveTimer < 50)
                         break;
-                    position->y -= 6;
-                    character[0]->SetVisible(true);
-                    character[0]->SetPosition(*position);
-                    character_spawn[2]->SetVisible(false);
-                    collider.clear();
-                    collider[0] = std::make_shared<Collider>(
-                        position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 18});
-                    collider[1] = std::make_shared<Collider>(
-                        position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -18});
+                    Position->y -= 6;
+                    CharacterAnimate->SetVisible(true);
+                    CharacterAnimate->SetPosition(*Position);
+                    CharacterSpawn[2]->SetVisible(false);
+                    ColliderBox.clear();
+                    ColliderBox[0] = std::make_shared<Collider>(
+                        Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 18});
+                    ColliderBox[1] = std::make_shared<Collider>(
+                        Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -18});
                     RockmanState = LiveState::Normal;
                     break;
                 }
@@ -283,7 +183,9 @@ void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
 
 void Rockman::Behavior(std::vector<std::shared_ptr<TileBox>> collison) {
     std::set<RockmanCollison> collisonstate = GetCollison(collison);
-
+    if(Health == 0){
+        RockmanState = LiveState::Death;
+    }
     switch (RockmanState) {
     case LiveState::Initial:
         Initialize();
@@ -304,33 +206,49 @@ void Rockman::Behavior(std::vector<std::shared_ptr<TileBox>> collison) {
     }
 }
 
-glm::vec2 Rockman::Getposition() {
-    return *position;
+glm::vec2 Rockman::GetPosition() {
+    return *Position;
 }
 
-void Rockman::Setposition(glm::vec2 pos) {
-    for (auto object : character)
-        object->SetPosition({pos.x, pos.y});
-    *position = pos;
+void Rockman::SetPosition(glm::vec2 pos) {
+    CharacterAnimate->SetPosition(pos);
+    CharacterImage->SetPosition(pos);
+    *Position = pos;
 }
 
-void Rockman::Setvisable(const int &idx) {
-    visable = idx;
-    for (int i = 0; i < character.size(); i++) {
-        if (idx == i) {
-            character[i]->SetVisible(true);
-        }
-        else
-            character[i]->SetVisible(false);
+void Rockman::SetVisable(const int &idx,bool isleft) {
+    if(idx == -1){
+        return;
     }
+
+    if(isleft){
+        CharacterAnimate->SetScale(LeftScale);
+        CharacterImage->SetScale(LeftScale);
+    }
+    else{
+        CharacterAnimate->SetScale(RightScale);
+        CharacterImage->SetScale(RightScale);
+    }
+
+    if(MoveState == PhysicState::CLIMB){
+        CharacterAnimate->SetVisible(false);
+        CharacterImage->SetVisible(true);
+        CharacterImage->SetImage(CharacterImagePath[idx]);
+    }
+    else if(Visable!=idx || MoveState == PhysicState::CLIMBFIN){
+        CharacterAnimate->SetAnimation(CharacterAnimatePath[idx],true,160, true);
+        CharacterImage->SetVisible(false);
+        CharacterAnimate->SetVisible(true);
+    }
+    Visable = idx;
 }
 
 void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
                            std::vector<std::shared_ptr<TileBox>> collisonbox) {
     // TODO: Modify Climb System, Import Shoot.
     Ladder_Pos = {-2000, -2000};
-    if (MoveState == PhysicState::MOVE)
-        Setvisable(0);
+    if (MoveState == PhysicState::MOVE &&( !Util::Input::IsKeyPressed(Util::Keycode::RIGHT) && !Util::Input::IsKeyPressed(Util::Keycode::LEFT)))
+        SetVisable(0, false);
     if (MoveState == PhysicState::JUMP) {
         Jump(collisonbox);
     }
@@ -340,7 +258,7 @@ void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
         return;
     }
     DebugMessagePhysic(MoveState);
-    glm::vec2 pos = Getposition();
+    glm::vec2 pos = GetPosition();
     if (Util::Input::IsKeyPressed(Util::Keycode::UP) &&
         collison.count(
             RockmanCollison::ROCKMANINLADDER)) // If State isn't Climb and can
@@ -348,23 +266,23 @@ void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
         Climb(collisonbox);
     if (MoveState == Rockman::PhysicState::MOVE) { // Move Left or Right
         if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-            Setvisable(1);
+            SetVisable(1,true);
             for (int i = 0; i < 10; i++) {
                 if (collison.count(RockmanCollison::UPLEFT) &&
                     collison.count(RockmanCollison::DOWNLEFT))
                     break;
                 pos.x = Util::Time::GetDeltaTimeMs() / 1000 * (-16) + pos.x;
-                Setposition(pos);
+                SetPosition(pos);
             }
         }
         if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-            Setvisable(2);
+            SetVisable(1, false);
             for (int i = 0; i < 10; i++) {
                 if (collison.count(RockmanCollison::UPRIGHT) &&
                     collison.count(RockmanCollison::DOWNRIGHT))
                     break;
                 pos.x = Util::Time::GetDeltaTimeMs() / 1000 * 16 + pos.x;
-                Setposition(pos);
+                SetPosition(pos);
             }
         }
     }
@@ -396,23 +314,23 @@ void Rockman::PhysicEngine(std::set<RockmanCollison> collison,
         }
     }
     if (MoveState == PhysicState::CLIMBFIN) { // De-Climbing
-        Setposition({position->x, position->y - 48});
+        SetPosition({Position->x, Position->y - 48});
         MoveState = PhysicState::MOVE;
     }
     if ((collison.count(RockmanCollison::BOTTOM) &&
          MoveState == PhysicState::JUMPBEFOREFALL)) { // De-Jumping
-        if (character[4]->GetVisibility() || character[5]->GetVisibility()) {
+        if (Visable == 2) {
             if (Util::Input::IsKeyPressed(Util::Keycode::X))
                 MoveState = PhysicState::JUMPBEFOREMOVE;
             if (!Util::Input::IsKeyPressed(Util::Keycode::X))
                 MoveState = PhysicState::MOVE;
-            Setvisable(0);
+            SetVisable(0, false);
         }
     }
     if (Util::Input::IsKeyPressed(
             Util::Keycode::DOWN)) { // Test, it can't not use when Release.
         if (collison.count(RockmanCollison::BOTTEMINLADDER)) {
-            Setposition({position->x, position->y - 16 * 3});
+            SetPosition({Position->x, Position->y - 16 * 3});
             Climb(collisonbox);
         }
         else {
@@ -426,10 +344,11 @@ void Rockman::Climb(std::vector<std::shared_ptr<TileBox>> collison) {
     auto CollisonResult = GetCollison(collison);
     if (MoveState != PhysicState::CLIMB) {
         MoveState = PhysicState::CLIMB;
-        Setposition({Ladder_Pos.x, position->y});
+        SetPosition({Ladder_Pos.x, Position->y});
+        SetVisable(0, false);
         Ladder_Pos = {-2000, -2000};
     }
-    glm::vec2 pos = Getposition();
+    glm::vec2 pos = GetPosition(),initial_yaxis = GetPosition();
     for (int i = 0; i < 10; i++) {
         CollisonResult = GetCollison(collison);
         if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
@@ -442,56 +361,57 @@ void Rockman::Climb(std::vector<std::shared_ptr<TileBox>> collison) {
         }
         else if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) &&
                  CollisonResult.count(RockmanCollison::BOTTOM)) {
-            Setvisable(0);
-            Setposition({pos.x, pos.y + 72});
             MoveState = PhysicState::CLIMBFIN;
+            SetVisable(0, false);
+            SetPosition({pos.x, pos.y + 72});
             return;
         }
         if (Util::Input::IsKeyPressed(Util::Keycode::X)) {
-            Setvisable(5);
             MoveState = PhysicState::FALL;
+            SetVisable(2, false);
             return;
         }
         if (!CollisonResult.count(RockmanCollison::ROCKMANINLADDER)) {
-            Setvisable(6);
-        }
-        else {
-            Setvisable(3);
-        }
-        if (!CollisonResult.count(RockmanCollison::ROCKMANINLADDER)) {
-            Setvisable(0);
-            Setposition({pos.x, pos.y + 48});
             MoveState = PhysicState::CLIMBFIN;
+            SetVisable(0,false);
+            SetPosition({pos.x, pos.y + 48});
             return;
         }
+    }
+    if(Util::Time::GetElapsedTimeMs()-ClimbTimer>250 && pos.y!=initial_yaxis.y){
+        if(Visable == 0)
+            SetVisable(1, false);
+        else
+            SetVisable(0, false);
+        ClimbTimer = Util::Time::GetElapsedTimeMs();
     }
     CollisonResult = GetCollison(collison);
     DebugMessageCollidor(CollisonResult, "Climb");
-    Setposition(pos);
+    SetPosition(pos);
 }
 
 void Rockman::Death() {
-    if (visable != -1)
-        Setvisable(-1);
-    if (!character_death[0]->GetVisibility()) {
+    if (Visable != -1)
+        SetVisable(-1,false);
+    if (!CharacterDeath[0]->GetVisibility()) {
         for (int i = 0; i < 12; i++) {
-            character_death[i]->SetPosition(*position);
-            character_death[i]->SetVisible(true);
+            CharacterDeath[i]->SetPosition(*Position);
+            CharacterDeath[i]->SetVisible(true);
         }
     }
-    if (character_death[0]->GetPosition().x > position->x + 150)
+    if (CharacterDeath[0]->GetPosition().x > Position->x + 150)
         return;
 
     int negative = 1;
     for (int i = 0; i < 4; i++) {
         auto delta = Util::Time::GetDeltaTimeMs() / 1000;
-        auto position = character_death[i]->GetPosition();
+        auto position = CharacterDeath[i]->GetPosition();
         if (!(i & 1)) {
-            character_death[i]->SetPosition(
+            CharacterDeath[i]->SetPosition(
                 {position.x + 60 * delta * negative, position.y});
         }
         else {
-            character_death[i]->SetPosition(
+            CharacterDeath[i]->SetPosition(
                 {position.x, position.y + 60 * delta * negative});
             negative *= -1;
         }
@@ -499,13 +419,13 @@ void Rockman::Death() {
     negative = 1;
     for (int i = 4; i < 8; i++) {
         auto delta = Util::Time::GetDeltaTimeMs() / 1000;
-        auto position = character_death[i]->GetPosition();
+        auto position = CharacterDeath[i]->GetPosition();
         if (!(i & 1)) {
-            character_death[i]->SetPosition(
+            CharacterDeath[i]->SetPosition(
                 {position.x + 120 * delta * negative, position.y});
         }
         else {
-            character_death[i]->SetPosition(
+            CharacterDeath[i]->SetPosition(
                 {position.x, position.y + 120 * delta * negative});
             negative *= -1;
         }
@@ -513,15 +433,15 @@ void Rockman::Death() {
     int negative_x = 1, negative_y = 1;
     for (int i = 8; i < 12; i++) {
         auto delta = Util::Time::GetDeltaTimeMs() / 1000;
-        auto position = character_death[i]->GetPosition();
+        auto position = CharacterDeath[i]->GetPosition();
         if (!(i & 1)) {
-            character_death[i]->SetPosition(
+            CharacterDeath[i]->SetPosition(
                 {position.x + 86.6 * delta * negative_x,
                  position.y + 86.6 * delta * negative_y});
             negative_x *= -1;
         }
         else {
-            character_death[i]->SetPosition(
+            CharacterDeath[i]->SetPosition(
                 {position.x + 86.6 * delta * negative_x,
                  position.y + 86.6 * delta * negative_y});
             negative_y *= -1;
@@ -529,63 +449,74 @@ void Rockman::Death() {
     }
 }
 
-int Rockman::Gethealth() {
-    return health;
+int Rockman::GetHealth() {
+    return Health;
 }
-void Rockman::Sethealth(int hp) {
+void Rockman::SetHealth(int hp) {
     if (hp < 0 || hp > 28)
         return;
-    health = hp;
-    healthbar->SetVisable(health);
-    if (!health) {
+    Health = hp;
+    if (Health == 0) {
         RockmanState = LiveState::Death;
     }
 }
 
 void Rockman::Shoot() {
     if (Util::Input::IsKeyDown(Util::Keycode::Z)) {
-        Setshootvisable(visable, true);
+        SetShootVisable(Visable,true);
         if (MoveState == PhysicState::MOVE)
             MoveState = PhysicState::SHOOT;
-        glm::vec2 ammo_position = {position->x + 35, position->y + 5};
-        glm::vec2 direction = {-20, 0};
-        if (visable == 2 || visable == 5 || visable == 0) {
-            direction = {20, 0};
+        glm::vec2 ammo_position = {Position->x + 35, Position->y + 5};
+        glm::vec2 direction = {-480, 0};
+        if (Visable == 2 || Visable == 5 || Visable == 0) {
+            direction = {480, 0};
             ammo_position = {ammo_position.x - 41, ammo_position.y + 4};
         }
-        if (visable == 5)
+        if (Visable == 5)
             ammo_position = {ammo_position.x + 36, ammo_position.y + 14};
-        if (visable == 4)
+        if (Visable == 4)
             ammo_position = {ammo_position.x - 36, ammo_position.y + 14};
         std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
             ammo_position, direction,
             RESOURCE_DIR "/Picture/Character/Shooting/Ammo.png",
             glm::vec2{8 * 3, 8 * 3});
-        magazine.push_back(ammo);
-        shoottimer = Util::Time::GetElapsedTimeMs();
+        Magazine.push_back(ammo);
+        ShootTimer = Util::Time::GetElapsedTimeMs();
         return;
     }
-    if (Util::Time::GetElapsedTimeMs() - shoottimer > 100 && shoottimer != 0) {
-        Setshootvisable(visable, false);
+    if (Util::Time::GetElapsedTimeMs() - ShootTimer > 100 && ShootTimer != 0) {
+        SetShootVisable(Visable,false);
         if (MoveState == PhysicState::SHOOT)
             MoveState = PhysicState::MOVE;
-        shoottimer = 0;
+        ShootTimer = 0;
     }
 }
-void Rockman::Setshootvisable(const int &idx, bool visable) {
-    character[idx]->SetVisible(!visable);
-    character_shoot[idx]->SetPosition(*position);
-    character_shoot[idx]->SetVisible(visable);
+void Rockman::SetShootVisable(const int &idx, bool visable) {
+    if(MoveState == PhysicState::CLIMB) {
+        if(visable == true)
+            CharacterImage->SetImage(CharacterShootPath[3]);
+        else
+            CharacterImage->SetImage(CharacterImagePath[0]);
+    }
+    else {
+        CharacterAnimate->SetVisible(!visable);
+        CharacterImage->SetVisible(visable);
+        CharacterImage->SetImage(CharacterShootPath[idx]);
+    }
+    if(Util::Input::IsKeyPressed(Util::Keycode::LEFT))
+        CharacterImage->SetScale(LeftScale);
+    else
+        CharacterImage->SetScale(RightScale);
 }
 std::set<Rockman::RockmanCollison>
 Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
     std::set<RockmanCollison> box;
     for (int i = 0; i < collison.size(); i++) {
-        Collider rockmanup = *collider[0], rockmandown = *collider[1];
+        Collider rockmanup = *ColliderBox[0], rockmandown = *ColliderBox[1];
         if (collison[i]->GetObjectType() == TileBox::ObjectType::CLIMB) {
 
             if (IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))) {
-                bool OverLap = IfColliginIsInside(
+                bool OverLap = IfObjectIsOverlaping(
                     rockmandown, *(collison[i]->Getcollisonbox()));
                 auto CollisonResult = WhereIsColliding(
                     rockmandown, *(collison[i]->Getcollisonbox()));
@@ -625,50 +556,22 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
     return box;
 }
 
-Rockman::LiveState Rockman::Getcurrentstate() {
+Rockman::LiveState Rockman::GetCurrentState() {
     return RockmanState;
 }
 
-std::vector<std::shared_ptr<Util::GameObject>> Rockman::GetAllchildren() {
-    std::vector<std::shared_ptr<Util::GameObject>> Object,
-        Barobject = healthbar->GetChildren();
-    for (auto i : character_spawn)
-        Object.push_back(i);
-    for (auto i : character)
-        Object.push_back(i);
-    for (auto i : character_death)
-        Object.push_back(i);
-    for (auto i : character_shoot)
-        Object.push_back(i);
-    for (auto i : Barobject)
-        Object.push_back(i);
-    return Object;
-}
-std::vector<std::shared_ptr<Util::GameObject>>
-Rockman::Getchildren(LiveState state) {
+std::vector<std::shared_ptr<Util::GameObject>> Rockman::GetAllChildren() {
     std::vector<std::shared_ptr<Util::GameObject>> Object;
-    switch (state) {
-    case LiveState::Spawn:
-        for (auto i : character_spawn)
-            Object.push_back(i);
-        break;
-
-    case LiveState::Normal:
-        for (auto i : character)
-            Object.push_back(i);
-        for (auto i : character_shoot)
-            Object.push_back(i);
-        break;
-
-    case LiveState::Death:
-        for (auto i : character_death)
-            Object.push_back(i);
-        break;
-    }
+    Object.push_back(CharacterAnimate);
+    Object.push_back(CharacterImage);
+    for(auto i:CharacterDeath)
+        Object.push_back(i);
+    for(auto i:CharacterSpawn)
+        Object.push_back(i);
     return Object;
 }
 void Rockman::Jump(std::vector<std::shared_ptr<TileBox>> collison) {
-    glm::vec2 pos = *position;
+    glm::vec2 pos = *Position;
     auto result = GetCollison(collison);
     if (MoveState == PhysicState::FALL ||
         MoveState == PhysicState::JUMPBEFOREFALL)
@@ -678,11 +581,8 @@ void Rockman::Jump(std::vector<std::shared_ptr<TileBox>> collison) {
             return;
         MoveState = PhysicState::JUMP;
         Initial_Pos = pos;
-        if (visable == 0 || visable == 2)
-            Setvisable(5);
-        if (visable == 1)
-            Setvisable(4);
-        Setposition(pos);
+        SetVisable(2, false);
+        SetPosition(pos);
         jumptimer = Util::Time::GetElapsedTimeMs();
         return;
     }
@@ -701,15 +601,17 @@ void Rockman::Jump(std::vector<std::shared_ptr<TileBox>> collison) {
                 if (!result.count(RockmanCollison::DOWNRIGHT) &&
                     !result.count(RockmanCollison::UPRIGHT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-                    pos.x += 64 * (Util::Time::GetDeltaTimeMs()/1000);
+                    pos.x += 16 * (Util::Time::GetDeltaTimeMs()/1000);
+                    SetVisable(2, false);
                 }
                 if (!result.count(RockmanCollison::DOWNLEFT) &&
                     !result.count(RockmanCollison::UPLEFT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-                    pos.x -= 64 * (Util::Time::GetDeltaTimeMs() / 1000);
+                    pos.x -= 16 * (Util::Time::GetDeltaTimeMs() / 1000);
+                    SetVisable(2, true);
                 }
                 pos.y += 120 * (Util::Time::GetDeltaTimeMs() / 1000);
-                Setposition(pos);
+                SetPosition(pos);
             }
             else {
                 MoveState = PhysicState::JUMPBEFOREFALL;
@@ -724,7 +626,7 @@ void Rockman::Fall(std::vector<std::shared_ptr<TileBox>> collison) {
         falltimer = Util::Time::GetElapsedTimeMs();
     if (MoveState == PhysicState::FALL &&
         Util::Time::GetElapsedTimeMs() - falltimer > (18)) {
-        glm::vec2 pos = *position;
+        glm::vec2 pos = *Position;
         falltimer = Util::Time::GetElapsedTimeMs();
         for (int i = 0; i < 6; i++) {
             auto result = GetCollison(collison);
@@ -745,14 +647,14 @@ void Rockman::Fall(std::vector<std::shared_ptr<TileBox>> collison) {
                     Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
                     pos.x -= 64 * (Util::Time::GetDeltaTimeMs() / 1000);
                 }
-                Setposition(pos);
+                SetPosition(pos);
             }
             else {
                 if (MoveState == PhysicState::FALL)
                     MoveState = PhysicState::MOVE;
                 else
                     MoveState = PhysicState::JUMPBEFOREMOVE;
-                Setvisable(0);
+                SetVisable(0, false);
                 falltimer = 0;
             }
         }

@@ -4,7 +4,6 @@
 #include "Component/AnimatedObject.hpp"
 #include "pch.hpp"
 #include "Ammo.hpp"
-#include "Component/Healthbar.hpp"
 #include "Component/Collider.hpp"
 #include "Component/TileBox.hpp"
 #include "Util/Logger.hpp"
@@ -54,35 +53,37 @@ public:
     /**
      * @brief Set object position.
      */
-    void Setposition(glm::vec2 pos);
+    void SetPosition(glm::vec2 pos);
 
     /**
      * @brief Get Rockman's health.
      * @return Rockman's health.
      */
-    int Gethealth();
+    int GetHealth();
 
     /**
      * @brief Get object position.
      * @return Object's postition.
      */
-    glm::vec2 Getposition();
+    glm::vec2 GetPosition();
 
-    LiveState Getcurrentstate();
+    /**
+     * @brief Set Rockman's health.
+     * @param health for Rockman's health.
+     */
+    void SetHealth(int hp);
+    LiveState GetCurrentState();
     /**
      * @brief collect all object in character.
      * @return All object in character.
      */
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetAllchildren();
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> Getchildren(LiveState state);
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> Gethealthbar(){ return healthbar->GetChildren(); };
-    [[nodiscard]] std::vector<std::shared_ptr<Ammo>> Getammo(){
-        auto Object = magazine;
-        magazine.clear();
+    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetAllChildren();
+    [[nodiscard]] std::vector<std::shared_ptr<Ammo>> GetAmmo(){
+        auto Object = Magazine;
+        Magazine.clear();
         return Object;
     }
-    [[nodiscard]] std::shared_ptr<Healthbar> GetHealthbar(){ return healthbar;}  // Need 封裝
-    [[nodiscard]] std::vector<std::shared_ptr<Collider>> GetCollider(){return collider;}
+    [[nodiscard]] std::vector<std::shared_ptr<Collider>> GetCollider(){return ColliderBox;}
 
 private:
     /**
@@ -114,23 +115,17 @@ private:
     void Death();
 
     /**
-     * @brief Set Rockman's health.
-     * @param health for Rockman's health.
-     */
-    void Sethealth(int hp);
-
-    /**
      * @brief Set Object different movement.
      * @param idx for the character's index.
      */
-    void Setvisable(const int &idx);
+    void SetVisable(const int &idx,bool isleft);
 
     /**
      * @brief Set Object different movement.
      * @param idx for the character's index.
      * @param visable for shoot object can see.
      */
-    void Setshootvisable(const int &idx,bool visable);
+    void SetShootVisable(const int &idx, bool visable);
 
     //TODO: Re-format GetCollison when Collider is re-format.
     /**
@@ -173,27 +168,32 @@ private:
      */
     void DebugMessagePhysic(Rockman::PhysicState physicState);
 
-    std::vector<std::shared_ptr<AnimatedObject>> character;
-    std::vector<std::shared_ptr<AnimatedObject>> character_shoot;
-    std::vector<std::shared_ptr<AnimatedObject>> character_death;
-    std::vector<std::shared_ptr<ImageObject>> character_spawn;
-    std::vector<std::shared_ptr<Ammo>> magazine;
+    std::shared_ptr<AnimatedObject> CharacterAnimate;
+    std::shared_ptr<ImageObject> CharacterImage;
+
+    std::vector<std::vector<std::string>> CharacterAnimatePath;
+    std::vector<std::string> CharacterShootPath;
+    std::vector<std::string> CharacterImagePath;
+
+    std::vector<std::shared_ptr<AnimatedObject>> CharacterDeath;
+    std::vector<std::shared_ptr<ImageObject>> CharacterSpawn;
+
+    std::vector<std::shared_ptr<Ammo>> Magazine;
 
     // timer to make animation smoothly.
-    unsigned long movetimer = 0,shoottimer = 0;
-    int health = 28;
-    int visable = 0;
+    unsigned long MoveTimer = 0,ShootTimer = 0,ClimbTimer = 0;
+    int Health = 28;
+    int Visable = 0;
 
-    std::shared_ptr<glm::vec2> position;
-    glm::vec2 scale = {3,3},inversescale = {-3,3};
+    std::shared_ptr<glm::vec2> Position;
+    glm::vec2 RightScale = {-3,3},LeftScale = {3,3};
     float ZIndex = 70;
 
-    glm::vec2 Initial_Pos = {-1,-1}; //when Using Jumping module, to calculate the moving.
-    glm::vec2 Ladder_Pos = {-2000,-2000};
+    glm::vec2 Initial_Pos = {-1,-1}; //When Using Jumping module, to calculate the moving.
+    glm::vec2 Ladder_Pos = {-2000,-2000}; //Initial ladder collison position.
     LiveState RockmanState;
     PhysicState MoveState;
 
-    std::vector<std::shared_ptr<Collider>> collider;
-    std::shared_ptr<Healthbar> healthbar;
+    std::vector<std::shared_ptr<Collider>> ColliderBox;
 };
 #endif
