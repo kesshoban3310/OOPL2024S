@@ -73,7 +73,7 @@ std::set<Collider::Bound> WhereIsColliding(const Collider &self,
     }
     return box;
 }
-bool IfColliginIsInside(const Collider &self, const Collider &other) {
+bool IfObjectIsOverlaping(const Collider &self, const Collider &other) {
     float Area = self.GetSize().x * self.GetSize().y;
     float OverLapArea = 0;
     float OtherXLeft = other.GetLeft(), OtherXRight = other.GetRight(),

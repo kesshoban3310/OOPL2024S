@@ -16,7 +16,7 @@ public:
     friend bool IsColliding(const Collider &self, const Collider &other);
     friend std::set<Collider::Bound> WhereIsColliding(const Collider &self,
                                                          const Collider &other);
-    friend bool IfColliginIsInside(const Collider &self,
+    friend bool IfObjectIsOverlaping(const Collider &self,
                                   const Collider &other);
     [[nodiscard]] glm::vec2 GetPosition() const;
 
