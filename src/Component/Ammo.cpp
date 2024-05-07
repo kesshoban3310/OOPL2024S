@@ -36,7 +36,7 @@ bool Ammo::Outofrange(glm::vec2 camerapos) { // need to add collision box;
     return Xoverlap || Yoverlap;
 }
 void Ammo::Behavior() {
-    initial_position->x += Util::Time::GetDeltaTimeMs() * speed.x * 0.05;
-    initial_position->y += Util::Time::GetDeltaTimeMs() * speed.y * 0.05;
+    initial_position->x += (Util::Time::GetDeltaTimeMs()/1000) * speed.x;
+    initial_position->y += (Util::Time::GetDeltaTimeMs()/1000) * speed.y;
     ammo->SetPosition(*initial_position);
 }
