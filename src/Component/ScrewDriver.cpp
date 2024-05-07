@@ -77,8 +77,8 @@ void Screwdriver::Shoot() {
     glm::vec2 ammosize = {8 * 3, 8 * 3};
     float theta = 0;
     for (int i = 0; i < 5; i++) {
-        ammospeed = {40 * cos(theta * PI / 180.0f),
-                     40 * sin(theta * PI / 180.0f)};
+        ammospeed = {320 * cos(theta * PI / 180.0f),
+                     320 * sin(theta * PI / 180.0f)};
         std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
             glm::vec2{position->x, position->y}, ammospeed, path, ammosize);
         if (i > 0 && i < 3)
