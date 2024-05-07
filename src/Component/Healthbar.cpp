@@ -2,40 +2,34 @@
 // Created by User on 2024/3/27.
 //
 
-#include "Component/Healthbar.hpp"
+#include "Component/HealthBar.hpp"
 #include "Util/Logger.hpp"
-
-Healthbar::Healthbar(glm::vec2 pos) {
+// "/Picture/Character/Health/blood"
+HealthBar::HealthBar(glm::vec2 pos,std::string path,int pathlength) {
     this->position = {pos.x - 311, pos.y + 201};
-    for (int i = 29; i >= 1; i--) {
-        std::string path = RESOURCE_DIR "/Picture/Character/Health/blood" +
-                           std::to_string(i) + ".png";
-        std::shared_ptr<ImageObject> bar = std::make_shared<ImageObject>(path);
-        bar->SetPosition(position);
-        bar->SetScale({3, 3});
-        bar->SetZIndex(70);
-        bar->SetVisible(false);
-        this->bar.push_back(bar);
+    this->index = pathlength-1;
+    for (int i = pathlength; i >= 1; i--) {
+        std::string healthpath = RESOURCE_DIR + path + std::to_string(i) + ".png";
+        Path.push_back(healthpath);
     }
+    Bar = std::make_shared<ImageObject>(Path[pathlength-1]);
+    Bar->SetPosition(position);
+    Bar->SetScale({3, 3});
+    Bar->SetZIndex(70);
+    Bar->SetVisible(true);
 }
-std::vector<std::shared_ptr<Util::GameObject>> Healthbar::GetChildren() {
-    std::vector<std::shared_ptr<Util::GameObject>> Object;
-    for (auto i : bar) {
-        Object.push_back(i);
-    }
+std::shared_ptr<Util::GameObject> HealthBar::GetChild() {
+    std::shared_ptr<Util::GameObject> Object = Bar;
     return Object;
 }
-void Healthbar::SetVisable(const int &idx) {
-    if (index == -1) {
-        index = idx;
-        bar[idx]->SetVisible(true);
+void HealthBar::SetVisable(const int &idx) {
+    if (idx == -1) {
         return;
     }
-    bar[idx]->SetVisible(true);
-    bar[index]->SetVisible(false);
     index = idx;
+    Bar->SetImage(Path[index]);
 }
-void Healthbar::SetPosition(glm::vec2 cameraposition) {
-    bar[index]->SetPosition({cameraposition.x - 311, cameraposition.y + 201});
+void HealthBar::SetPosition(glm::vec2 cameraposition) {
+    Bar->SetPosition(cameraposition);
     position = cameraposition;
 }
