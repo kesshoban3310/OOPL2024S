@@ -14,7 +14,7 @@ set(SRC_FILES
         Component/Bombombomb.cpp
         Component/Blaster.cpp
         Component/Collider.cpp
-        Component/Healthbar.cpp
+        Component/HealthBar.cpp
         Component/ImageObject.cpp
         Component/OctopusBattery.cpp
         Component/Phase.cpp
@@ -44,7 +44,7 @@ set(INCLUDE_FILES
         Component/Backgroundmap.hpp
         Component/Collider.hpp
         Component/EnemyAttribute.hpp
-        Component/Healthbar.hpp
+        Component/HealthBar.hpp
         Component/ImageObject.hpp
         Component/OctopusBattery.hpp
         Component/Phase.hpp
