@@ -48,7 +48,7 @@ void Blaster::Behavior(glm::vec2 pos) {
             AnimationTimer = Util::Time::GetElapsedTimeMs();
         }
     }
-    else if (!Open) {
+    else {
         if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
             AnimationInterval) {
             if (PathIndex > 0)
@@ -66,7 +66,7 @@ void Blaster::Behavior(glm::vec2 pos) {
     }
 }
 void Blaster::Shoot() {
-    glm::vec2 ammospeed = {10, 0};
+    glm::vec2 ammospeed = {360, 0};
     std::string path =
         RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/blaster/blaster5.png";
     glm::vec2 ammosize = {8 * 3, 8 * 3};
