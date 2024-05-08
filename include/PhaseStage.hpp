@@ -1,14 +1,14 @@
 #ifndef PHASE_STAGE_HPP
 #define PHASE_STAGE_HPP
 
-#include "Component/Phase.hpp"
-#include "Component/SceneManager.hpp"
-#include "Component/TileMap.hpp"
 #include "Component/Blaster.hpp"
-#include "Component/ScrewDriver.hpp"
 #include "Component/Bombombomb.hpp"
 #include "Component/HealthBar.hpp"
 #include "Component/OctopusBattery.hpp"
+#include "Component/Phase.hpp"
+#include "Component/SceneManager.hpp"
+#include "Component/ScrewDriver.hpp"
+#include "Component/TileMap.hpp"
 #include "IncludeComponent.hpp"
 
 class PhaseStage final : public Phase {

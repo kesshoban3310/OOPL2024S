@@ -6,10 +6,11 @@
 
 class HealthBar {
 public:
-    HealthBar(glm::vec2 pos,std::string path,int pathlength);
+    HealthBar(glm::vec2 pos, std::string path, int pathlength);
     void SetVisable(const int &idx);
     void SetPosition(glm::vec2 cameraposition);
     [[nodiscard]] std::shared_ptr<Util::GameObject> GetChild();
+
 private:
     std::shared_ptr<ImageObject> Bar;
     std::vector<std::string> Path;
