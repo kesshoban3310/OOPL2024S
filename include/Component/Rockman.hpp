@@ -1,16 +1,39 @@
 #ifndef ROCKMAN_HPP
 #define ROCKMAN_HPP
 
-#include "Ammo.hpp"
-#include "AnimatedObject.hpp"
-#include "Component/Collider.hpp"
-#include "Component/Healthbar.hpp"
+#include "Component/AnimatedObject.hpp"
 #include "pch.hpp"
+#include "Ammo.hpp"
+#include "Component/Collider.hpp"
+#include "Component/TileBox.hpp"
+#include "Util/Logger.hpp"
 #include <queue>
 
+
 class Rockman {
+private:
+    enum class RockmanCollison{
+        TOP,
+        BOTTOM,
+        UPLEFT,
+        UPRIGHT,
+        DOWNLEFT,
+        DOWNRIGHT,
+        ROCKMANINLADDER,
+        BOTTEMINLADDER,
+    };
 public:
-    enum class State {
+    enum class PhysicState{
+        JUMP,
+        CLIMB,
+        SHOOT,
+        MOVE,
+        FALL,
+        JUMPBEFOREMOVE,
+        JUMPBEFOREFALL,
+        CLIMBFIN,
+    };
+    enum class LiveState{
         Spawn,
         Initial,
         Normal,
@@ -19,7 +42,50 @@ public:
     /**
      * @brief Constructor.
      */
-    Rockman(glm::vec2 pos, State Rockmanstate);
+    Rockman(glm::vec2 pos,LiveState Rockmanstate);
+
+    /**
+     * @brief Rockman's all behavior, move 、 shoot or other.
+     * A helper to choose what Rockman need to do now.
+     */
+    void Behavior(std::vector<std::shared_ptr<TileBox>> collison);
+
+    /**
+     * @brief Set object position.
+     */
+    void SetPosition(glm::vec2 pos);
+
+    /**
+     * @brief Get Rockman's health.
+     * @return Rockman's health.
+     */
+    int GetHealth();
+
+    /**
+     * @brief Get object position.
+     * @return Object's postition.
+     */
+    glm::vec2 GetPosition();
+
+    /**
+     * @brief Set Rockman's health.
+     * @param health for Rockman's health.
+     */
+    void SetHealth(int hp);
+    LiveState GetCurrentState();
+    /**
+     * @brief collect all object in character.
+     * @return All object in character.
+     */
+    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetAllChildren();
+    [[nodiscard]] std::vector<std::shared_ptr<Ammo>> GetAmmo(){
+        auto Object = Magazine;
+        Magazine.clear();
+        return Object;
+    }
+    [[nodiscard]] std::vector<std::shared_ptr<Collider>> GetCollider(){return ColliderBox;}
+
+private:
     /**
      * @brief Initialize the object.
      * Include all Image into this class.
@@ -27,107 +93,107 @@ public:
     void Initialize();
 
     /**
-     * @brief Spawn Rockman to map.
+     * @brief Spawn animation for Rockman into map.
      * Drop it to the point.
      */
 
-    void Spawn();
+    void Spawn(std::vector<std::shared_ptr<TileBox>> collison);
 
     /**
-     * @brief Rockman's all behavior, move 、 shoot or other.
-     * A helper to choose what Rockman need to do now.
+     * @brief Rockman's all moving action.
      */
-    void behavior();
-
-    /**
-     * @brief Rockman's all move.
-     */
-    void move();
+    void PhysicEngine(std::set<Rockman::RockmanCollison> collison,std::vector<std::shared_ptr<TileBox>> collisonbox);
 
     /**
      * @brief Rockman's shoot animation.
      */
-    void shoot();
+    void Shoot();
+
     /**
      * @brief Rockman's death animation.
      */
-    void death();
-    /**
-     * @brief Get Rockman's health.
-     * @return Rockman's health.
-     */
-    int Gethealth();
-    /**
-     * @brief Set Rockman's health.
-     * @param hp for Rockman's health.
-     */
-    void Sethealth(int hp);
-
-    /**
-     * @brief Set object position.
-     */
-    void Setposition(glm::vec2 pos);
-
-    /**
-     * @brief Get object position.
-     * @return Object's postition.
-     */
-    glm::vec2 Getposition();
+    void Death();
 
     /**
      * @brief Set Object different movement.
      * @param idx for the character's index.
      */
-    void Setvisable(const int &idx);
+    void SetVisable(const int &idx,bool isleft);
 
-    State Getcurrentstate();
     /**
-     * @brief collect all object in character.
-     * @return All object in character.
+     * @brief Set Object different movement.
+     * @param idx for the character's index.
+     * @param visable for shoot object can see.
      */
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>>
-    GetAllchildren();
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>>
-    Getchildren(State state);
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>>
-    Gethealthbar() {
-        return healthbar->GetChildren();
-    };
-    [[nodiscard]] std::vector<std::shared_ptr<Ammo>> Getammo() {
-        auto Object = magazine;
-        magazine.clear();
-        return Object;
-    }
-    [[nodiscard]] std::shared_ptr<Healthbar> GetHealthbar() {
-        return healthbar;
-    } // Need 封裝
-    [[nodiscard]] std::vector<std::shared_ptr<Collider>> GetCollider() {
-        return collider;
-    }
+    void SetShootVisable(const int &idx, bool visable);
 
-private:
-    std::vector<std::shared_ptr<AnimatedObject>> character;
-    std::vector<std::shared_ptr<AnimatedObject>> character_shoot;
-    std::vector<std::shared_ptr<AnimatedObject>> character_death;
-    std::vector<std::shared_ptr<ImageObject>> character_spawn;
-    std::vector<std::shared_ptr<Ammo>> magazine;
+    //TODO: Re-format GetCollison when Collider is re-format.
+    /**
+     * @brief Judge where Rockman is collide.
+     * @param collison for foreobject.
+     * @return Rockman collide state.
+     */
+    std::set<RockmanCollison> GetCollison(std::vector<std::shared_ptr<TileBox>> collison);
+
+    /**
+     * @brief Rockman's Jumping Animation.
+     * @param collison for foreobject.
+     */
+    void Jump(std::vector<std::shared_ptr<TileBox>> collison);
+    unsigned long jumptimer = 0;
+
+    /**
+     * @brief Rockman's Falling Animation.
+     * @param collison for foreobject.
+     */
+    void Fall(std::vector<std::shared_ptr<TileBox>> collison);
+    unsigned long falltimer = 0;
+
+    /**
+     * @brief Rockman's Climbing Animation.
+     * @param collison for foreobject.
+     */
+    void Climb(std::vector<std::shared_ptr<TileBox>> collison);
+
+    /**
+     * @brief Print LOG_DEBUG for rockman's collison state.
+     * @param collidorstate for a set storing Rockman's collison state.
+     * @param locate for where the function call or other message.
+     */
+    void DebugMessageCollidor(std::set<Rockman::RockmanCollison> collidorstate,std::string locate);
+
+    /**
+     * @brief Print LOG_DEBUG for rockman's physic state.
+     * @param physicState for a variable storing Rockman's physic state.
+     */
+    void DebugMessagePhysic(Rockman::PhysicState physicState);
+
+    std::shared_ptr<AnimatedObject> CharacterAnimate;
+    std::shared_ptr<ImageObject> CharacterImage;
+
+    std::vector<std::vector<std::string>> CharacterAnimatePath;
+    std::vector<std::string> CharacterShootPath;
+    std::vector<std::string> CharacterImagePath;
+
+    std::vector<std::shared_ptr<AnimatedObject>> CharacterDeath;
+    std::vector<std::shared_ptr<ImageObject>> CharacterSpawn;
+
+    std::vector<std::shared_ptr<Ammo>> Magazine;
+
     // timer to make animation smoothly.
-    unsigned long movetimer = -1, shoottimer = -1;
-    int health = 28;
-    int visable = 0;
+    unsigned long MoveTimer = 0,ShootTimer = 0,ClimbTimer = 0;
+    int Health = 28;
+    int Visable = 0;
 
-    std::shared_ptr<glm::vec2> position;
-    glm::vec2 scale = {3, 3}, inversescale = {-3, 3};
+    std::shared_ptr<glm::vec2> Position;
+    glm::vec2 RightScale = {-3,3},LeftScale = {3,3};
     float ZIndex = 70;
 
-    glm::vec2 initial_pos = {
-        -1, -1}; // when Using Jumping module, to calculate the moving.
-    State Rockmanstate;
-    void Setshootvisable(const int &idx, bool visable);
-    bool is_jumping = false, is_falling = false;
-    double speed = 20.0, acclerator = 10.0, power = 175.0;
-    int Jump_bar = -1;
-    std::vector<std::shared_ptr<Collider>> collider;
-    std::shared_ptr<Healthbar> healthbar;
+    glm::vec2 Initial_Pos = {-1,-1}; //When Using Jumping module, to calculate the moving.
+    glm::vec2 Ladder_Pos = {-2000,-2000}; //Initial ladder collison position.
+    LiveState RockmanState;
+    PhysicState MoveState;
+
+    std::vector<std::shared_ptr<Collider>> ColliderBox;
 };
 #endif

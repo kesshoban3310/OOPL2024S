@@ -2,6 +2,7 @@
 #define BACK_GROUND_MAP_HPP
 
 #include "Component/Collider.hpp"
+#include "Component/TileBox.hpp"
 #include "Component/TileMap.hpp"
 #include "ImageObject.hpp"
 #include "Util/GameObject.hpp"
@@ -37,16 +38,14 @@ public:
     GetChildren() const {
         std::vector<std::shared_ptr<Util::GameObject>> ans;
         for (auto i : Map)
-            ans.push_back(i);
+            ans.push_back(i->Getchild());
         return ans;
     }
-    void SetObjectCollisonBox();
-    std::vector<std::shared_ptr<Collider>> GetCollisonBox(glm::vec2 camerapos);
+    std::vector<std::shared_ptr<TileBox>> GetCollisonBox(glm::vec2 camerapos);
 
 private:
-    std::vector<std::shared_ptr<ImageObject>>
-        Map; // Beta Version. Change After the Map Made.
-    std::vector<std::shared_ptr<Collider>> MapCollisonBox;
+    std::vector<std::shared_ptr<TileBox>>
+        Map;           // Beta Version. Change After the Map Made.
     std::string stage; // Initial Stage to change Image;
 };
 

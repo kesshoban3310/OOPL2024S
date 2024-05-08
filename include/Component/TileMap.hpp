@@ -1,6 +1,7 @@
 #ifndef TILE_MAP_HPP
 #define TILE_MAP_HPP
 
+#include "Component/TileBox.hpp"
 #include "ImageObject.hpp"
 #include "Util/GameObject.hpp"
 #include "pch.hpp"
@@ -32,7 +33,7 @@ inline glm::vec2 GetTilePosition(const int &x, const int &y);
  * @param stageName the name of the stage, used to find the stage
  * @return the vector of GameObjects in the background
  */
-std::vector<std::shared_ptr<ImageObject>>
+std::vector<std::shared_ptr<TileBox>>
 GetBackgroundObjects(const std::string &stageName);
 
 /**
@@ -40,7 +41,7 @@ GetBackgroundObjects(const std::string &stageName);
  * @param stageName the name of the stage, used to find the stage
  * @return the vector of GameObjects in the foreground
  */
-std::vector<std::shared_ptr<ImageObject>>
+std::vector<std::shared_ptr<TileBox>>
 GetForegroundObjects(const std::string &stageName);
 
 } // namespace TileMap

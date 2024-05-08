@@ -9,7 +9,7 @@ public:
     Scorebar(glm::vec2 pos);
     void AddScore(int point);
     void Show(glm::vec2 pos);
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> Getchildren() {
+    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() {
         return scoreObject;
     }
 

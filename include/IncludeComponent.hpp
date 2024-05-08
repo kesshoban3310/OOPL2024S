@@ -7,7 +7,7 @@
 
 #include "Component/Backgroundmap.hpp"
 #include "Component/Collider.hpp"
-#include "Component/Healthbar.hpp"
+#include "Component/HealthBar.hpp"
 #include "Component/ImageObject.hpp"
 #include "Component/Rockman.hpp"
 

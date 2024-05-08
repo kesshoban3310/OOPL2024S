@@ -4,15 +4,16 @@
 #include "ImageObject.hpp"
 #include "pch.hpp"
 
-class Healthbar {
+class HealthBar {
 public:
-    Healthbar(glm::vec2 pos);
+    HealthBar(glm::vec2 pos, std::string path, int pathlength);
     void SetVisable(const int &idx);
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren();
     void SetPosition(glm::vec2 cameraposition);
+    [[nodiscard]] std::shared_ptr<Util::GameObject> GetChild();
 
 private:
-    std::vector<std::shared_ptr<ImageObject>> bar;
+    std::shared_ptr<ImageObject> Bar;
+    std::vector<std::string> Path;
     glm::vec2 position;
     int index = -1;
 };
