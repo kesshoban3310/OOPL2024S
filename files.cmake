@@ -25,6 +25,8 @@ set(SRC_FILES
         Component/TestBox.cpp
         Component/TileMap.cpp
         Component/TileBox.cpp
+        Component/CollideEventManager.cpp
+        Component/Item.cpp
 )
 
 set(INCLUDE_FILES
@@ -55,6 +57,8 @@ set(INCLUDE_FILES
         Component/TestBox.hpp
         Component/TileMap.hpp
         Component/TileBox.hpp
+        Component/CollideEventManager.hpp
+        Component/Item.hpp
 
         #other
         IncludeComponent.hpp
