@@ -175,7 +175,7 @@ void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
                     ColliderBox.push_back(std::make_shared<Collider>(
                         Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 18}));
                     ColliderBox.push_back(std::make_shared<Collider>(
-                        Position, glm::vec2{20 * 3, 12 * 3},glm::vec2{0, -18}));
+                        Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -18}));
                     RockmanState = LiveState::Normal;
                     break;
                 }
