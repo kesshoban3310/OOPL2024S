@@ -479,7 +479,7 @@ void Rockman::Shoot() {
         std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
             ammo_position, direction,
             RESOURCE_DIR "/Picture/Character/Shooting/Ammo.png",
-            glm::vec2{8 * 3, 8 * 3},Ammo::Type::ROCKMAN);
+            glm::vec2{8 * 3, 8 * 3});
         Magazine.push_back(ammo);
         ShootTimer = Util::Time::GetElapsedTimeMs();
         return;
