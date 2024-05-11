@@ -168,10 +168,10 @@ void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
                     CharacterAnimate->SetPosition(*Position);
                     CharacterSpawn[2]->SetVisible(false);
                     ColliderBox.clear();
-                    ColliderBox[0] = std::make_shared<Collider>(
-                        Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 18});
-                    ColliderBox[1] = std::make_shared<Collider>(
-                        Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -18});
+                    ColliderBox.push_back(std::make_shared<Collider>(
+                        Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 18}));
+                    ColliderBox.push_back(std::make_shared<Collider>(
+                        Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -18}));
                     RockmanState = LiveState::Normal;
                     break;
                 }
@@ -479,7 +479,7 @@ void Rockman::Shoot() {
         std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
             ammo_position, direction,
             RESOURCE_DIR "/Picture/Character/Shooting/Ammo.png",
-            glm::vec2{8 * 3, 8 * 3});
+            glm::vec2{8 * 3, 8 * 3},Ammo::Type::ROCKMAN);
         Magazine.push_back(ammo);
         ShootTimer = Util::Time::GetElapsedTimeMs();
         return;
