@@ -80,7 +80,7 @@ void Screwdriver::Shoot() {
         ammospeed = {320 * cos(theta * PI / 180.0f),
                      320 * sin(theta * PI / 180.0f)};
         std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
-            glm::vec2{position->x, position->y}, ammospeed, path, ammosize);
+            glm::vec2{position->x, position->y}, ammospeed, path, ammosize, AmmoType::ENEMY);
         if (i > 0 && i < 3)
             theta += 30;
         else

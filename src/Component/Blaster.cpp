@@ -71,6 +71,6 @@ void Blaster::Shoot() {
         RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/blaster/blaster5.png";
     glm::vec2 ammosize = {8 * 3, 8 * 3};
     std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
-        glm::vec2{position->x + 24, position->y}, ammospeed, path, ammosize);
+        glm::vec2{position->x + 24, position->y}, ammospeed, path, ammosize, AmmoType::ENEMY);
     magazine.push_back(ammo);
 }
