@@ -1,6 +1,7 @@
 #include "PhaseStage.hpp"
 #include "Util/Input.hpp"
 #include "Util/Time.hpp"
+#include "algorithm"
 
 void PhaseStage::Init(App *app) {
     // Load the map
@@ -19,6 +20,10 @@ void PhaseStage::Init(App *app) {
     m_Testbox = std::make_shared<TestBox>(glm::vec2{360, -3408}, glm::vec2{3, 3});
     m_BackgroundObjects->SetImagetoBackgroundObject();
     m_ForegroundObjects->SetImagetoForegroundObject();
+
+    // Load Magazine
+    m_Magazine = std::make_shared<std::queue<std::shared_ptr<Ammo>>>();
+
     // Load Blaster
     for (int i = 0; i < 4; i++) {
         int timer = 66;
@@ -101,6 +106,10 @@ void PhaseStage::Init(App *app) {
         app->GetRoot()->AddChild(octopusbattery->GetChild());
     }
 
+    // Set the collide event manager
+    m_CollideEventManager.SetRockman(m_Rockman);
+    m_CollideEventManager.SetMagazine(m_Magazine);
+
     // Add the root
     m_Rockman->Behavior(m_ForegroundObjects->GetCollisonBox(glm::vec2{360, -3408}));
     m_Scorebar->Show({360, -3408});
@@ -135,9 +144,10 @@ void PhaseStage::Update(App *app) {
     //get some info
     glm::vec2 CameraPos = app->GetCameraPosition();
 
-    // show healthbar and scorebar
+    // set healthbar and scorebar
     m_Scorebar->Show(CameraPos);
     m_RockmanHealthBar->SetPosition(glm::vec2 {CameraPos.x-311,CameraPos.y+201});
+    m_RockmanHealthBar->SetVisable(std::max(m_Rockman->GetHealth(), 0));
 
     // if changing scene, return
     if (m_SceneManager.IsChangingScene()) {
@@ -160,6 +170,7 @@ void PhaseStage::Update(App *app) {
         m_OctopusBattery[i]->Behavior(CameraPos);
     }
 
+    m_CollideEventManager.Update();
     ReloadMagazine(app);
 
     //m_Testbox->Move();
@@ -202,32 +213,32 @@ void PhaseStage::ReloadMagazine(App *app) {
     glm::vec2 CameraPosition = app->GetCameraPosition();
     auto magazine = m_Rockman->GetAmmo();
     for (auto Ammo : magazine) {
-        m_Magazine.push(Ammo);
+        m_Magazine->push(Ammo);
         app->GetRoot()->AddChild(Ammo->GetChild());
     }
     for (int i = 0; i < 4; i++) { // Blaster Magazine
         magazine = m_Blaster[i]->Getammo();
         for (auto Ammo : magazine) {
-            m_Magazine.push(Ammo);
+            m_Magazine->push(Ammo);
             app->GetRoot()->AddChild(Ammo->GetChild());
         }
     }
     for (int i = 0; i < 3; i++) { // Screwdriver Magazine
         magazine = m_Screwdriver[i]->Getammo();
         for (auto Ammo : magazine) {
-            m_Magazine.push(Ammo);
+            m_Magazine->push(Ammo);
             app->GetRoot()->AddChild(Ammo->GetChild());
         }
     }
-    int magazine_size = m_Magazine.size();
+    int magazine_size = m_Magazine->size();
     for (int i = 0; i < magazine_size; i++) {
-        auto Ammo = m_Magazine.front();
-        m_Magazine.pop();
+        auto Ammo = m_Magazine->front();
+        m_Magazine->pop();
         Ammo->Behavior();
-        if (Ammo->Outofrange(CameraPosition)) {
+        if (Ammo->Outofrange(CameraPosition) || Ammo->IsMarkedForRemoval()) {
             app->GetRoot()->RemoveChild(Ammo->GetChild());
             continue;
         }
-        m_Magazine.push(Ammo);
+        m_Magazine->push(Ammo);
     }
 }
