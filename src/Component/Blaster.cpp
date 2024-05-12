@@ -4,30 +4,19 @@
 #include "Component/Blaster.hpp"
 #include "Util/Time.hpp"
 
-Blaster::Blaster(glm::vec2 pos, unsigned long animationinterval,
-                 bool increase) {
-    this->position = std::make_shared<glm::vec2>(pos);
-    this->Collibox = std::make_shared<Collider>(
-        this->position, glm::vec2{16 * 3, 16 * 3}, glm::vec2{0, 0});
+Blaster::Blaster(glm::vec2 pos, glm::vec2 collidersize, glm::vec2 scale,
+                 unsigned long animationinterval, bool increase,
+                 std::vector<std::string> path, std::string ammopath,
+                 int health, bool visable, Enemy::HurtState hurtstate,
+                 Enemy::LifeState lifestate)
+    : Enemy(pos, path[0], health, visable, collidersize, hurtstate, lifestate,
+            scale) {
     this->AnimationInterval = animationinterval;
     this->Open = increase;
-    this->AmmoPath =
-        RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/blaster/blaster5.png";
-    Initialize();
+    this->AmmoPath = ammopath;
+    this->Path = path;
 }
-void Blaster::Initialize() {
-    for (int i = 1; i <= 4; i++) {
-        std::string path = RESOURCE_DIR
-                           "/Picture/Enemies/Bomb Man Stage/blaster/blaster" +
-                           std::to_string(i) + ".png";
-        ObjectPath.push_back(path);
-    }
-    Object = std::make_shared<ImageObject>(ObjectPath[0]);
-    Object->SetScale({-3, 3});
-    Object->SetPosition(*this->position);
-    Object->SetZIndex(70);
-    Object->SetVisible(true);
-}
+
 void Blaster::Behavior(glm::vec2 pos) {
     if (Open) {
         if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
@@ -44,7 +33,7 @@ void Blaster::Behavior(glm::vec2 pos) {
                     AnimationCount = 0;
                 }
             }
-            Object->SetImage(ObjectPath[PathIndex]);
+            Object->SetImage(Path[PathIndex]);
             AnimationTimer = Util::Time::GetElapsedTimeMs();
         }
     }
@@ -60,17 +49,16 @@ void Blaster::Behavior(glm::vec2 pos) {
                     AnimationCount = 0;
                 }
             }
-            Object->SetImage(ObjectPath[PathIndex]);
+            Object->SetImage(Path[PathIndex]);
             AnimationTimer = Util::Time::GetElapsedTimeMs();
         }
     }
 }
 void Blaster::Shoot() {
     glm::vec2 ammospeed = {360, 0};
-    std::string path =
-        RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/blaster/blaster5.png";
     glm::vec2 ammosize = {8 * 3, 8 * 3};
-    std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
-        glm::vec2{position->x + 24, position->y}, ammospeed, path, ammosize);
+    std::shared_ptr<Ammo> ammo =
+        std::make_shared<Ammo>(glm::vec2{Position->x + 24, Position->y},
+                               ammospeed, AmmoPath, ammosize, AmmoType::ENEMY);
     magazine.push_back(ammo);
 }

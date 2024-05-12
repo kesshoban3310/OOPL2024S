@@ -1,44 +1,41 @@
 #ifndef BOMBOMBOMB_HPP
 #define BOMBOMBOMB_HPP
 
-#include "ImageObject.hpp"
-#include "Component/EnemyAttribute.hpp"
 #include "Component/Ammo.hpp"
 #include "Component/Collider.hpp"
-#include "glm/fwd.hpp"
+#include "Component/EnemyAttribute.hpp"
+#include "ImageObject.hpp"
 #include "Util/Time.hpp"
-#include <vector>
+#include "glm/fwd.hpp"
+#include <cmath>
 #include <memory>
 #include <string>
-#include <cmath>
+#include <vector>
 
-class Bombombomb:Enemy,Physic{
+class Bombombomb : public Enemy, Physic {
 public:
-    Bombombomb(glm::vec2 pos,glm::vec2 speed,glm::vec2 ammospeed,glm::vec2 scale,std::string path,std::string ammopath);
-    void Initialize() override;
+    Bombombomb(glm::vec2 pos, glm::vec2 speed, glm::vec2 ammospeed,
+               glm::vec2 scale, glm::vec2 colldiersize, std::string path,
+               std::string ammopath, int health, bool visable,
+               Enemy::HurtState hurtState);
     void Behavior(glm::vec2 position) override;
     void PhysicEngine() override;
     void Split();
     void SmallBombMove();
-    [[nodiscard]] std::shared_ptr<Util::GameObject> GetChild() {return Object;}
-    [[nodiscard]] glm::vec2 GetPosition(){return *Position;}
-    [[nodiscard]] Collider GetCollider(){return *Collisonbox;}
+
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetAmmos() {
         std::vector<std::shared_ptr<Util::GameObject>> SmallBombObject;
-        for(auto i:SmallBomb)
+        for (auto i : SmallBomb)
             SmallBombObject.push_back(i);
         return SmallBombObject;
     }
+
 private:
-    std::shared_ptr<ImageObject> Object;
     std::vector<std::shared_ptr<ImageObject>> SmallBomb;
-    std::shared_ptr<Collider> Collisonbox;
-    std::shared_ptr<glm::vec2> Position;
     std::string Path;
     std::string AmmoPath;
-    glm::vec2 InitialPosition,FinalPosition;
-    glm::vec2 Scale;
-    glm::vec2 Speed,AmmoSpeed;
+    glm::vec2 InitialPosition, FinalPosition;
+    glm::vec2 Speed, AmmoSpeed;
     float WaitingCounter = 0;
     bool BeSmallBomb;
 };
