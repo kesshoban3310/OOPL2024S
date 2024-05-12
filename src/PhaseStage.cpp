@@ -1,6 +1,7 @@
 #include "PhaseStage.hpp"
 #include "Util/Input.hpp"
 #include "Util/Time.hpp"
+#include "algorithm"
 
 void PhaseStage::Init(App *app) {
     // Load the map
@@ -19,18 +20,35 @@ void PhaseStage::Init(App *app) {
     m_Testbox = std::make_shared<TestBox>(glm::vec2{360, -3408}, glm::vec2{3, 3});
     m_BackgroundObjects->SetImagetoBackgroundObject();
     m_ForegroundObjects->SetImagetoForegroundObject();
+
+    // Load Magazine
+    m_Magazine = std::make_shared<std::queue<std::shared_ptr<Ammo>>>();
+
     // Load Blaster
+    std::vector<std::string> BlasterPath;
+    for(int i=1;i<=4;i++){
+        std::string path = RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/blaster/blaster" + std::to_string(i) + ".png";
+        BlasterPath.push_back(path);
+    }
+    std::string BlasterAmmoPath = RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/blaster/blaster5.png";
     for (int i = 0; i < 4; i++) {
         int timer = 66;
         std::shared_ptr<Blaster> blaster = std::make_shared<Blaster>(
-            glm::vec2{4894, -2832 + 96 * i}, timer, i % 2);
+            glm::vec2{4894, -2832 + 96 * i},glm::vec2 {16*3,16*3},glm::vec2{-3,3}, timer, i % 2,BlasterPath,BlasterAmmoPath,1,true,Enemy::HurtState::INVINCIBLE,Enemy::LifeState::LIFE);
         m_Blaster.push_back(blaster);
         app->GetRoot()->AddChild(blaster->GetChild());
     }
     // Load Screwdriver
+    std::vector<std::string> ScrewDriverPath;
+    for(int i=1;i<=5;i++){
+        std::string path = RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/ScrewDriver/ScrewDriver" + std::to_string(i) + ".png";
+        ScrewDriverPath.push_back(path);
+    }
+    std::string ScrewDriverAmmoPath = RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/ScrewDriver/ScrewDriver6.png";
+
     for (int i = 0; i < 3; i++) {
         std::shared_ptr<Screwdriver> screwdriver =
-            std::make_shared<Screwdriver>(glm::vec2{4295 + 301.5 * i, -3602});
+            std::make_shared<Screwdriver>(glm::vec2{4295 + 301.5 * i, -3602},glm::vec2 {3,3},glm::vec2 {16*3,16*3},ScrewDriverPath,ScrewDriverAmmoPath,Enemy::LifeState::LIFE,Enemy::HurtState::COWARDLY,1,true);
         m_Screwdriver.push_back(screwdriver);
         app->GetRoot()->AddChild(screwdriver->GetChild());
     }
@@ -38,68 +56,85 @@ void PhaseStage::Init(App *app) {
     for (int i = 0; i < 4; i++) {
         std::shared_ptr<Bombombomb> bombombomb = std::make_shared<Bombombomb>(
             glm::vec2{2515 + 385 * i, -3950}, glm::vec2{0, 12},
-            glm::vec2{16, 16}, glm::vec2{3, 3},
-            "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb1.png",
-            "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb2.png");
+            glm::vec2{16, 16}, glm::vec2{3, 3},glm::vec2 {16*3,16*3},
+            RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb1.png",
+            RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb2.png",
+            1,true,Enemy::HurtState::COWARDLY);
         m_Bombombomb.push_back(bombombomb);
         app->GetRoot()->AddChild(bombombomb->GetChild());
-        app->GetRoot()->AddChildren(bombombomb->GetAmmos());
     }
     //Load OctopusBattery
-    glm::vec2 OctopusBatteryIniPos = glm::vec2{12576,-959};
-    glm::vec2 OctopusBatteryFinPos = glm::vec2{12720,-959};
-    OctopusBattery::OctopusState OctopusIniState = OctopusBattery::OctopusState::SLEEP;
-    for(int i=0;i<4;i++){
-        if(i%2)
+    glm::vec2 OctopusBatteryIniPos = glm::vec2{12576, -959};
+    glm::vec2 OctopusBatteryFinPos = glm::vec2{12720, -959};
+    OctopusBattery::OctopusState OctopusIniState =
+        OctopusBattery::OctopusState::SLEEP;
+    for (int i = 0; i < 4; i++) {
+        if (i % 2)
             OctopusIniState = OctopusBattery::OctopusState::BLEAZY;
         else
             OctopusIniState = OctopusBattery::OctopusState::SLEEP;
-        std::shared_ptr<OctopusBattery> octopusbattery = std::make_shared<OctopusBattery>(
-            OctopusBatteryIniPos,OctopusBatteryFinPos, glm::vec2{16, 0}, glm::vec2{3, 3},
-            std::vector<std::string>{
-                RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery1.png",
-                RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery2.png",
-                RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery3.png"},
-            OctopusIniState);
-        if(i == 0){
-            OctopusBatteryIniPos = glm::vec2{12576 ,-1149};
-            OctopusBatteryFinPos = glm::vec2{12720 ,-1149};
+        std::shared_ptr<OctopusBattery> octopusbattery =
+            std::make_shared<OctopusBattery>(
+                OctopusBatteryIniPos,
+                OctopusBatteryFinPos,
+                glm::vec2 {16*3,16*3},
+                glm::vec2{16, 0},
+                glm::vec2{3, 3},
+                std::vector<std::string>{
+                    RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery1.png",
+                    RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery2.png",
+                    RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery3.png"},
+                1,true,
+                OctopusIniState,Enemy::HurtState::COWARDLY);
+        if (i == 0) {
+            OctopusBatteryIniPos = glm::vec2{12576, -1149};
+            OctopusBatteryFinPos = glm::vec2{12720, -1149};
         }
-        else{
-            OctopusBatteryIniPos.y-=96;
-            OctopusBatteryFinPos.y-=96;
+        else {
+            OctopusBatteryIniPos.y -= 96;
+            OctopusBatteryFinPos.y -= 96;
         }
-        std::swap(OctopusBatteryIniPos,OctopusBatteryFinPos);
+        std::swap(OctopusBatteryIniPos, OctopusBatteryFinPos);
         m_OctopusBattery.push_back(octopusbattery);
         app->GetRoot()->AddChild(octopusbattery->GetChild());
     }
-    OctopusBatteryIniPos = glm::vec2{12576 ,-1728};
-    OctopusBatteryFinPos = glm::vec2{12720 ,-1728};
+    OctopusBatteryIniPos = glm::vec2{12576, -1728};
+    OctopusBatteryFinPos = glm::vec2{12720, -1728};
 
-    for(int i=0;i<4;i++){
-        if(i%2)
+    for (int i = 0; i < 4; i++) {
+        if (i % 2)
             OctopusIniState = OctopusBattery::OctopusState::BLEAZY;
         else
             OctopusIniState = OctopusBattery::OctopusState::SLEEP;
-        std::shared_ptr<OctopusBattery> octopusbattery = std::make_shared<OctopusBattery>(
-            OctopusBatteryIniPos,OctopusBatteryFinPos, glm::vec2{16, 0}, glm::vec2{3, 3},
-            std::vector<std::string>{
-                RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery1.png",
-                RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery2.png",
-                RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery3.png"},
-            OctopusIniState);
-        if(i == 0){
-            OctopusBatteryIniPos = glm::vec2{12576 ,-1918};
-            OctopusBatteryFinPos = glm::vec2{12720 ,-1918};
+        std::shared_ptr<OctopusBattery> octopusbattery =
+            std::make_shared<OctopusBattery>(
+                OctopusBatteryIniPos,
+                OctopusBatteryFinPos,
+                glm::vec2 {16*3,16*3},
+                glm::vec2{16, 0},
+                glm::vec2{3, 3},
+                std::vector<std::string>{
+                    RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery1.png",
+                    RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery2.png",
+                    RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/OctopusBattery/OctopusBattery3.png"},
+                1,true,
+                OctopusIniState,Enemy::HurtState::COWARDLY);
+        if (i == 0) {
+            OctopusBatteryIniPos = glm::vec2{12576, -1918};
+            OctopusBatteryFinPos = glm::vec2{12720, -1918};
         }
-        else{
-            OctopusBatteryIniPos.y-=96;
-            OctopusBatteryFinPos.y-=96;
+        else {
+            OctopusBatteryIniPos.y -= 96;
+            OctopusBatteryFinPos.y -= 96;
         }
-        std::swap(OctopusBatteryIniPos,OctopusBatteryFinPos);
+        std::swap(OctopusBatteryIniPos, OctopusBatteryFinPos);
         m_OctopusBattery.push_back(octopusbattery);
         app->GetRoot()->AddChild(octopusbattery->GetChild());
     }
+
+    // Set the collide event manager
+    m_CollideEventManager.SetRockman(m_Rockman);
+    m_CollideEventManager.SetMagazine(m_Magazine);
 
     // Add the root
     m_Rockman->Behavior(m_ForegroundObjects->GetCollisonBox(glm::vec2{360, -3408}));
@@ -135,9 +170,10 @@ void PhaseStage::Update(App *app) {
     //get some info
     glm::vec2 CameraPos = app->GetCameraPosition();
 
-    // show healthbar and scorebar
+    // set healthbar and scorebar
     m_Scorebar->Show(CameraPos);
     m_RockmanHealthBar->SetPosition(glm::vec2 {CameraPos.x-311,CameraPos.y+201});
+    m_RockmanHealthBar->SetVisable(std::max(m_Rockman->GetHealth(), 0));
 
     // if changing scene, return
     if (m_SceneManager.IsChangingScene()) {
@@ -160,6 +196,7 @@ void PhaseStage::Update(App *app) {
         m_OctopusBattery[i]->Behavior(CameraPos);
     }
 
+    m_CollideEventManager.Update();
     ReloadMagazine(app);
 
     //m_Testbox->Move();
@@ -202,32 +239,32 @@ void PhaseStage::ReloadMagazine(App *app) {
     glm::vec2 CameraPosition = app->GetCameraPosition();
     auto magazine = m_Rockman->GetAmmo();
     for (auto Ammo : magazine) {
-        m_Magazine.push(Ammo);
+        m_Magazine->push(Ammo);
         app->GetRoot()->AddChild(Ammo->GetChild());
     }
     for (int i = 0; i < 4; i++) { // Blaster Magazine
         magazine = m_Blaster[i]->Getammo();
         for (auto Ammo : magazine) {
-            m_Magazine.push(Ammo);
+            m_Magazine->push(Ammo);
             app->GetRoot()->AddChild(Ammo->GetChild());
         }
     }
     for (int i = 0; i < 3; i++) { // Screwdriver Magazine
-        magazine = m_Screwdriver[i]->Getammo();
+        magazine = m_Screwdriver[i]->GetAmmo();
         for (auto Ammo : magazine) {
-            m_Magazine.push(Ammo);
+            m_Magazine->push(Ammo);
             app->GetRoot()->AddChild(Ammo->GetChild());
         }
     }
-    int magazine_size = m_Magazine.size();
+    int magazine_size = m_Magazine->size();
     for (int i = 0; i < magazine_size; i++) {
-        auto Ammo = m_Magazine.front();
-        m_Magazine.pop();
+        auto Ammo = m_Magazine->front();
+        m_Magazine->pop();
         Ammo->Behavior();
-        if (Ammo->Outofrange(CameraPosition)) {
+        if (Ammo->Outofrange(CameraPosition) || Ammo->IsMarkedForRemoval()) {
             app->GetRoot()->RemoveChild(Ammo->GetChild());
             continue;
         }
-        m_Magazine.push(Ammo);
+        m_Magazine->push(Ammo);
     }
 }
