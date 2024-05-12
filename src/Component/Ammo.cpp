@@ -6,9 +6,10 @@
 #include "Util/Time.hpp"
 
 Ammo::Ammo(glm::vec2 position, glm::vec2 speed, std::string imagepath,
-           glm::vec2 ammosize) {
+           glm::vec2 ammosize, AmmoType type) {
     this->path = imagepath;
     this->speed = speed;
+    this->type = type;
     ammo = std::make_shared<ImageObject>(path);
     initial_position = std::make_shared<glm::vec2>(position);
     ammo->SetPosition(*initial_position);
@@ -36,7 +37,7 @@ bool Ammo::Outofrange(glm::vec2 camerapos) { // need to add collision box;
     return Xoverlap || Yoverlap;
 }
 void Ammo::Behavior() {
-    initial_position->x += (Util::Time::GetDeltaTimeMs()/1000) * speed.x;
-    initial_position->y += (Util::Time::GetDeltaTimeMs()/1000) * speed.y;
+    initial_position->x += (Util::Time::GetDeltaTimeMs() / 1000) * speed.x;
+    initial_position->y += (Util::Time::GetDeltaTimeMs() / 1000) * speed.y;
     ammo->SetPosition(*initial_position);
 }
