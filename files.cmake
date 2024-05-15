@@ -14,6 +14,7 @@ set(SRC_FILES
         Component/Bombombomb.cpp
         Component/Blaster.cpp
         Component/Collider.cpp
+        Component/EnemyAttribute.cpp
         Component/HealthBar.cpp
         Component/ImageObject.cpp
         Component/OctopusBattery.cpp
