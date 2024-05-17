@@ -41,11 +41,10 @@ public:
             ans.push_back(i->Getchild());
         return ans;
     }
-    std::vector<std::shared_ptr<TileBox>> GetCollisonBox(glm::vec2 camerapos);
+    std::vector<std::shared_ptr<TileBox>> GetTileBox();
 
 private:
-    std::vector<std::shared_ptr<TileBox>>
-        Map;           // Beta Version. Change After the Map Made.
+    std::vector<std::shared_ptr<TileBox>> Map; // Beta Version. Change After the Map Made.
     std::string stage; // Initial Stage to change Image;
 };
 
