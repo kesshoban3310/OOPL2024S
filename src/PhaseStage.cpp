@@ -16,11 +16,12 @@ void PhaseStage::Init(App *app) {
 
     // Load Scorebar
     m_Scorebar = std::make_shared<Scorebar>(glm::vec2{360, -3408});
-    // Lode Testbox
+    // Load Testbox
     m_Testbox = std::make_shared<TestBox>(glm::vec2{360, -3408}, glm::vec2{3, 3});
+    //Load Map
     m_BackgroundObjects->SetImagetoBackgroundObject();
     m_ForegroundObjects->SetImagetoForegroundObject();
-
+    m_ForeObjectTileBox = std::make_shared<std::vector<std::shared_ptr<TileBox>>>( m_ForegroundObjects->GetTileBox() );
     // Load Magazine
     m_Magazine = std::make_shared<std::queue<std::shared_ptr<Ammo>>>();
 
@@ -137,7 +138,7 @@ void PhaseStage::Init(App *app) {
     m_CollideEventManager.SetMagazine(m_Magazine);
 
     // Add the root
-    m_Rockman->Behavior(m_ForegroundObjects->GetCollisonBox(glm::vec2{360, -3408}));
+    m_Rockman->Behavior(*m_ForeObjectTileBox);
     m_Scorebar->Show({360, -3408});
     app->GetRoot()->AddChild(m_Testbox->Getchild());
     app->GetRoot()->AddChildren(m_BackgroundObjects->GetChildren());
@@ -181,19 +182,19 @@ void PhaseStage::Update(App *app) {
         return;
     }
 
-    m_Rockman->Behavior(m_ForegroundObjects->GetCollisonBox(app->GetCameraPosition()));
+    m_Rockman->Behavior(*m_ForeObjectTileBox);
     for (int i = 0; i < 4; i++) {
-        m_Blaster[i]->Behavior(m_Rockman->GetPosition());
+        m_Blaster[i]->DoBehavior(m_Rockman->GetPosition());
     }
     for (int i = 0; i < 4; i++) {
-        m_Bombombomb[i]->Behavior(CameraPos);
+        m_Bombombomb[i]->DoBehavior(CameraPos);
     }
     for (int i = 0; i < 3; i++) {
-        m_Screwdriver[i]->Behavior(m_Rockman->GetPosition());
+        m_Screwdriver[i]->DoBehavior(m_Rockman->GetPosition());
     }
 
     for(int i=0;i<8;i++){
-        m_OctopusBattery[i]->Behavior(CameraPos);
+        m_OctopusBattery[i]->DoBehavior(CameraPos);
     }
 
     m_CollideEventManager.Update();

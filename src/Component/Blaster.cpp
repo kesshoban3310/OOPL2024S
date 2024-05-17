@@ -17,7 +17,7 @@ Blaster::Blaster(glm::vec2 pos, glm::vec2 collidersize, glm::vec2 scale,
     this->Path = path;
 }
 
-void Blaster::Behavior(glm::vec2 pos) {
+void Blaster::DoBehavior(glm::vec2 pos) {
     if (Open) {
         if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
             AnimationInterval) {

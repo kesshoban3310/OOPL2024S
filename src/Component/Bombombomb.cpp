@@ -24,7 +24,7 @@ Bombombomb::Bombombomb(glm::vec2 pos, glm::vec2 speed, glm::vec2 ammospeed,
     this->AmmoSpeed = ammospeed;
 }
 
-void Bombombomb::Behavior(glm::vec2 position) {
+void Bombombomb::DoBehavior(glm::vec2 position) {
     float direction = sqrt((position.x-Position->x)*(position.x-Position->x) + (position.y-Position->y)*(position.y-Position->y));
     if(direction <= 630) {
         if(!BeSmallBomb)

@@ -37,7 +37,7 @@ private:
     std::vector<std::shared_ptr<Bombombomb>> m_Bombombomb;
     SceneManager m_SceneManager;
     CollideEventManager m_CollideEventManager;
-
+    std::shared_ptr<std::vector<std::shared_ptr<TileBox>> > m_ForeObjectTileBox;
     void ReloadMagazine(App *app); // Update Every Ammo In The Stage.
 };
 

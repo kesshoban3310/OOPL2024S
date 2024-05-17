@@ -17,7 +17,7 @@ public:
                    glm::vec2 speed, glm::vec2 scale,
                    std::vector<std::string> path, int health, bool visable,
                    OctopusState state, Enemy::HurtState hurtstate);
-    void Behavior(glm::vec2 position) override;
+    void DoBehavior(glm::vec2 position) override;
     void PhysicEngine() override;
 
 private:

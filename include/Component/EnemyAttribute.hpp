@@ -14,11 +14,11 @@
  */
 class Enemy {
 public:
-    enum class HurtState { // To see if it is harmful or unharmful.
-        INVINCIBLE,        // Unharmful.
-        COWARDLY,          // Harmful.
+    enum class HurtState {
+        INVINCIBLE,
+        COWARDLY,
     };
-    enum class LifeState { // To see if it is life or dead.
+    enum class LifeState {
         LIFE,
         DEAD,
     };
@@ -26,7 +26,7 @@ public:
           glm::vec2 collidersize, HurtState state,
           LifeState lifeState = LifeState::LIFE, glm::vec2 scale = {3, 3});
     virtual ~Enemy() = default;
-    virtual void Behavior(glm::vec2 position) = 0;
+    virtual void DoBehavior(glm::vec2 position) = 0;
 
     virtual glm::vec2 GetPosition();
     virtual void SetPosition(glm::vec2 pos);
@@ -34,8 +34,8 @@ public:
     virtual void SetHealth(int health);
     virtual int GetHealth();
 
-    virtual void SetVisable(bool visable); // disable enemy.
-    virtual bool GetVisable();             // Get Visable
+    virtual void SetVisable(bool visable);
+    virtual bool GetVisable();
 
     virtual void SetImage(std::string path);
 
@@ -45,9 +45,7 @@ public:
     virtual LifeState GetLifeState();
     virtual void SetLifeState(LifeState lifestate);
 
-    [[nodiscard]] Collider GetCollider() {
-        return *Hitbox;
-    } // Get Enemy Collider.
+    [[nodiscard]] Collider GetCollider() { return *Hitbox; }
     [[nodiscard]] std::shared_ptr<Util::GameObject> GetChild() {
         std::shared_ptr<Util::GameObject> object = Object;
         return object;
@@ -76,5 +74,4 @@ class Shootable {
 public:
     virtual void Shoot() = 0;
 };
-
 #endif

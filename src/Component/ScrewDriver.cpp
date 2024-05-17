@@ -16,7 +16,7 @@ Screwdriver::Screwdriver(glm::vec2 pos, glm::vec2 scale, glm::vec2 collidersize,
     this->ObjectPath = path;
     this->AmmoPath = ammopath;
 }
-void Screwdriver::Behavior(glm::vec2 pos) {
+void Screwdriver::DoBehavior(glm::vec2 pos) {
     double Distance = sqrt(((pos.x - Position->x) * (pos.x - Position->x)) +
                            ((pos.y - Position->y) * (pos.y - Position->y)));
     if (Distance <= 250)
