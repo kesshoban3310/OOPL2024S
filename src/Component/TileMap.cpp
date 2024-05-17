@@ -28,8 +28,9 @@ std::vector<std::vector<int>> TileMap::ConvertToTiles(const std::string &path) {
 }
 
 glm::vec2 TileMap::GetTilePosition(const int &x, const int &y) {
-    double positionX = 0.5 * SCALE.y * TILE_SIZE.y * y;
-    double positionY = -0.5 * SCALE.x * TILE_SIZE.x * x;
+    glm::vec2 offset = {0, -1};
+    double positionX = 0.5 * SCALE.y * TILE_SIZE.y * (y + offset.y);
+    double positionY = -0.5 * SCALE.x * TILE_SIZE.x * (x + offset.x);
     return {positionX, positionY};
 }
 
