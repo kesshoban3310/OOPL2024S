@@ -18,7 +18,7 @@ OctopusBattery::OctopusBattery(glm::vec2 inipos, glm::vec2 finpos,
     this->State = state;
     this->Path = path;
 }
-void OctopusBattery::Behavior(glm::vec2 position) {
+void OctopusBattery::DoBehavior(glm::vec2 position) {
     float direction =
         sqrt((position.x - Position->x) * (position.x - Position->x) +
              (position.y - Position->y) * (position.y - Position->y));
