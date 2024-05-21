@@ -46,31 +46,57 @@ bool IsColliding(const Collider &self, const Collider &other) {
 
 std::set<Collider::Bound> WhereIsColliding(const Collider &self,
                                            const Collider &other) {
-    // TODO: Modify algorithm to make it more clear.
+    /* Definition of this function.
+     * Basic from self side.
+     * For example, when return Collider::Bound::TOP, It means self's top
+     * crashed.
+     */
     std::set<Collider::Bound> box;
+    glm::vec2 SelfPos = self.GetPosition();
+    float SelfLeft = self.GetLeft(), SelfRight = self.GetRight();
+    float SelfTop = self.GetTop(), SelfBottom = self.GetBottom();
 
-    bool Left = self.GetPosition().x > other.GetPosition().x,
-         Right = self.GetPosition().x <= other.GetPosition().x;
-    bool Up = other.GetPosition().y >= self.GetTop() &&
-              (self.GetLeft() < other.GetPosition().x &&
-               other.GetPosition().x < self.GetRight()),
-         Down = self.GetBottom() >= other.GetPosition().y &&
-                (self.GetLeft() < other.GetPosition().x &&
-                 other.GetPosition().x < self.GetRight());
-    if (Up) {
-        box.insert(Collider::Bound::TOP);
-        return box;
+    glm::vec2 OtherPos = other.GetPosition();
+    float OtherLeft = other.GetLeft(), OtherRight = other.GetRight();
+    float OtherTop = other.GetTop(), OtherBottom = other.GetBottom();
+
+    if (SelfLeft <= OtherRight && OtherLeft <= SelfRight &&
+        SelfBottom <= OtherTop && OtherBottom <= SelfTop) {
+        float XOverlap,YOVerlap;
+        if(SelfBottom <= OtherTop && OtherTop <= SelfTop){
+            YOVerlap = (OtherTop-SelfBottom)/(OtherTop-OtherBottom);
+        }
+        else{
+            YOVerlap = (SelfTop-OtherBottom)/(OtherTop-OtherBottom);
+        }
+        if(OtherLeft <= SelfRight && SelfRight <= OtherRight){
+            XOverlap = (SelfRight-OtherLeft)/(OtherRight-OtherLeft);
+        }
+        else{
+            XOverlap = (OtherRight-SelfLeft)/(OtherRight-OtherLeft);
+        }
+        if( YOVerlap>=0.15 ) {
+            if (OtherLeft <= SelfLeft &&
+                SelfLeft <= OtherRight) { // Self Left Collide
+                box.insert(Collider::Bound::LEFT);
+            }
+            if (OtherLeft <= SelfRight &&
+                SelfRight <= OtherRight) { // Self Right Collide
+                box.insert(Collider::Bound::RIGHT);
+            }
+        }
+        else if(XOverlap>=0.15){
+            if (OtherBottom <= SelfTop &&
+                SelfTop <= OtherTop) { // Self Top Collide
+                box.insert(Collider::Bound::TOP);
+            }
+            if (OtherBottom <= SelfBottom &&
+                SelfBottom <= OtherTop) { // Self Bottom Collide
+                box.insert(Collider::Bound::BOTTOM);
+            }
+        }
     }
-    if (Down) {
-        box.insert(Collider::Bound::BOTTOM);
-        return box;
-    }
-    if (Right) {
-        box.insert(Collider::Bound::RIGHT);
-    }
-    if (Left) {
-        box.insert(Collider::Bound::LEFT);
-    }
+
     return box;
 }
 bool IfObjectIsOverlaping(const Collider &self, const Collider &other) {
