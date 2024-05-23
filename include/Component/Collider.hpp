@@ -23,12 +23,12 @@ public:
     [[nodiscard]] glm::vec2 GetSize() const;
 
     [[nodiscard]] glm::vec2 GetOffset() const;
-
-private:
     [[nodiscard]] inline float GetTop() const;
     [[nodiscard]] inline float GetBottom() const;
     [[nodiscard]] inline float GetLeft() const;
     [[nodiscard]] inline float GetRight() const;
+private:
+
 
     std::shared_ptr<glm::vec2> m_Position;
     glm::vec2 m_Offset;
