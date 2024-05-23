@@ -138,7 +138,7 @@ void PhaseStage::Init(App *app) {
     m_CollideEventManager.SetMagazine(m_Magazine);
 
     // Add the root
-    m_Rockman->Behavior(*m_ForeObjectTileBox);
+    m_Rockman->DoBehavior(*m_ForeObjectTileBox);
     m_Scorebar->Show({360, -3408});
     app->GetRoot()->AddChild(m_Testbox->Getchild());
     app->GetRoot()->AddChildren(m_BackgroundObjects->GetChildren());
@@ -182,7 +182,7 @@ void PhaseStage::Update(App *app) {
         return;
     }
 
-    m_Rockman->Behavior(*m_ForeObjectTileBox);
+    m_Rockman->DoBehavior(*m_ForeObjectTileBox);
     for (int i = 0; i < 4; i++) {
         m_Blaster[i]->DoBehavior(m_Rockman->GetPosition());
     }

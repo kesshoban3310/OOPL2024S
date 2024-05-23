@@ -48,7 +48,7 @@ public:
      * @brief Rockman's all behavior, move 、 shoot or other.
      * A helper to choose what Rockman need to do now.
      */
-    void Behavior(std::vector<std::shared_ptr<TileBox>> collison);
+    void DoBehavior(std::vector<std::shared_ptr<TileBox>> collison);
 
     /**
      * @brief Set object position.
@@ -171,6 +171,7 @@ private:
     std::shared_ptr<AnimatedObject> CharacterAnimate;
     std::shared_ptr<ImageObject> CharacterImage;
 
+
     std::vector<std::vector<std::string>> CharacterAnimatePath;
     std::vector<std::string> CharacterShootPath;
     std::vector<std::string> CharacterImagePath;
@@ -187,7 +188,7 @@ private:
 
     std::shared_ptr<glm::vec2> Position;
     glm::vec2 RightScale = {-3,3},LeftScale = {3,3};
-    float ZIndex = 70;
+    float ZIndex = 60;
 
     glm::vec2 Initial_Pos = {-1,-1}; //When Using Jumping module, to calculate the moving.
     glm::vec2 Ladder_Pos = {-2000,-2000}; //Initial ladder collison position.
