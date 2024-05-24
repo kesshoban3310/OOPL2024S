@@ -19,14 +19,17 @@ enum class ItemType {
 
 class Item final : public Util::GameObject {
 public:
-    explicit Item(ItemType type, glm::vec2 position, float remainingTime = 10.0f);
+    explicit Item(ItemType type, glm::vec2 position,
+                  float remainingTime = 10000.0f);
     ~Item() override = default;
 
     [[nodiscard]] ItemType GetType() const { return m_Type; }
 
     [[nodiscard]] Collider GetCollider() const { return *m_Collider; }
 
-    [[nodiscard]] bool IsAlive() const { return m_RemainingTime > 0.0f && !m_MarkedForRemoval; }
+    [[nodiscard]] bool IsAlive() const {
+        return m_RemainingTime > 0.0f && !m_MarkedForRemoval;
+    }
 
     void MarkForRemoval() { m_MarkedForRemoval = true; }
 
