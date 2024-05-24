@@ -9,9 +9,9 @@ void CollideEventManager::Update() {
         m_Magazine->push(ammo);
         auto rockmanCollider = m_Rockman->GetCollider();
         auto ammoCollider = ammo->GetCollider();
-        if(ammo->GetAmmoType() != AmmoType::ENEMY)
+        if (ammo->GetAmmoType() != AmmoType::ENEMY)
             continue;
-        for(auto & j : rockmanCollider) {
+        for (auto &j : rockmanCollider) {
             if (IsColliding(*j, ammoCollider)) {
                 m_Rockman->SetHealth(m_Rockman->GetHealth() - 2);
                 ammo->MarkForRemoval();
@@ -35,7 +35,41 @@ void CollideEventManager::Update() {
     }
 
     // 4. item <---> rockman
-    // waiting for implementation of item
+    int itemCount = (int)m_Items->size();
+    for (int i = 0; i < itemCount; i++) {
+        auto item = m_Items->front();
+        m_Items->pop();
+        m_Items->push(item);
+        auto rockmanCollider = m_Rockman->GetCollider();
+        auto itemCollider = item->GetCollider();
+        for (auto &j : rockmanCollider) {
+            if (IsColliding(*j, itemCollider)) {
+                item->MarkForRemoval();
+                switch (item->GetType()) {
+                case ItemType::SMALL_HEALTH_ENERGY:
+                    m_Rockman->SetHealth(
+                        std::max(28, m_Rockman->GetHealth() + 2));
+                    break;
+                case ItemType::BIG_HEALTH_ENERGY:
+                    m_Rockman->SetHealth(
+                        std::max(28, m_Rockman->GetHealth() + 4));
+                    break;
+                case ItemType::SMALL_WEAPON_ENERGY:
+                    break;
+                case ItemType::BIG_WEAPON_ENERGY:
+                    break;
+                case ItemType::ONE_UP:
+                    break;
+                case ItemType::SPECIAL_WEAPON_ITEM:
+                    break;
+                case ItemType::SCORE_BALL:
+                    m_Scorebar->AddScore(1000);
+                    break;
+                }
+                break;
+            }
+        }
+    }
 
     // 5. item <---> enemy
     // waiting for implementation of item
