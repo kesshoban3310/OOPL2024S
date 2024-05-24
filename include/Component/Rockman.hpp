@@ -72,7 +72,21 @@ public:
      * @param health for Rockman's health.
      */
     void SetHealth(int hp);
+    /**
+     * @brief Get Rockman's LiveState.
+     * @param health for Rockman's health.
+     */
     LiveState GetCurrentState();
+    /**
+     * @brief Set Rockman to Invincible.
+     */
+    void SetInvincible();
+
+    /**
+     * @brief Get if Rockman is Invincible.
+     */
+    bool GetInvincible();
+
     /**
      * @brief collect all object in character.
      * @return All object in character.
@@ -194,6 +208,10 @@ private:
     glm::vec2 Ladder_Pos = {-2000,-2000}; //Initial ladder collison position.
     LiveState RockmanState;
     PhysicState MoveState;
+
+    //Rockman's Invincible State
+    bool Invincible = false;
+    unsigned long InvincibleTimer = 0,InvincibleTime = 300;
 
     std::vector<std::shared_ptr<Collider>> ColliderBox;
 };
