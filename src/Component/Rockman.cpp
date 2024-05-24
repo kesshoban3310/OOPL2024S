@@ -191,6 +191,10 @@ void Rockman::DoBehavior(std::vector<std::shared_ptr<TileBox>> collison) {
     if (Health == 0) {
         RockmanState = LiveState::Death;
     }
+    if(Util::Time::GetElapsedTimeMs()-InvincibleTimer>InvincibleTime){
+        Invincible = false;
+        InvincibleTimer = 0;
+    }
     switch (RockmanState) {
     case LiveState::Initial:
         Initialize();
@@ -397,8 +401,12 @@ void Rockman::Climb(std::vector<std::shared_ptr<TileBox>> collison) {
 }
 
 void Rockman::Death() {
-    if (Visable != -1)
-        SetVisable(-1, false);
+    if (Visable != -1) {
+        Visable = -1;
+        CharacterImage->SetVisible(false);
+        CharacterAnimate->SetVisible(false);
+
+    }
     if (!CharacterDeath[0]->GetVisibility()) {
         for (int i = 0; i < 12; i++) {
             CharacterDeath[i]->SetPosition(*Position);
@@ -659,6 +667,16 @@ void Rockman::Fall(std::vector<std::shared_ptr<TileBox>> collison) {
         }
     }
 }
+
+bool Rockman::GetInvincible() {
+    return Invincible;
+}
+void Rockman::SetInvincible() {
+    if(Invincible) return;
+    Invincible = true;
+    InvincibleTimer = Util::Time::GetElapsedTimeMs();
+}
+
 void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
                                    std::string locate) {
     LOG_DEBUG("=========" + locate + "============");
