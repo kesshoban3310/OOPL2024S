@@ -30,15 +30,18 @@ private:
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<TestBox> m_Testbox;
     std::shared_ptr<HealthBar> m_RockmanHealthBar;
-    std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine; // Store Rockman's Ammo.
+    std::shared_ptr<std::queue<std::shared_ptr<Ammo>>>
+        m_Magazine; // Store Rockman's Ammo.
     std::vector<std::shared_ptr<Blaster>> m_Blaster;
     std::vector<std::shared_ptr<Screwdriver>> m_Screwdriver;
     std::vector<std::shared_ptr<OctopusBattery>> m_OctopusBattery;
     std::vector<std::shared_ptr<Bombombomb>> m_Bombombomb;
+    std::shared_ptr<std::queue<std::shared_ptr<Item>>> m_Items;
     SceneManager m_SceneManager;
     CollideEventManager m_CollideEventManager;
-    std::shared_ptr<std::vector<std::shared_ptr<TileBox>> > m_ForeObjectTileBox;
+    std::shared_ptr<std::vector<std::shared_ptr<TileBox>>> m_ForeObjectTileBox;
     void ReloadMagazine(App *app); // Update Every Ammo In The Stage.
+    void UpdateItems(App *app);
 };
 
 #endif // PHASE_STAGE_HPP
