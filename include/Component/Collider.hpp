@@ -23,10 +23,10 @@ public:
     [[nodiscard]] glm::vec2 GetSize() const;
 
     [[nodiscard]] glm::vec2 GetOffset() const;
-    [[nodiscard]] inline float GetTop() const;
-    [[nodiscard]] inline float GetBottom() const;
-    [[nodiscard]] inline float GetLeft() const;
-    [[nodiscard]] inline float GetRight() const;
+    [[nodiscard]] float GetTop() const;
+    [[nodiscard]] float GetBottom() const;
+    [[nodiscard]] float GetLeft() const;
+    [[nodiscard]] float GetRight() const;
 private:
 
 
