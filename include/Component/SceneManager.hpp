@@ -79,7 +79,20 @@ public:
      *
      * @return Camera position
      */
-    [[nodiscard]] glm::vec2 GetCameraPosition() const { return m_CameraPosition; }
+    [[nodiscard]] glm::vec2 GetCameraPosition() const {
+        return m_CameraPosition;
+    }
+
+    /**
+     * @brief Check if the position is falling out of the scene
+     *
+     * @param position Position to check
+     * @param threshold Tolerance of the position to check
+     *
+     * @return true if the position is falling out of the scene
+     * @return false if the position is not falling out of the scene
+     */
+    bool IsFallOutOfScene(glm::vec2 position, float threshold = 200.0f) const;
 
 private:
     static constexpr unsigned int SCENE_CHANGE_DELAY_MS = 1000;
@@ -89,7 +102,8 @@ private:
 
     // the start time of changing scene, only used when m_SceneChanging is true
     float m_StartChangeTime = 0.0f;
-    // the start camera position of changing scene, only used when m_SceneChanging is true
+    // the start camera position of changing scene, only used when
+    // m_SceneChanging is true
     glm::vec2 m_StartCameraPosition = glm::vec2(0.0f, 0.0f);
 };
 

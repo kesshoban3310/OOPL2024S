@@ -25,10 +25,10 @@ void SceneManager::Update(glm::vec2 position) {
     // Update the camera position
     auto GetUpdatedCameraPosition = [&]() -> glm::vec2 {
         // Clamp the x position to the scene bounds
-        float x_min = m_SceneRanges[m_CurrentScene].m_TopLeft.x +
-                      WINDOW_WIDTH / 2.0f;
-        float x_max = m_SceneRanges[m_CurrentScene].m_BottomRight.x -
-                      WINDOW_WIDTH / 2.0f;
+        float x_min =
+            m_SceneRanges[m_CurrentScene].m_TopLeft.x + WINDOW_WIDTH / 2.0f;
+        float x_max =
+            m_SceneRanges[m_CurrentScene].m_BottomRight.x - WINDOW_WIDTH / 2.0f;
         float x = std::clamp(position.x, x_min, x_max);
 
         // calculate the y position
@@ -53,4 +53,10 @@ void SceneManager::Update(glm::vec2 position) {
 bool SceneManager::IsChangingScene() const {
     return m_StartChangeTime + SCENE_CHANGE_DELAY_MS >
            Util::Time::GetElapsedTimeMs();
+}
+
+bool SceneManager::IsFallOutOfScene(glm::vec2 position, float threshold) const {
+    return !m_SceneRanges.at(m_CurrentScene).IsContain(position) &&
+           position.y <
+               m_SceneRanges.at(m_CurrentScene).m_BottomRight.y - threshold;
 }
