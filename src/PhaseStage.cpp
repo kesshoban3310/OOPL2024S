@@ -5,6 +5,9 @@
 #include "limits"
 
 void PhaseStage::Init(App *app) {
+    // define enemy array
+    std::vector<std::shared_ptr<Enemy>> enemies;
+
     // Load the map
     m_BackgroundObjects = std::make_shared<Backgroundmap>("Bomb Man Stage");
     m_ForegroundObjects = std::make_shared<Backgroundmap>("Bomb Man Stage");
@@ -49,6 +52,7 @@ void PhaseStage::Init(App *app) {
             glm::vec2{-3, 3}, timer, i % 2, BlasterPath, BlasterAmmoPath, 1,
             true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
         m_Blaster.push_back(blaster);
+        enemies.push_back(blaster);
         app->GetRoot()->AddChild(blaster->GetChild());
     }
     // Load Screwdriver
@@ -70,6 +74,7 @@ void PhaseStage::Init(App *app) {
                 glm::vec2{16 * 3, 16 * 3}, ScrewDriverPath, ScrewDriverAmmoPath,
                 Enemy::LifeState::LIFE, Enemy::HurtState::COWARDLY, 1, true);
         m_Screwdriver.push_back(screwdriver);
+        enemies.push_back(screwdriver);
         app->GetRoot()->AddChild(screwdriver->GetChild());
     }
     // Load Bombombomb
@@ -81,6 +86,7 @@ void PhaseStage::Init(App *app) {
             RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb2.png",
             1, true, Enemy::HurtState::COWARDLY);
         m_Bombombomb.push_back(bombombomb);
+        enemies.push_back(bombombomb);
         app->GetRoot()->AddChild(bombombomb->GetChild());
     }
     // Load OctopusBattery
@@ -96,7 +102,7 @@ void PhaseStage::Init(App *app) {
         std::shared_ptr<OctopusBattery> octopusbattery =
             std::make_shared<OctopusBattery>(
                 OctopusBatteryIniPos, OctopusBatteryFinPos,
-                glm::vec2{16 * 3, 16 * 3}, glm::vec2{16, 0}, glm::vec2{3, 3},
+                glm::vec2{12 * 3, 12 * 3}, glm::vec2{16, 0}, glm::vec2{3, 3},
                 std::vector<std::string>{
                     RESOURCE_DIR "/Picture/Enemies/Bomb Man "
                                  "Stage/OctopusBattery/OctopusBattery1.png",
@@ -115,6 +121,7 @@ void PhaseStage::Init(App *app) {
         }
         std::swap(OctopusBatteryIniPos, OctopusBatteryFinPos);
         m_OctopusBattery.push_back(octopusbattery);
+        enemies.push_back(octopusbattery);
         app->GetRoot()->AddChild(octopusbattery->GetChild());
     }
     OctopusBatteryIniPos = glm::vec2{12576, -1728};
@@ -147,6 +154,7 @@ void PhaseStage::Init(App *app) {
         }
         std::swap(OctopusBatteryIniPos, OctopusBatteryFinPos);
         m_OctopusBattery.push_back(octopusbattery);
+        enemies.push_back(octopusbattery);
         app->GetRoot()->AddChild(octopusbattery->GetChild());
     }
 
@@ -165,6 +173,8 @@ void PhaseStage::Init(App *app) {
     m_CollideEventManager.SetMagazine(m_Magazine);
     m_CollideEventManager.SetItems(m_Items);
     m_CollideEventManager.SetScorebar(m_Scorebar);
+    m_CollideEventManager.SetEnemies(enemies);
+    m_CollideEventManager.SetRenderer(app->GetRoot());
 
     // Add the root
     m_Rockman->DoBehavior(*m_ForeObjectTileBox);
@@ -211,7 +221,6 @@ void PhaseStage::Update(App *app) {
         LOG_DEBUG("Changing Scene");
         return;
     }
-
     m_Rockman->DoBehavior(*m_ForeObjectTileBox);
     for (int i = 0; i < 4; i++) {
         m_Blaster[i]->DoBehavior(m_Rockman->GetPosition());
