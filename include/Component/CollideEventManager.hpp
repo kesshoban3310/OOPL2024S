@@ -5,7 +5,9 @@
 #include "Item.hpp"
 #include "Rockman.hpp"
 #include "Scorebar.hpp"
+#include "Util/Renderer.hpp"
 #include <memory>
+#include <random>
 #include <utility>
 
 class PhaseStage;
@@ -39,12 +41,20 @@ public:
         m_Scorebar = std::move(scorebar);
     }
 
+    void SetRenderer(std::shared_ptr<Util::Renderer> renderer) {
+        m_Renderer = std::move(renderer);
+    }
+
 private:
     std::shared_ptr<Rockman> m_Rockman;
     std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine;
     std::vector<std::shared_ptr<Enemy>> m_Enemies;
     std::shared_ptr<std::queue<std::shared_ptr<Item>>> m_Items;
     std::shared_ptr<Scorebar> m_Scorebar;
+    std::shared_ptr<Util::Renderer> m_Renderer;
+    std::mt19937 gen = std::mt19937(std::random_device{}());
+    std::uniform_real_distribution<> dis =
+        std::uniform_real_distribution<>(0, 1);
 };
 
 #endif
