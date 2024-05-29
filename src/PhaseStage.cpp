@@ -152,13 +152,19 @@ void PhaseStage::Init(App *app) {
 
     // setting items
     m_Items = std::make_shared<std::queue<std::shared_ptr<Item>>>();
-    /*
-    std::shared_ptr<Item> item =
-    std::make_shared<Item>(ItemType::SCORE_BALL, glm::vec2{4060, -3408},
-                               std::numeric_limits<float>::infinity());
-    m_Items->push(item);
-    app->GetRoot()->AddChild(item);
-    */
+    std::vector<std::pair<ItemType, glm::vec2>> itemsAttributes = {
+        {ItemType::SMALL_HEALTH_ENERGY, {4704, -3270}},
+        {ItemType::SMALL_HEALTH_ENERGY, {4748, -3270}},
+        {ItemType::BIG_WEAPON_ENERGY, {5176, -3540}},
+        {ItemType::BIG_HEALTH_ENERGY, {5176, -2830}},
+        {ItemType::ONE_UP, {10718, -328}}};
+    for (auto itemAttribute : itemsAttributes) {
+        std::shared_ptr<Item> item =
+            std::make_shared<Item>(itemAttribute.first, itemAttribute.second,
+                                   std::numeric_limits<float>::infinity());
+        m_Items->push(item);
+        app->GetRoot()->AddChild(item);
+    }
 
     // Set the collide event manager
     m_CollideEventManager.SetRockman(m_Rockman);
@@ -229,7 +235,6 @@ void PhaseStage::Update(App *app) {
 
     m_CollideEventManager.Update();
     ReloadMagazine(app);
-
     // m_Testbox->Move();
 
     /*
