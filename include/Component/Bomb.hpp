@@ -33,7 +33,6 @@ private:
     const float GRAVITY = 200.0f;
     float m_XVelocity;
     float m_YVelocity;
-    float m_ExpectedTime;
     std::shared_ptr<Collider> m_Collider;
     std::shared_ptr<glm::vec2> m_Position;
     bool m_MarkedForRemoval = false;
