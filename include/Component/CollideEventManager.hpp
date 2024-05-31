@@ -1,6 +1,7 @@
 #ifndef COLLIDE_EVENT_MANAGER_HPP
 #define COLLIDE_EVENT_MANAGER_HPP
 
+#include "Component/Bomb.hpp"
 #include "EnemyAttribute.hpp"
 #include "Item.hpp"
 #include "Rockman.hpp"
@@ -37,6 +38,10 @@ public:
         m_Items = std::move(items);
     }
 
+    void SetBombs(std::shared_ptr<std::queue<std::shared_ptr<Bomb>>> bombs) {
+        m_Bombs = std::move(bombs);
+    }
+
     void SetScorebar(std::shared_ptr<Scorebar> scorebar) {
         m_Scorebar = std::move(scorebar);
     }
@@ -50,6 +55,7 @@ private:
     std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine;
     std::vector<std::shared_ptr<Enemy>> m_Enemies;
     std::shared_ptr<std::queue<std::shared_ptr<Item>>> m_Items;
+    std::shared_ptr<std::queue<std::shared_ptr<Bomb>>> m_Bombs;
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<Util::Renderer> m_Renderer;
     std::mt19937 gen = std::mt19937(std::random_device{}());

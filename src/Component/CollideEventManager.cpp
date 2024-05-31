@@ -6,7 +6,7 @@ void CollideEventManager::Update() {
     auto RockmanGetDamage = [this](int damage) {
         if (m_Rockman->GetInvincible())
             return;
-        m_Rockman->SetHealth(m_Rockman->GetHealth() - damage);
+        m_Rockman->SetHealth(std::max(0, m_Rockman->GetHealth() - damage));
         m_Rockman->SetInvincible();
     };
 
@@ -43,7 +43,7 @@ void CollideEventManager::Update() {
             }
 
             auto item = std::make_shared<Item>(type, enemy->GetPosition() +
-                                                         glm::vec2(0, -30));
+                                                         glm::vec2(0, 40));
             m_Items->push(item);
             m_Renderer->AddChild(item);
         }
@@ -135,6 +135,24 @@ void CollideEventManager::Update() {
                     m_Scorebar->AddScore(1000);
                     break;
                 }
+                break;
+            }
+        }
+    }
+
+    // 5. rockman <---> bomb
+    int bombCount = (int)m_Bombs->size();
+    for (int i = 0; i < bombCount; i++) {
+        std::shared_ptr<Bomb> bomb = m_Bombs->front();
+        m_Bombs->pop();
+        m_Bombs->push(bomb);
+        auto rockmanCollider = m_Rockman->GetCollider();
+        auto bombCollider = bomb->GetCollider();
+        for (auto &j : rockmanCollider) {
+            if (IsColliding(*j, bombCollider)) {
+                if(bomb->GetState() == Bomb::State::FALLING)
+                    bomb->SetToExplode();
+                RockmanGetDamage(3);
                 break;
             }
         }
