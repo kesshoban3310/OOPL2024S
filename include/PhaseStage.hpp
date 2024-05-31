@@ -2,6 +2,7 @@
 #define PHASE_STAGE_HPP
 
 #include "Component/Blaster.hpp"
+#include "Component/Bomb.hpp"
 #include "Component/Bombombomb.hpp"
 #include "Component/CollideEventManager.hpp"
 #include "Component/HealthBar.hpp"
@@ -40,8 +41,10 @@ private:
     SceneManager m_SceneManager;
     CollideEventManager m_CollideEventManager;
     std::shared_ptr<std::vector<std::shared_ptr<TileBox>>> m_ForeObjectTileBox;
+    std::shared_ptr<std::queue<std::shared_ptr<Bomb>>> m_Bombs;
     void ReloadMagazine(App *app); // Update Every Ammo In The Stage.
     void UpdateItems(App *app);
+    void UpdateBombs(App *app);
 };
 
 #endif // PHASE_STAGE_HPP

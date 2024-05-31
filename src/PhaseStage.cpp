@@ -174,10 +174,14 @@ void PhaseStage::Init(App *app) {
         app->GetRoot()->AddChild(item);
     }
 
+    // setting bomb
+    m_Bombs = std::make_shared<std::queue<std::shared_ptr<Bomb>>>();
+
     // Set the collide event manager
     m_CollideEventManager.SetRockman(m_Rockman);
     m_CollideEventManager.SetMagazine(m_Magazine);
     m_CollideEventManager.SetItems(m_Items);
+    m_CollideEventManager.SetBombs(m_Bombs);
     m_CollideEventManager.SetScorebar(m_Scorebar);
     m_CollideEventManager.SetEnemies(enemies);
     m_CollideEventManager.SetRenderer(app->GetRoot());
@@ -264,7 +268,18 @@ void PhaseStage::Update(App *app) {
         m_Testbox->SetPosition({12638, -398});
     }
 
+    // bomb test
+    /*
+    if (Util::Input::IsKeyUp(Util::Keycode::R)) {
+        std::shared_ptr<Bomb> bomb = std::make_shared<Bomb>(
+            RESOURCE_DIR "/Picture/Bomb/Bomb.png",
+            glm::vec2{330, -3308}, glm::vec2{540, -3308}, -3200);
+        m_Bombs->push(bomb);
+        app->GetRoot()->AddChild(bomb);
+    }
+    */
     UpdateItems(app);
+    UpdateBombs(app);
 
     // TODO : change this to win
     if (Util::Input::IsKeyUp(Util::Keycode::I)) {
@@ -323,10 +338,26 @@ void PhaseStage::UpdateItems(App *app) {
         auto item = m_Items->front();
         m_Items->pop();
         item->Update(m_ForeObjectTileBox);
-        if (!item->IsAlive()) {
+        if (!item->IsAlive() ||
+            m_SceneManager.IsFallOutOfScene(item->GetPosition())) {
             app->GetRoot()->RemoveChild(item);
             continue;
         }
         m_Items->push(item);
+    }
+}
+
+void PhaseStage::UpdateBombs(App *app) {
+    int bombSize = (int)m_Bombs->size();
+    for (int i = 0; i < bombSize; i++) {
+        auto bomb = m_Bombs->front();
+        m_Bombs->pop();
+        bomb->Update(m_ForeObjectTileBox);
+        if (!bomb->IsAlive() ||
+            m_SceneManager.IsFallOutOfScene(bomb->GetPosition())) {
+            app->GetRoot()->RemoveChild(bomb);
+            continue;
+        }
+        m_Bombs->push(bomb);
     }
 }
