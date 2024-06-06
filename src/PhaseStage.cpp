@@ -185,6 +185,7 @@ void PhaseStage::Init(App *app) {
     m_CollideEventManager.SetScorebar(m_Scorebar);
     m_CollideEventManager.SetEnemies(enemies);
     m_CollideEventManager.SetRenderer(app->GetRoot());
+    m_CollideEventManager.SetApp(app);
 
     // Add the root
     m_Rockman->DoBehavior(*m_ForeObjectTileBox);
@@ -210,6 +211,10 @@ void PhaseStage::Init(App *app) {
         {7, {{12264, -1512}, {13032, -2280}}},
         {8, {{12264, -2280}, {13032, -3048}}},
     });
+
+    // setting person life
+    m_PersonLife = std::make_shared<PersonLife>();
+    app->GetRoot()->AddChild(m_PersonLife);
 }
 
 void PhaseStage::Update(App *app) {
@@ -220,11 +225,12 @@ void PhaseStage::Update(App *app) {
     // get some info
     glm::vec2 CameraPos = app->GetCameraPosition();
 
-    // set healthbar and scorebar
+    // set healthbar and scorebar and person life ui
     m_Scorebar->Show(CameraPos);
     m_RockmanHealthBar->SetPosition(
         glm::vec2{CameraPos.x - 311, CameraPos.y + 201});
     m_RockmanHealthBar->SetVisable(std::max(m_Rockman->GetHealth(), 0));
+    m_PersonLife->Update(app->GetLifeCount(), CameraPos);
 
     // if changing scene, return
     if (m_SceneManager.IsChangingScene()) {
@@ -287,9 +293,13 @@ void PhaseStage::Update(App *app) {
         return;
     }
 
-    // TODO : change this to lose
+    // TODO : change this condition to lose a life
     if (Util::Input::IsKeyUp(Util::Keycode::O)) {
-        app->ChangeState(App::State::LOSE);
+        app->SetLifeCount(app->GetLifeCount() - 1);
+        if (app->GetLifeCount() == 0)
+            app->ChangeState(App::State::LOSE);
+        else
+            app->ChangeState(App::State::STAGE);
         return;
     }
 }

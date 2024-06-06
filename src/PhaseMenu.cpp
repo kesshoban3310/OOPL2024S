@@ -77,9 +77,8 @@ void PhaseMenu::Update(App *app) {
     m_SelectBox->SetPosition(m_SelectBoxPosition[m_Stage]);
 
     // change app state
-    // TODO: add more state if there are more stages
-    // TODO: add background change to cleared stage
     if(Util::Input::IsKeyDown(Util::Keycode::RETURN)) {
+        app->SetLifeCount(3);
         app->ChangeState(App::State::STAGE);
     }
 }
