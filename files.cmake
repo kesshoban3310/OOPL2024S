@@ -29,6 +29,7 @@ set(SRC_FILES
         Component/TileBox.cpp
         Component/CollideEventManager.cpp
         Component/Item.cpp
+        Component/PersonLife.cpp
 )
 
 set(INCLUDE_FILES
@@ -62,6 +63,7 @@ set(INCLUDE_FILES
         Component/TileBox.hpp
         Component/CollideEventManager.hpp
         Component/Item.hpp
+        Component/PersonLife.hpp
 
         #other
         IncludeComponent.hpp
