@@ -4,18 +4,20 @@
 
 Bomb::Bomb(const std::string &imagePath, glm::vec2 startPosition,
            glm::vec2 expectedEndPosition, float expectedHeight) {
+
+    auto CalculateFallingTime = [&](float startY, float endY) {
+        return std::sqrt(2 * std::abs(endY - startY) * GRAVITY);
+    };
+
     m_Drawable = std::make_shared<Util::Image>(imagePath);
     m_Transform.scale = {3, 3};
     m_Position = std::make_shared<glm::vec2>(startPosition);
     SetZIndex(70);
-    m_ExpectedTime =
-        std::sqrt(2 * std::abs(expectedHeight - startPosition.y) * GRAVITY) +
-        std::sqrt(2 * std::abs(expectedHeight - expectedEndPosition.y) *
-                  GRAVITY);
-    m_XVelocity = (expectedEndPosition.x - startPosition.x) / m_ExpectedTime;
+    m_XVelocity = (expectedEndPosition.x - startPosition.x) /
+                  (CalculateFallingTime(startPosition.y, expectedHeight) +
+                   CalculateFallingTime(expectedHeight, expectedEndPosition.y));
     m_YVelocity =
-        std::sqrt(2 * std::abs(expectedHeight - startPosition.y) * GRAVITY) /
-        GRAVITY;
+        CalculateFallingTime(startPosition.y, expectedHeight) / GRAVITY;
     m_Collider = std::make_shared<Collider>(m_Position, GetScaledSize(),
                                             glm::vec2{0, 0});
     m_Transform.translation = *m_Position;
