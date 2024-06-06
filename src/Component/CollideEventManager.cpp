@@ -1,5 +1,6 @@
 #include "Component/CollideEventManager.hpp"
 #include "Component/Item.hpp"
+#include "Component/App.hpp"
 #include <random>
 
 void CollideEventManager::Update() {
@@ -128,6 +129,7 @@ void CollideEventManager::Update() {
                 case ItemType::BIG_WEAPON_ENERGY:
                     break;
                 case ItemType::ONE_UP:
+                    m_App->SetLifeCount(std::min(99u, m_App->GetLifeCount() + 1));
                     break;
                 case ItemType::SPECIAL_WEAPON_ITEM:
                     break;
