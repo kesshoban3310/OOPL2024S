@@ -18,7 +18,7 @@ public:
                glm::vec2 scale, glm::vec2 colldiersize, std::string path,
                std::string ammopath, int health, bool visable,
                Enemy::HurtState hurtState);
-    void DoBehavior(glm::vec2 position) override;
+    void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
     void PhysicEngine() override;
     void Split();
     void SmallBombMove();

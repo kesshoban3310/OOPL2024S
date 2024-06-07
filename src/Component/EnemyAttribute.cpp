@@ -13,6 +13,7 @@ Enemy::Enemy(glm::vec2 pos, std::string path, int hp, bool visable, glm::vec2 co
     this->Hitbox = std::make_shared<Collider>(Position,collidersize,glm::vec2 {0,0});
     this->Object = std::make_shared<ImageObject>(path);
     this->Scale = scale;
+    this->InitialHealth = hp;
     Object->SetPosition(pos);
     Object->SetScale(Scale);
     Object->SetVisible(visable);
@@ -62,4 +63,14 @@ glm::vec2 Enemy::GetPosition(){
 void Enemy::SetPosition(glm::vec2 pos){
     *Position = pos;
     Object->SetPosition(pos);
+}
+void Enemy::Revival() {
+    if(RevivalTimer == 0){
+        RevivalTimer = Util::Time::GetElapsedTimeMs();
+        return;
+    }
+    else if(Util::Time::GetElapsedTimeMs()-RevivalTimer > RevivalTime){
+        Life = Enemy::LifeState::LIFE;
+        Health = InitialHealth;
+    }
 }

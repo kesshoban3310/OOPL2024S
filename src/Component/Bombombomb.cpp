@@ -24,8 +24,8 @@ Bombombomb::Bombombomb(glm::vec2 pos, glm::vec2 speed, glm::vec2 ammospeed,
     this->AmmoSpeed = ammospeed;
 }
 
-void Bombombomb::DoBehavior(glm::vec2 position) {
-    float direction = sqrt((position.x-Position->x)*(position.x-Position->x) + (position.y-Position->y)*(position.y-Position->y));
+void Bombombomb::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
+    float direction = sqrt((CameraPos.x-Position->x)*(CameraPos.x-Position->x) + (CameraPos.y-Position->y)*(CameraPos.y-Position->y));
     if(direction <= 630) {
         if(!BeSmallBomb)
             PhysicEngine();
@@ -36,6 +36,7 @@ void Bombombomb::DoBehavior(glm::vec2 position) {
         Object->SetPosition(InitialPosition);
         *Position = InitialPosition;
         WaitingCounter = 0;
+        BeSmallBomb = 0;
     }
 }
 void Bombombomb::PhysicEngine() {
