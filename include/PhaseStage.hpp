@@ -2,6 +2,7 @@
 #define PHASE_STAGE_HPP
 
 #include "Component/Blaster.hpp"
+#include "Component/Bomb.hpp"
 #include "Component/Bombombomb.hpp"
 #include "Component/CollideEventManager.hpp"
 #include "Component/HealthBar.hpp"
@@ -10,6 +11,7 @@
 #include "Component/SceneManager.hpp"
 #include "Component/ScrewDriver.hpp"
 #include "Component/TileMap.hpp"
+#include "Component/PersonLife.hpp"
 #include "IncludeComponent.hpp"
 
 class PhaseStage final : public Phase {
@@ -30,15 +32,21 @@ private:
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<TestBox> m_Testbox;
     std::shared_ptr<HealthBar> m_RockmanHealthBar;
-    std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine; // Store Rockman's Ammo.
+    std::shared_ptr<std::queue<std::shared_ptr<Ammo>>>
+        m_Magazine; // Store Rockman's Ammo.
     std::vector<std::shared_ptr<Blaster>> m_Blaster;
     std::vector<std::shared_ptr<Screwdriver>> m_Screwdriver;
     std::vector<std::shared_ptr<OctopusBattery>> m_OctopusBattery;
     std::vector<std::shared_ptr<Bombombomb>> m_Bombombomb;
+    std::shared_ptr<std::queue<std::shared_ptr<Item>>> m_Items;
     SceneManager m_SceneManager;
     CollideEventManager m_CollideEventManager;
-    std::shared_ptr<std::vector<std::shared_ptr<TileBox>> > m_ForeObjectTileBox;
+    std::shared_ptr<std::vector<std::shared_ptr<TileBox>>> m_ForeObjectTileBox;
+    std::shared_ptr<std::queue<std::shared_ptr<Bomb>>> m_Bombs;
+    std::shared_ptr<PersonLife> m_PersonLife;
     void ReloadMagazine(App *app); // Update Every Ammo In The Stage.
+    void UpdateItems(App *app);
+    void UpdateBombs(App *app);
 };
 
 #endif // PHASE_STAGE_HPP

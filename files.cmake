@@ -11,6 +11,7 @@ set(SRC_FILES
         Component/Ammo.cpp
         Component/AnimatedObject.cpp
         Component/Backgroundmap.cpp
+        Component/Bomb.cpp
         Component/Bombombomb.cpp
         Component/Blaster.cpp
         Component/Collider.cpp
@@ -28,6 +29,7 @@ set(SRC_FILES
         Component/TileBox.cpp
         Component/CollideEventManager.cpp
         Component/Item.cpp
+        Component/PersonLife.cpp
 )
 
 set(INCLUDE_FILES
@@ -43,6 +45,7 @@ set(INCLUDE_FILES
         Component/Ammo.hpp
         Component/AnimatedObject.hpp
         Component/Blaster.hpp
+        Component/Bomb.hpp
         Component/Bombombomb.hpp
         Component/Backgroundmap.hpp
         Component/Collider.hpp
@@ -60,6 +63,7 @@ set(INCLUDE_FILES
         Component/TileBox.hpp
         Component/CollideEventManager.hpp
         Component/Item.hpp
+        Component/PersonLife.hpp
 
         #other
         IncludeComponent.hpp

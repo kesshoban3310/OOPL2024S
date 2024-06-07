@@ -23,6 +23,8 @@ public:
 
     void SetCameraPosition(const glm::vec2 &position);
 
+    void SetLifeCount(unsigned int count);
+
     void ResetCameraPosition();
 
     [[nodiscard]] State GetState() const;
@@ -32,6 +34,8 @@ public:
     [[nodiscard]] std::shared_ptr<Core::Context> GetContext() const;
 
     [[nodiscard]] glm::vec2 GetCameraPosition() const;
+
+    [[nodiscard]] unsigned int GetLifeCount() const;
 
     explicit App(State state);
 
@@ -43,6 +47,7 @@ private:
     std::shared_ptr<Util::Renderer> m_Root;
     std::shared_ptr<Core::Context> m_Context;
     glm::vec2 m_CameraPosition;
+    unsigned int m_LifeCount;
 };
 
 #endif // APP_HPP

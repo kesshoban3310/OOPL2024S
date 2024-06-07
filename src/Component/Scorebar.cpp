@@ -20,6 +20,8 @@ Scorebar::Scorebar(glm::vec2 pos) {
     }
 }
 void Scorebar::AddScore(int point) {
+    const int MAX_SCORE = 9999999;
+    point = std::min(MAX_SCORE, point);
     int c = 0, index = 0;
     while (index < 7) {
         score[index] = score[index] + point % 10 + c;

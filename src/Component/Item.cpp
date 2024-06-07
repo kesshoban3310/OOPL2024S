@@ -1,9 +1,13 @@
 #include "Component/Item.hpp"
+#include "Component/TileBox.hpp"
+#include "Util/Time.hpp"
 #include <string>
 
-Item::Item(ItemType type, glm::vec2 position)
-    : m_Type(type) {
-    m_Transform.translation = position;
+Item::Item(ItemType type, glm::vec2 position, float remainingTime)
+    : m_Type(type),
+      m_Position(std::make_shared<glm::vec2>(position)),
+      m_RemainingTime(remainingTime) {
+    m_Transform.translation = *m_Position;
     m_Transform.scale = {3, 3};
     const std::string folderPath = RESOURCE_DIR "/Picture/Item/";
     switch (type) {
@@ -43,6 +47,20 @@ Item::Item(ItemType type, glm::vec2 position)
     }
     SetZIndex(70);
     m_Collider = std::make_shared<Collider>(
-        Collider(std::make_shared<glm::vec2>(m_Transform.translation),
-                 GetScaledSize(), {0, 0}));
+        Collider(m_Position, GetScaledSize(), {0, 0}));
+}
+
+void Item::Update(
+    std::shared_ptr<std::vector<std::shared_ptr<TileBox>>> tileBoxes) {
+    const glm::vec2 velocity = {0, -0.2};
+    m_Position->y += velocity.y * Util::Time::GetDeltaTimeMs();
+    m_RemainingTime -= Util::Time::GetDeltaTimeMs();
+
+    for (auto &tileBox : *tileBoxes) {
+        Collider tileBoxCollider = *tileBox->Getcollisonbox();
+        if (IsColliding(tileBoxCollider, *m_Collider)) {
+            m_Position->y -= m_Collider->GetBottom() - tileBoxCollider.GetTop();
+        }
+    }
+    m_Transform.translation = *m_Position;
 }
