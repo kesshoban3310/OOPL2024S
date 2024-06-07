@@ -38,6 +38,7 @@ void PhaseLose::Update(App *app) {
     if (Util::Input::IsKeyPressed(Util::Keycode::RETURN)) {
         switch (m_State) {
         case State::CONTINUE:
+            app->SetLifeCount(3);
             app->ChangeState(GetLastState());
             break;
         case State::STAGE_SELECT:

@@ -11,6 +11,7 @@
 #include "Component/SceneManager.hpp"
 #include "Component/ScrewDriver.hpp"
 #include "Component/TileMap.hpp"
+#include "Component/PersonLife.hpp"
 #include "IncludeComponent.hpp"
 
 class PhaseStage final : public Phase {
@@ -42,6 +43,7 @@ private:
     CollideEventManager m_CollideEventManager;
     std::shared_ptr<std::vector<std::shared_ptr<TileBox>>> m_ForeObjectTileBox;
     std::shared_ptr<std::queue<std::shared_ptr<Bomb>>> m_Bombs;
+    std::shared_ptr<PersonLife> m_PersonLife;
     void ReloadMagazine(App *app); // Update Every Ammo In The Stage.
     void UpdateItems(App *app);
     void UpdateBombs(App *app);

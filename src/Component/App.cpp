@@ -103,3 +103,11 @@ App::~App() {
 std::shared_ptr<Core::Context> App::GetContext() const {
     return m_Context;
 }
+
+void App::SetLifeCount(unsigned int count) {
+    m_LifeCount = count;
+}
+
+unsigned int App::GetLifeCount() const {
+    return m_LifeCount;
+}

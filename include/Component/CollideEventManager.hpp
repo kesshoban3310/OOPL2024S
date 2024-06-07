@@ -50,6 +50,10 @@ public:
         m_Renderer = std::move(renderer);
     }
 
+    void SetApp(App *app) {
+        m_App = app;
+    }
+
 private:
     std::shared_ptr<Rockman> m_Rockman;
     std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine;
@@ -58,6 +62,7 @@ private:
     std::shared_ptr<std::queue<std::shared_ptr<Bomb>>> m_Bombs;
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<Util::Renderer> m_Renderer;
+    App *m_App;
     std::mt19937 gen = std::mt19937(std::random_device{}());
     std::uniform_real_distribution<> dis =
         std::uniform_real_distribution<>(0, 1);
