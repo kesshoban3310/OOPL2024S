@@ -9,11 +9,8 @@
 // 4896 -2832
 class Screwdriver : public Enemy, Shootable {
 public:
-    Screwdriver(glm::vec2 pos, glm::vec2 scale, glm::vec2 collidersize,
-                std::vector<std::string> path, std::string ammopath,
-                Enemy::LifeState lifestate, Enemy::HurtState hurtstate,
-                int health, bool visable);
-    void DoBehavior(glm::vec2 pos) override;
+    Screwdriver(glm::vec2 pos,glm::vec2 scale,glm::vec2 collidersize,std::vector<std::string> path,std::string ammopath,Enemy::LifeState lifestate,Enemy::HurtState hurtstate,int health,bool visable);
+    void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
     void Shoot() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<Ammo>> GetAmmo() {

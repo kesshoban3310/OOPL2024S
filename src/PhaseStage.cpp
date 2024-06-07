@@ -35,6 +35,29 @@ void PhaseStage::Init(App *app) {
     // Load Magazine
     m_Magazine = std::make_shared<std::queue<std::shared_ptr<Ammo>>>();
 
+    // Load Kamadoma
+    std::vector<std::string> KamadomaPath;
+    for (int i = 1; i <= 3; i++) {
+        std::string path = RESOURCE_DIR
+                           "/Picture/Enemies/Bomb Man Stage/Kamadoma/Kamadoma" +
+                           std::to_string(i) + ".png";
+        KamadomaPath.push_back(path);
+    }
+    std::vector<glm::vec2> KamadomaPoints;
+    KamadomaPoints = {
+        glm::vec2{72, -3600},   glm::vec2{312, -3600},  glm::vec2{600, -3600},
+        glm::vec2{835, -3504},  glm::vec2{1031, -3408}, glm::vec2{1226, -3312},
+        glm::vec2{1356, -3412}, glm::vec2{1461, -3506}, glm::vec2{1607, -3600},
+        glm::vec2{1850, -3600}, glm::vec2{2132, -3600}};
+    for(int i=0;i<5;i++){
+        std::shared_ptr<Kamadoma> kamadoma = std::make_shared<Kamadoma>(
+            KamadomaPath, KamadomaPoints, KamadomaPoints[3+i],3+i,
+            glm::vec2{16 * 3, 16 * 3}, 1, true, Enemy::HurtState::COWARDLY);
+        m_Kamadoma.push_back(kamadoma);
+        m_Enemies.push_back(kamadoma);
+        app->GetRoot()->AddChild(kamadoma->GetChild());
+    }
+
     // Load Blaster
     std::vector<std::string> BlasterPath;
     for (int i = 1; i <= 4; i++) {
@@ -52,7 +75,7 @@ void PhaseStage::Init(App *app) {
             glm::vec2{-3, 3}, timer, i % 2, BlasterPath, BlasterAmmoPath, 1,
             true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
         m_Blaster.push_back(blaster);
-        enemies.push_back(blaster);
+        m_Enemies.push_back(blaster);
         app->GetRoot()->AddChild(blaster->GetChild());
     }
     // Load Screwdriver
@@ -74,7 +97,7 @@ void PhaseStage::Init(App *app) {
                 glm::vec2{16 * 3, 16 * 3}, ScrewDriverPath, ScrewDriverAmmoPath,
                 Enemy::LifeState::LIFE, Enemy::HurtState::COWARDLY, 1, true);
         m_Screwdriver.push_back(screwdriver);
-        enemies.push_back(screwdriver);
+        m_Enemies.push_back(screwdriver);
         app->GetRoot()->AddChild(screwdriver->GetChild());
     }
     // Load Bombombomb
@@ -86,7 +109,19 @@ void PhaseStage::Init(App *app) {
             RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb2.png",
             1, true, Enemy::HurtState::COWARDLY);
         m_Bombombomb.push_back(bombombomb);
-        enemies.push_back(bombombomb);
+        m_Enemies.push_back(bombombomb);
+        app->GetRoot()->AddChild(bombombomb->GetChild());
+    }
+    // Load Bombombomb
+    for (int i = 0; i < 4; i++) {
+        std::shared_ptr<Bombombomb> bombombomb = std::make_shared<Bombombomb>(
+            glm::vec2{2515 + 385 * i, -3950}, glm::vec2{0, 12},
+            glm::vec2{16, 16}, glm::vec2{3, 3}, glm::vec2{16 * 3, 16 * 3},
+            RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb1.png",
+            RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb2.png",
+            1, true, Enemy::HurtState::COWARDLY);
+        m_Bombombomb.push_back(bombombomb);
+        m_Enemies.push_back(bombombomb);
         app->GetRoot()->AddChild(bombombomb->GetChild());
     }
     // Load OctopusBattery
@@ -121,7 +156,7 @@ void PhaseStage::Init(App *app) {
         }
         std::swap(OctopusBatteryIniPos, OctopusBatteryFinPos);
         m_OctopusBattery.push_back(octopusbattery);
-        enemies.push_back(octopusbattery);
+        m_Enemies.push_back(octopusbattery);
         app->GetRoot()->AddChild(octopusbattery->GetChild());
     }
     OctopusBatteryIniPos = glm::vec2{12576, -1728};
@@ -154,10 +189,65 @@ void PhaseStage::Init(App *app) {
         }
         std::swap(OctopusBatteryIniPos, OctopusBatteryFinPos);
         m_OctopusBattery.push_back(octopusbattery);
-        enemies.push_back(octopusbattery);
+        m_Enemies.push_back(octopusbattery);
         app->GetRoot()->AddChild(octopusbattery->GetChild());
     }
-
+    // Load KillerBomb
+    m_KillerBomb = std::make_shared<KillerBomb>(
+        glm::vec2{6059, -2051}, glm::vec2{-160, 200}, glm::vec2{3, 3},
+        RESOURCE_DIR
+        "/Picture/Enemies/Bomb Man Stage/KillerBomb/KillerBomb.png",
+        1, true);
+    m_Enemies.push_back(m_KillerBomb);
+    // Loag Mambu
+    m_Mambu = std::make_shared<Mambu>(
+        glm::vec2{9406, -360},
+        std::vector<std::string>{
+            RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Mambu/Mambu1.png",
+            RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Mambu/Mambu2.png"},
+        glm::vec2{-80, 0}, glm::vec2{40, 40},
+        RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Mambu/Mambu3.png",
+        glm::vec2{3, 3}, 1, true);
+    m_Enemies.push_back(m_Mambu);
+    // Load Gabyoll
+    std::vector<std::string> GabyollPath;
+    for (int i = 1; i <= 2; i++) {
+        std::string path = RESOURCE_DIR
+                           "/Picture/Enemies/Bomb Man Stage/Gabyoll/Gabyoll" +
+                           std::to_string(i) + ".png";
+        GabyollPath.push_back(path);
+    }
+    std::vector<std::pair<glm::vec2,glm::vec2> >GabyollPos;
+    GabyollPos = {
+        {glm::vec2 {8108,-1888},glm::vec2 {8260,-1888}},
+        {glm::vec2 {8534,-1744},glm::vec2 {8598,-1744}},
+        {glm::vec2 {8936,-2080},glm::vec2 {7962,-2080}},
+    };
+    for(int i=0;i<3;i++){
+        std::shared_ptr<Gabyoll> gabyoll = std::make_shared<Gabyoll>(
+            GabyollPos[i].first, GabyollPos[i].second, glm::vec2{16 * 3, 8 * 3},
+            GabyollPath, glm::vec2{0, 0}, 1, true, Enemy::HurtState::INVINCIBLE,
+            Enemy::LifeState::LIFE);
+        m_Enemies.push_back(gabyoll);
+        m_Gabyoll.push_back(gabyoll);
+        app->GetRoot()->AddChild(gabyoll->GetChild());
+    }
+    // Load SniperJoe
+    std::vector<std::string> SniperJoePath;
+    for (int i = 1; i <= 4; i++) {
+        std::string path =
+            RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/SniperJoe/SniperJoe" +
+            std::to_string(i) + ".png";
+        SniperJoePath.push_back(path);
+    }
+    std::string SniperJoeAmmoPath =
+        RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/SniperJoe/SniperJoe5.png";
+    m_SniperJoe = std::make_shared<SniperJoe>(
+        glm::vec2{10460, -323}, glm::vec2{10992, -323},
+        glm::vec2{20 * 3, 22 * 3}, glm::vec2{20 * 3, 0 * 3}, glm::vec2{-240, 0},
+        SniperJoePath, SniperJoeAmmoPath, 5, true, Enemy::HurtState::INVINCIBLE,
+        Enemy::LifeState::LIFE);
+    m_Enemies.push_back(m_SniperJoe);
     // setting items
     m_Items = std::make_shared<std::queue<std::shared_ptr<Item>>>();
     std::vector<std::pair<ItemType, glm::vec2>> itemsAttributes = {
@@ -183,7 +273,7 @@ void PhaseStage::Init(App *app) {
     m_CollideEventManager.SetItems(m_Items);
     m_CollideEventManager.SetBombs(m_Bombs);
     m_CollideEventManager.SetScorebar(m_Scorebar);
-    m_CollideEventManager.SetEnemies(enemies);
+    m_CollideEventManager.SetEnemies(m_Enemies);
     m_CollideEventManager.SetRenderer(app->GetRoot());
     m_CollideEventManager.SetApp(app);
 
@@ -215,7 +305,7 @@ void PhaseStage::Init(App *app) {
     // setting person life
     m_PersonLife = std::make_shared<PersonLife>();
     app->GetRoot()->AddChild(m_PersonLife);
-
+    m_EnemyManager.SetEnemies(m_Enemies);
     app->GetRoot()->Update();
 }
 
@@ -240,19 +330,11 @@ void PhaseStage::Update(App *app) {
         return;
     }
     m_Rockman->DoBehavior(*m_ForeObjectTileBox);
-    for (int i = 0; i < 4; i++) {
-        m_Blaster[i]->DoBehavior(m_Rockman->GetPosition());
-    }
-    for (int i = 0; i < 4; i++) {
-        m_Bombombomb[i]->DoBehavior(CameraPos);
-    }
-    for (int i = 0; i < 3; i++) {
-        m_Screwdriver[i]->DoBehavior(m_Rockman->GetPosition());
-    }
 
-    for (int i = 0; i < 8; i++) {
-        m_OctopusBattery[i]->DoBehavior(CameraPos);
-    }
+    glm::vec2 RockmanPos = m_Rockman->GetPosition();
+    int SceneStage = m_SceneManager.GetCurrentScene();
+
+    m_EnemyManager.Update(CameraPos,RockmanPos,SceneStage);
 
     m_CollideEventManager.Update();
     ReloadMagazine(app);
