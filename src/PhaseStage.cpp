@@ -215,6 +215,8 @@ void PhaseStage::Init(App *app) {
     // setting person life
     m_PersonLife = std::make_shared<PersonLife>();
     app->GetRoot()->AddChild(m_PersonLife);
+
+    app->GetRoot()->Update();
 }
 
 void PhaseStage::Update(App *app) {
