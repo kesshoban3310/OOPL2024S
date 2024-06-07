@@ -17,7 +17,8 @@ public:
                    glm::vec2 speed, glm::vec2 scale,
                    std::vector<std::string> path, int health, bool visable,
                    OctopusState state, Enemy::HurtState hurtstate);
-    void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
+    void DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                    int SceneStage) override;
     void PhysicEngine() override;
 
 private:
