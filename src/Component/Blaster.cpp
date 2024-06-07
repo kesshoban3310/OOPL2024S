@@ -17,8 +17,10 @@ Blaster::Blaster(glm::vec2 pos, glm::vec2 collidersize, glm::vec2 scale,
     this->Path = path;
 }
 
-void Blaster::DoBehavior(glm::vec2 pos) {
+void Blaster::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                         int SceneStage) {
     if (Open) {
+        Hurt = Enemy::HurtState::COWARDLY;
         if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
             AnimationInterval) {
             if (PathIndex < 3)
@@ -38,6 +40,7 @@ void Blaster::DoBehavior(glm::vec2 pos) {
         }
     }
     else {
+        Hurt = Enemy::HurtState::INVINCIBLE;
         if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
             AnimationInterval) {
             if (PathIndex > 0)
@@ -57,7 +60,8 @@ void Blaster::DoBehavior(glm::vec2 pos) {
 void Blaster::Shoot() {
     glm::vec2 ammospeed = {360, 0};
     glm::vec2 ammosize = {8 * 3, 8 * 3};
-    std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(glm::vec2{Position->x + 24, Position->y},
-        ammospeed, AmmoPath, ammosize, AmmoType::ENEMY);
+    std::shared_ptr<Ammo> ammo =
+        std::make_shared<Ammo>(glm::vec2{Position->x + 24, Position->y},
+                               ammospeed, AmmoPath, ammosize, AmmoType::ENEMY);
     magazine.push_back(ammo);
 }

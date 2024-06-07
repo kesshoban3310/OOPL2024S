@@ -4,6 +4,7 @@
 #include "Component/Collider.hpp"
 #include "Component/ImageObject.hpp"
 #include "Util/GameObject.hpp"
+#include "Util/Time.hpp"
 #include "glm/vec2.hpp"
 #include "pch.hpp"
 #include <memory>
@@ -26,7 +27,9 @@ public:
           glm::vec2 collidersize, HurtState state,
           LifeState lifeState = LifeState::LIFE, glm::vec2 scale = {3, 3});
     virtual ~Enemy() = default;
-    virtual void DoBehavior(glm::vec2 position) = 0;
+    virtual void DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                            int SceneStage) = 0;
+    void Revival();
 
     virtual glm::vec2 GetPosition();
     virtual void SetPosition(glm::vec2 pos);
@@ -57,9 +60,12 @@ protected:
     std::shared_ptr<Collider> Hitbox;
     HurtState Hurt;
     glm::vec2 Scale;
-    int Health;
+    int Health, InitialHealth;
     bool Visable;
     LifeState Life;
+
+    std::string ID;
+    long long RevivalTime = 3000, RevivalTimer = 0;
 };
 
 class Attackable {

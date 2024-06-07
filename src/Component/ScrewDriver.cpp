@@ -16,9 +16,11 @@ Screwdriver::Screwdriver(glm::vec2 pos, glm::vec2 scale, glm::vec2 collidersize,
     this->ObjectPath = path;
     this->AmmoPath = ammopath;
 }
-void Screwdriver::DoBehavior(glm::vec2 pos) {
-    double Distance = sqrt(((pos.x - Position->x) * (pos.x - Position->x)) +
-                           ((pos.y - Position->y) * (pos.y - Position->y)));
+void Screwdriver::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                             int SceneStage) {
+    double Distance =
+        sqrt(((RockmanPos.x - Position->x) * (RockmanPos.x - Position->x)) +
+             ((RockmanPos.y - Position->y) * (RockmanPos.y - Position->y)));
     if (Distance <= 250)
         StartUp = true;
     if (StartUp) {

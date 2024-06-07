@@ -13,7 +13,8 @@ public:
                 std::vector<std::string> path, std::string ammopath,
                 Enemy::LifeState lifestate, Enemy::HurtState hurtstate,
                 int health, bool visable);
-    void DoBehavior(glm::vec2 pos) override;
+    void DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                    int SceneStage) override;
     void Shoot() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<Ammo>> GetAmmo() {

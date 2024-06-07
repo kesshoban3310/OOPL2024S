@@ -12,11 +12,12 @@
 
 // Y axis From -3950 to -3240
 Bombombomb::Bombombomb(glm::vec2 pos, glm::vec2 speed, glm::vec2 ammospeed,
-                       glm::vec2 scale, glm::vec2 colldiersize,std::string path,
-                       std::string ammopath,int health,bool visable,Enemy::HurtState hurtState)
-: Enemy(pos,path,health,visable,colldiersize,hurtState){
+                       glm::vec2 scale, glm::vec2 colldiersize,
+                       std::string path, std::string ammopath, int health,
+                       bool visable, Enemy::HurtState hurtState)
+    : Enemy(pos, path, health, visable, colldiersize, hurtState) {
     this->Path = path;
-    this->AmmoPath =  ammopath;
+    this->AmmoPath = ammopath;
     this->InitialPosition = pos;
     this->FinalPosition = glm::vec2{pos.x, -3240};
     this->Speed = speed;
@@ -24,18 +25,22 @@ Bombombomb::Bombombomb(glm::vec2 pos, glm::vec2 speed, glm::vec2 ammospeed,
     this->AmmoSpeed = ammospeed;
 }
 
-void Bombombomb::DoBehavior(glm::vec2 position) {
-    float direction = sqrt((position.x-Position->x)*(position.x-Position->x) + (position.y-Position->y)*(position.y-Position->y));
-    if(direction <= 630) {
-        if(!BeSmallBomb)
+void Bombombomb::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                            int SceneStage) {
+    float direction =
+        sqrt((CameraPos.x - Position->x) * (CameraPos.x - Position->x) +
+             (CameraPos.y - Position->y) * (CameraPos.y - Position->y));
+    if (direction <= 630) {
+        if (!BeSmallBomb)
             PhysicEngine();
         else
             SmallBombMove();
     }
-    else{ //Set to Initial.
+    else { // Set to Initial.
         Object->SetPosition(InitialPosition);
         *Position = InitialPosition;
         WaitingCounter = 0;
+        BeSmallBomb = 0;
     }
 }
 void Bombombomb::PhysicEngine() {
@@ -55,10 +60,7 @@ void Bombombomb::PhysicEngine() {
     }
 }
 void Bombombomb::Split() {
-    for(int i=0;i<4;i++){
-
+    for (int i = 0; i < 4; i++) {
     }
 }
-void Bombombomb::SmallBombMove() {
-
-}
+void Bombombomb::SmallBombMove() {}
