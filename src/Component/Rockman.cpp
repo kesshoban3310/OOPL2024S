@@ -405,7 +405,10 @@ void Rockman::Death() {
         Visable = -1;
         CharacterImage->SetVisible(false);
         CharacterAnimate->SetVisible(false);
+<<<<<<< HEAD
 
+=======
+>>>>>>> c172e7be154d7c9ef6b05a888234475b3408cb76
     }
     if (!CharacterDeath[0]->GetVisibility()) {
         for (int i = 0; i < 12; i++) {
@@ -677,9 +680,12 @@ void Rockman::SetInvincible() {
     InvincibleTimer = Util::Time::GetElapsedTimeMs();
 }
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> c172e7be154d7c9ef6b05a888234475b3408cb76
 void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
                                    std::string locate) {
     LOG_DEBUG("=========" + locate + "============");

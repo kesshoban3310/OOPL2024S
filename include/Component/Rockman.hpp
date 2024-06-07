@@ -74,7 +74,11 @@ public:
     void SetHealth(int hp);
     /**
      * @brief Get Rockman's LiveState.
+<<<<<<< HEAD
      * @param health for Rockman's health.
+=======
+     * @param Statement for Rockman's LifeState.
+>>>>>>> c172e7be154d7c9ef6b05a888234475b3408cb76
      */
     LiveState GetCurrentState();
     /**

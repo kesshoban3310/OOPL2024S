@@ -31,6 +31,8 @@ public:
         return m_RemainingTime > 0.0f && !m_MarkedForRemoval;
     }
 
+    [[nodiscard]] glm::vec2 GetPosition() const { return *m_Position; }
+
     void MarkForRemoval() { m_MarkedForRemoval = true; }
 
     void
