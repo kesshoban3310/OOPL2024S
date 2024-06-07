@@ -405,6 +405,7 @@ void Rockman::Death() {
         Visable = -1;
         CharacterImage->SetVisible(false);
         CharacterAnimate->SetVisible(false);
+
     }
     if (!CharacterDeath[0]->GetVisibility()) {
         for (int i = 0; i < 12; i++) {
@@ -488,7 +489,7 @@ void Rockman::Shoot() {
         std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
             ammo_position, direction,
             RESOURCE_DIR "/Picture/Character/Shooting/Ammo.png",
-            glm::vec2{8 * 3, 8 * 3}, AmmoType::ROCKMAN);
+            glm::vec2{8 * 3, 8 * 3}, Ammo::Type::ROCKMAN);
         Magazine.push_back(ammo);
         ShootTimer = Util::Time::GetElapsedTimeMs();
         return;
@@ -675,6 +676,9 @@ void Rockman::SetInvincible() {
     Invincible = true;
     InvincibleTimer = Util::Time::GetElapsedTimeMs();
 }
+
+
+
 
 void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
                                    std::string locate) {
