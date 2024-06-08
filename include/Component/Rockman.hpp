@@ -74,7 +74,6 @@ public:
     void SetHealth(int hp);
     /**
      * @brief Get Rockman's LiveState.
-     * @param health for Rockman's health.
      */
     LiveState GetCurrentState();
     /**
@@ -87,6 +86,10 @@ public:
      */
     bool GetInvincible();
 
+    /**
+     * @brief Set Rockman's livestate.
+     * @param Rockman's livestate
+     */
     void SetLifeState(Rockman::LiveState livestate);
     /**
      * @brief collect all object in character.

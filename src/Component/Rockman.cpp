@@ -405,7 +405,6 @@ void Rockman::Death() {
         Visable = -1;
         CharacterImage->SetVisible(false);
         CharacterAnimate->SetVisible(false);
-
     }
     if (!CharacterDeath[0]->GetVisibility()) {
         for (int i = 0; i < 12; i++) {
@@ -413,6 +412,8 @@ void Rockman::Death() {
             CharacterDeath[i]->SetVisible(true);
         }
     }
+    if (CharacterDeath[0]->GetPosition().x > Position->x + 150)
+        return;
 
     int negative = 1;
     for (int i = 0; i < 4; i++) {
@@ -487,7 +488,7 @@ void Rockman::Shoot() {
         std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
             ammo_position, direction,
             RESOURCE_DIR "/Picture/Character/Shooting/Ammo.png",
-            glm::vec2{8 * 3, 8 * 3}, Ammo::Type::ROCKMAN);
+            glm::vec2{8 * 3, 8 * 3}, AmmoType::ROCKMAN);
         Magazine.push_back(ammo);
         ShootTimer = Util::Time::GetElapsedTimeMs();
         return;
@@ -521,7 +522,7 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
     std::set<RockmanCollison> box;
     for (int i = 0; i < collison.size(); i++) {
         Collider rockmanup = *ColliderBox[0], rockmandown = *ColliderBox[1];
-        if (collison[i]->GetObjectType() == TileBox::ObjectType::CLIMB) { //If block is ladder
+        if (collison[i]->GetObjectType() == TileBox::ObjectType::CLIMB) {
             if (IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))) {
                 bool OverLap = IfObjectIsOverlaping(
                     rockmandown, *(collison[i]->Getcollisonbox()));
@@ -539,30 +540,22 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
             }
             continue;
         }
-        else if(collison[i]->GetObjectType() == TileBox::ObjectType::DAMAGE){
-            if (IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))){
-                RockmanState = LiveState::Death;
-                return {};
-            }
-        }
-        else{
-            auto collisonresult =
-                WhereIsColliding(rockmanup, *(collison[i]->Getcollisonbox()));
-            if (collisonresult.count(Collider::Bound::TOP))
-                box.insert(RockmanCollison::TOP);
-            if (collisonresult.count(Collider::Bound::LEFT))
-                box.insert(RockmanCollison::UPLEFT);
-            if (collisonresult.count(Collider::Bound::RIGHT))
-                box.insert(RockmanCollison::UPRIGHT);
-            collisonresult =
-                WhereIsColliding(rockmandown, *(collison[i]->Getcollisonbox()));
-            if (collisonresult.count(Collider::Bound::LEFT))
-                box.insert(RockmanCollison::DOWNLEFT);
-            if (collisonresult.count(Collider::Bound::RIGHT))
-                box.insert(RockmanCollison::DOWNRIGHT);
-            if (collisonresult.count(Collider::Bound::BOTTOM))
-                box.insert(RockmanCollison::BOTTOM);
-        }
+        auto collisonresult =
+            WhereIsColliding(rockmanup, *(collison[i]->Getcollisonbox()));
+        if (collisonresult.count(Collider::Bound::TOP))
+            box.insert(RockmanCollison::TOP);
+        if (collisonresult.count(Collider::Bound::LEFT))
+            box.insert(RockmanCollison::UPLEFT);
+        if (collisonresult.count(Collider::Bound::RIGHT))
+            box.insert(RockmanCollison::UPRIGHT);
+        collisonresult =
+            WhereIsColliding(rockmandown, *(collison[i]->Getcollisonbox()));
+        if (collisonresult.count(Collider::Bound::LEFT))
+            box.insert(RockmanCollison::DOWNLEFT);
+        if (collisonresult.count(Collider::Bound::RIGHT))
+            box.insert(RockmanCollison::DOWNRIGHT);
+        if (collisonresult.count(Collider::Bound::BOTTOM))
+            box.insert(RockmanCollison::BOTTOM);
     }
     return box;
 }
@@ -685,9 +678,6 @@ void Rockman::SetInvincible() {
 void Rockman::SetLifeState(Rockman::LiveState livestate) {
     RockmanState = livestate;
 }
-
-
-
 void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
                                    std::string locate) {
     LOG_DEBUG("=========" + locate + "============");

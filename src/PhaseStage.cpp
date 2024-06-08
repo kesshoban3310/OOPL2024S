@@ -1,8 +1,13 @@
 #include "PhaseStage.hpp"
 #include "Util/Input.hpp"
 #include "Util/Time.hpp"
+#include "algorithm"
+#include "limits"
 
 void PhaseStage::Init(App *app) {
+    // define enemy array
+    std::vector<std::shared_ptr<Enemy>> enemies;
+
     // Load the map
     m_BackgroundObjects = std::make_shared<Backgroundmap>("Bomb Man Stage");
     m_ForegroundObjects = std::make_shared<Backgroundmap>("Bomb Man Stage");
@@ -18,14 +23,17 @@ void PhaseStage::Init(App *app) {
 
     // Load Scorebar
     m_Scorebar = std::make_shared<Scorebar>(glm::vec2{360, -3408});
-    // Lode Testbox
+    // Load Testbox
     m_Testbox =
-        std::make_shared<TestBox>(glm::vec2{360, -3477.5}, glm::vec2{3, 3});
-
+        std::make_shared<TestBox>(glm::vec2{360, -3408}, glm::vec2{3, 3});
     // Load Map
     m_BackgroundObjects->SetImagetoBackgroundObject();
     m_ForegroundObjects->SetImagetoForegroundObject();
-    m_ForeObjectTileBox = m_ForegroundObjects->GetTileBox();
+    m_ForeObjectTileBox =
+        std::make_shared<std::vector<std::shared_ptr<TileBox>>>(
+            m_ForegroundObjects->GetTileBox());
+    // Load Magazine
+    m_Magazine = std::make_shared<std::queue<std::shared_ptr<Ammo>>>();
 
     // Load Kamadoma
     std::vector<std::string> KamadomaPath;
@@ -49,6 +57,7 @@ void PhaseStage::Init(App *app) {
         m_Enemies.push_back(kamadoma);
         app->GetRoot()->AddChild(kamadoma->GetChild());
     }
+
     // Load Blaster
     std::vector<std::string> BlasterPath;
     for (int i = 1; i <= 4; i++) {
@@ -69,7 +78,6 @@ void PhaseStage::Init(App *app) {
         m_Enemies.push_back(blaster);
         app->GetRoot()->AddChild(blaster->GetChild());
     }
-
     // Load Screwdriver
     std::vector<std::string> ScrewDriverPath;
     for (int i = 1; i <= 5; i++) {
@@ -92,7 +100,18 @@ void PhaseStage::Init(App *app) {
         m_Enemies.push_back(screwdriver);
         app->GetRoot()->AddChild(screwdriver->GetChild());
     }
-
+    // Load Bombombomb
+    for (int i = 0; i < 4; i++) {
+        std::shared_ptr<Bombombomb> bombombomb = std::make_shared<Bombombomb>(
+            glm::vec2{2515 + 385 * i, -3950}, glm::vec2{0, 12},
+            glm::vec2{16, 16}, glm::vec2{3, 3}, glm::vec2{16 * 3, 16 * 3},
+            RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb1.png",
+            RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb2.png",
+            1, true, Enemy::HurtState::COWARDLY);
+        m_Bombombomb.push_back(bombombomb);
+        m_Enemies.push_back(bombombomb);
+        app->GetRoot()->AddChild(bombombomb->GetChild());
+    }
     // Load Bombombomb
     for (int i = 0; i < 4; i++) {
         std::shared_ptr<Bombombomb> bombombomb = std::make_shared<Bombombomb>(
@@ -118,7 +137,7 @@ void PhaseStage::Init(App *app) {
         std::shared_ptr<OctopusBattery> octopusbattery =
             std::make_shared<OctopusBattery>(
                 OctopusBatteryIniPos, OctopusBatteryFinPos,
-                glm::vec2{16 * 3, 16 * 3}, glm::vec2{16, 0}, glm::vec2{3, 3},
+                glm::vec2{12 * 3, 12 * 3}, glm::vec2{16, 0}, glm::vec2{3, 3},
                 std::vector<std::string>{
                     RESOURCE_DIR "/Picture/Enemies/Bomb Man "
                                  "Stage/OctopusBattery/OctopusBattery1.png",
@@ -229,17 +248,44 @@ void PhaseStage::Init(App *app) {
         SniperJoePath, SniperJoeAmmoPath, 5, true, Enemy::HurtState::INVINCIBLE,
         Enemy::LifeState::LIFE);
     m_Enemies.push_back(m_SniperJoe);
+    // setting items
+    m_Items = std::make_shared<std::queue<std::shared_ptr<Item>>>();
+    std::vector<std::pair<ItemType, glm::vec2>> itemsAttributes = {
+        {ItemType::SMALL_HEALTH_ENERGY, {4704, -3270}},
+        {ItemType::SMALL_HEALTH_ENERGY, {4748, -3270}},
+        {ItemType::BIG_WEAPON_ENERGY, {5176, -3540}},
+        {ItemType::BIG_HEALTH_ENERGY, {5176, -2830}},
+        {ItemType::ONE_UP, {10718, -328}}};
+    for (auto itemAttribute : itemsAttributes) {
+        std::shared_ptr<Item> item =
+            std::make_shared<Item>(itemAttribute.first, itemAttribute.second,
+                                   std::numeric_limits<float>::infinity());
+        m_Items->push(item);
+        app->GetRoot()->AddChild(item);
+    }
+
+    // setting bomb
+    m_Bombs = std::make_shared<std::queue<std::shared_ptr<Bomb>>>();
+
+    // Set the collide event manager
+    m_CollideEventManager.SetRockman(m_Rockman);
+    m_CollideEventManager.SetMagazine(m_Magazine);
+    m_CollideEventManager.SetItems(m_Items);
+    m_CollideEventManager.SetBombs(m_Bombs);
+    m_CollideEventManager.SetScorebar(m_Scorebar);
+    m_CollideEventManager.SetEnemies(m_Enemies);
+    m_CollideEventManager.SetRenderer(app->GetRoot());
+    m_CollideEventManager.SetApp(app);
+
     // Add the root
+    m_Rockman->DoBehavior(*m_ForeObjectTileBox);
     m_Scorebar->Show({360, -3408});
     app->GetRoot()->AddChild(m_Testbox->Getchild());
-    app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
-    app->GetRoot()->AddChild(m_KillerBomb->GetChild());
-    app->GetRoot()->AddChild(m_Mambu->GetChild());
-    app->GetRoot()->AddChild(m_SniperJoe->GetChild());
-    app->GetRoot()->AddChildren(m_Rockman->GetAllChildren());
-    app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
     app->GetRoot()->AddChildren(m_BackgroundObjects->GetChildren());
     app->GetRoot()->AddChildren(m_ForegroundObjects->GetChildren());
+    app->GetRoot()->AddChildren(m_Rockman->GetAllChildren());
+    app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
+    app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
 
     // TODO: remove camera movement in the futures
     app->SetCameraPosition({360, -3408});
@@ -255,80 +301,94 @@ void PhaseStage::Init(App *app) {
         {7, {{12264, -1512}, {13032, -2280}}},
         {8, {{12264, -2280}, {13032, -3048}}},
     });
-    m_EnemyManager.SetEnemies(m_Enemies);
 
-    app->Update();
+    // setting person life
+    m_PersonLife = std::make_shared<PersonLife>();
+    app->GetRoot()->AddChild(m_PersonLife);
+    m_EnemyManager.SetEnemies(m_Enemies);
+    app->GetRoot()->Update();
 }
 
 void PhaseStage::Update(App *app) {
     // update SceneManager
     m_SceneManager.Update(m_Rockman->GetPosition());
     app->SetCameraPosition(m_SceneManager.GetCameraPosition());
+
     // get some info
     glm::vec2 CameraPos = app->GetCameraPosition();
 
-    // show healthbar and scorebar
+    // set healthbar and scorebar and person life ui
     m_Scorebar->Show(CameraPos);
     m_RockmanHealthBar->SetPosition(
         glm::vec2{CameraPos.x - 311, CameraPos.y + 201});
+    m_RockmanHealthBar->SetVisable(std::max(m_Rockman->GetHealth(), 0));
+    m_PersonLife->Update(app->GetLifeCount(), CameraPos);
 
     // if changing scene, return
     if (m_SceneManager.IsChangingScene()) {
         LOG_DEBUG("Changing Scene");
         return;
     }
-
-    m_Rockman->DoBehavior(m_ForeObjectTileBox);
+    m_Rockman->DoBehavior(*m_ForeObjectTileBox);
 
     glm::vec2 RockmanPos = m_Rockman->GetPosition();
     int SceneStage = m_SceneManager.GetCurrentScene();
 
     m_EnemyManager.Update(CameraPos,RockmanPos,SceneStage);
-    ReloadMagazine(app);
 
+    m_CollideEventManager.Update();
+    ReloadMagazine(app);
+    // m_Testbox->Move();
     if(!CheckIfRockmanInMap(CameraPos,RockmanPos,glm::vec2{50,50}) &&
         m_Rockman->GetCurrentState() == Rockman::LiveState::Normal){
         //Let Rockman Die.
         m_Rockman->SetLifeState(Rockman::LiveState::Death);
     }
-    m_Testbox->Move();
-    if (Util::Input::IsKeyPressed(Util::Keycode::Q)) {
-        LOG_INFO("Testbox Position");
-        LOG_INFO(std::to_string(m_Testbox->GetPosition().x) + " " +
-                 std::to_string(m_Testbox->GetPosition().y));
-    }
+
     /*
     LOG_INFO("Camera Position");
     LOG_INFO(std::to_string(app->GetCameraPosition().x)+"
     "+std::to_string(app->GetCameraPosition().y)); LOG_INFO("Rockman Position");
-    LOG_INFO(std::to_string(m_Rockman->GetPosition().x)+"
-    "+std::to_string(m_Rockman->GetPosition().y)); LOG_INFO("Root Size");
+    LOG_INFO(std::to_string(m_Rockman->Getposition().x)+"
+    "+std::to_string(m_Rockman->Getposition().y)); LOG_INFO("Root Size");
     LOG_INFO(std::to_string(app->GetRoot()->size()));
     LOG_INFO("Bombombomb Position");
     LOG_INFO(std::to_string(m_Bombombomb[0]->GetPosition().x)+"
     "+std::to_string(m_Bombombomb[0]->GetPosition().y));
     */
-    if (Util::Input::IsKeyPressed(Util::Keycode::B)) {
-        m_Rockman->SetPosition(CameraPos);
-        m_Testbox->SetPosition(CameraPos);
-    }
+    if (Util::Input::IsKeyPressed(Util::Keycode::B))
+        m_Rockman->SetPosition(app->GetCameraPosition());
     if (Util::Input::IsKeyPressed(Util::Keycode::L)) {
-        m_Rockman->SetPosition({7962,-2000});
-        m_Testbox->SetPosition({7962,-2000});
+        m_Rockman->SetPosition({12638, -398});
+        m_Testbox->SetPosition({12638, -398});
     }
-    if(Util::Input::IsKeyPressed(Util::Keycode::G)){
-        m_Rockman->SetLifeState(Rockman::LiveState::Normal);
+
+    // bomb test
+    /*
+    if (Util::Input::IsKeyUp(Util::Keycode::R)) {
+        std::shared_ptr<Bomb> bomb = std::make_shared<Bomb>(
+            RESOURCE_DIR "/Picture/Bomb/Bomb.png",
+            glm::vec2{330, -3308}, glm::vec2{540, -3308}, -3200);
+        m_Bombs->push(bomb);
+        app->GetRoot()->AddChild(bomb);
     }
-    // m_Rockman->SetPosition({360,-3408});
-    //  TODO : change this to win
+    */
+    UpdateItems(app);
+    UpdateBombs(app);
+
+    // TODO : change this to win
     if (Util::Input::IsKeyUp(Util::Keycode::I)) {
         app->ChangeState(App::State::ENDING_ANIMATION);
         return;
     }
 
-    // TODO : change this to lose
+    // TODO : change this condition to lose a life
     if (Util::Input::IsKeyUp(Util::Keycode::O)) {
-        app->ChangeState(App::State::LOSE);
+        app->SetLifeCount(app->GetLifeCount() - 1);
+        if (app->GetLifeCount() == 0)
+            app->ChangeState(App::State::LOSE);
+        else
+            app->ChangeState(App::State::STAGE);
         return;
     }
 }
@@ -341,47 +401,66 @@ void PhaseStage::ReloadMagazine(App *app) {
     glm::vec2 CameraPosition = app->GetCameraPosition();
     auto magazine = m_Rockman->GetAmmo();
     for (auto Ammo : magazine) {
-        m_Magazine.push(Ammo);
+        m_Magazine->push(Ammo);
         app->GetRoot()->AddChild(Ammo->GetChild());
     }
     for (int i = 0; i < 4; i++) { // Blaster Magazine
         magazine = m_Blaster[i]->Getammo();
         for (auto Ammo : magazine) {
-            m_Magazine.push(Ammo);
+            m_Magazine->push(Ammo);
             app->GetRoot()->AddChild(Ammo->GetChild());
         }
     }
     for (int i = 0; i < 3; i++) { // Screwdriver Magazine
         magazine = m_Screwdriver[i]->GetAmmo();
         for (auto Ammo : magazine) {
-            m_Magazine.push(Ammo);
+            m_Magazine->push(Ammo);
             app->GetRoot()->AddChild(Ammo->GetChild());
         }
     }
-    for (int i = 0; i < 1; i++) { // SniperJoe Ammo
-        magazine = m_SniperJoe->GetAmmo();
-        for (auto Ammo : magazine) {
-            m_Magazine.push(Ammo);
-            app->GetRoot()->AddChild(Ammo->GetChild());
-        }
-    }
-    magazine = m_Mambu->GetAmmo();
-    for (auto Ammo : magazine) {
-        m_Magazine.push(Ammo);
-        app->GetRoot()->AddChild(Ammo->GetChild());
-    }
-    int magazine_size = m_Magazine.size();
+    int magazine_size = m_Magazine->size();
     for (int i = 0; i < magazine_size; i++) {
-        auto Ammo = m_Magazine.front();
-        m_Magazine.pop();
+        auto Ammo = m_Magazine->front();
+        m_Magazine->pop();
         Ammo->Behavior();
-        if (Ammo->Outofrange(CameraPosition)) {
+        if (Ammo->Outofrange(CameraPosition) || Ammo->IsMarkedForRemoval()) {
             app->GetRoot()->RemoveChild(Ammo->GetChild());
             continue;
         }
-        m_Magazine.push(Ammo);
+        m_Magazine->push(Ammo);
     }
 }
+
+void PhaseStage::UpdateItems(App *app) {
+    int itemSize = (int)m_Items->size();
+    for (int i = 0; i < itemSize; i++) {
+        auto item = m_Items->front();
+        m_Items->pop();
+        item->Update(m_ForeObjectTileBox);
+        if (!item->IsAlive() ||
+            m_SceneManager.IsFallOutOfScene(item->GetPosition())) {
+            app->GetRoot()->RemoveChild(item);
+            continue;
+        }
+        m_Items->push(item);
+    }
+}
+
+void PhaseStage::UpdateBombs(App *app) {
+    int bombSize = (int)m_Bombs->size();
+    for (int i = 0; i < bombSize; i++) {
+        auto bomb = m_Bombs->front();
+        m_Bombs->pop();
+        bomb->Update(m_ForeObjectTileBox);
+        if (!bomb->IsAlive() ||
+            m_SceneManager.IsFallOutOfScene(bomb->GetPosition())) {
+            app->GetRoot()->RemoveChild(bomb);
+            continue;
+        }
+        m_Bombs->push(bomb);
+    }
+}
+
 bool PhaseStage::CheckIfRockmanInMap(glm::vec2 cameraposition,glm::vec2 position,glm::vec2 offset) {
     float LeftX = cameraposition.x-384-offset.x,RightX = cameraposition.x+384+offset.x;
     float BottomY = cameraposition.y-360-offset.y,TopY = cameraposition.y+360+offset.y;
