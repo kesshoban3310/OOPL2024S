@@ -522,7 +522,7 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
     std::set<RockmanCollison> box;
     for (int i = 0; i < collison.size(); i++) {
         Collider rockmanup = *ColliderBox[0], rockmandown = *ColliderBox[1];
-        if (collison[i]->GetObjectType() == TileBox::ObjectType::CLIMB) {
+        if (collison[i]->GetObjectType() == TileBox::ObjectType::CLIMB) { //If block is ladder
             if (IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))) {
                 bool OverLap = IfObjectIsOverlaping(
                     rockmandown, *(collison[i]->Getcollisonbox()));
@@ -540,22 +540,30 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
             }
             continue;
         }
-        auto collisonresult =
-            WhereIsColliding(rockmanup, *(collison[i]->Getcollisonbox()));
-        if (collisonresult.count(Collider::Bound::TOP))
-            box.insert(RockmanCollison::TOP);
-        if (collisonresult.count(Collider::Bound::LEFT))
-            box.insert(RockmanCollison::UPLEFT);
-        if (collisonresult.count(Collider::Bound::RIGHT))
-            box.insert(RockmanCollison::UPRIGHT);
-        collisonresult =
-            WhereIsColliding(rockmandown, *(collison[i]->Getcollisonbox()));
-        if (collisonresult.count(Collider::Bound::LEFT))
-            box.insert(RockmanCollison::DOWNLEFT);
-        if (collisonresult.count(Collider::Bound::RIGHT))
-            box.insert(RockmanCollison::DOWNRIGHT);
-        if (collisonresult.count(Collider::Bound::BOTTOM))
-            box.insert(RockmanCollison::BOTTOM);
+        else if(collison[i]->GetObjectType() == TileBox::ObjectType::DAMAGE){
+            if (IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))){
+                RockmanState = LiveState::Death;
+                return {};
+            }
+        }
+        else{
+            auto collisonresult =
+                WhereIsColliding(rockmanup, *(collison[i]->Getcollisonbox()));
+            if (collisonresult.count(Collider::Bound::TOP))
+                box.insert(RockmanCollison::TOP);
+            if (collisonresult.count(Collider::Bound::LEFT))
+                box.insert(RockmanCollison::UPLEFT);
+            if (collisonresult.count(Collider::Bound::RIGHT))
+                box.insert(RockmanCollison::UPRIGHT);
+            collisonresult =
+                WhereIsColliding(rockmandown, *(collison[i]->Getcollisonbox()));
+            if (collisonresult.count(Collider::Bound::LEFT))
+                box.insert(RockmanCollison::DOWNLEFT);
+            if (collisonresult.count(Collider::Bound::RIGHT))
+                box.insert(RockmanCollison::DOWNRIGHT);
+            if (collisonresult.count(Collider::Bound::BOTTOM))
+                box.insert(RockmanCollison::BOTTOM);
+        }
     }
     return box;
 }
