@@ -34,7 +34,6 @@ private:
     long long CoolDownTime = 500,CoolDownTimer = 0; //Free for next Jumping time.
 
     long long StartJumpingTime = 0,JumpingTimer = 0, JumpingTime = 3000; //Calculate Jumping Animation.
-
     glm::vec2 Speed;
     float JumpHigh = 122.5f;
 
@@ -47,3 +46,4 @@ private:
     int InitialIdx;
 };
 #endif
+

@@ -484,7 +484,7 @@ bool PhaseStage::CheckIfRockmanInMap(glm::vec2 cameraposition,glm::vec2 position
     float LeftX = cameraposition.x-384-offset.x,RightX = cameraposition.x+384+offset.x;
     float BottomY = cameraposition.y-360-offset.y,TopY = cameraposition.y+360+offset.y;
     return (LeftX <= position.x && position.x <= RightX) && (BottomY <= position.y && position.y <= TopY);
-}
+
 void PhaseStage::RockmanRivival() {
     if(RockmanRivivalTimer == 0){
         RockmanRivivalTimer = Util::Time::GetElapsedTimeMs();
@@ -515,3 +515,4 @@ void PhaseStage::StartAnimation() {
         m_Rockman->SetLifeState(Rockman::LiveState::Spawn);
     }
 }
+

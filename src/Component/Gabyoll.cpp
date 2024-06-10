@@ -6,6 +6,7 @@
 
 #define PI 3.1415926535
 
+
 Gabyoll::Gabyoll(glm::vec2 inipos, glm::vec2 finpos,glm::vec2 collidersize, std::vector<std::string> path, glm::vec2 speed, int health, bool visable, Enemy::HurtState hurtstate, Enemy::LifeState lifestate)
     : Enemy(inipos,path[0],health,visable,collidersize,hurtstate,lifestate){
     this->Path = path;
@@ -14,9 +15,10 @@ Gabyoll::Gabyoll(glm::vec2 inipos, glm::vec2 finpos,glm::vec2 collidersize, std:
     this->length = glm::vec2 {finpos.x-inipos.x,finpos.y-inipos.y};
     this->Finpos = finpos;
 };
-void Gabyoll::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
+void Gabyoll::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                         int SceneStage) {
     float dirx = Position->x - CameraPos.x;
-    if(Life == Enemy::LifeState::LIFE && (-384 <= dirx && dirx <= 384)){
+    if (Life == Enemy::LifeState::LIFE && (-384 <= dirx && dirx <= 384)) {
         PhysicEngine();
     }
 }

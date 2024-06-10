@@ -1,6 +1,7 @@
 #ifndef KILLER_BOMB_HPP
 #define KILLER_BOMB_HPP
 
+
 #include "Component/EnemyAttribute.hpp"
 #include "Component/ImageObject.hpp"
 #include "Component/Collider.hpp"
@@ -21,8 +22,7 @@ public:
     void SetVisable(bool visable);
     bool GetVisable();
 private:
-    long long CoolDownTimer = 0,CoolDownTime = 500;
-
+    long long CoolDownTimer = 0, CoolDownTime = 500;
     std::string Path;
     glm::vec2 Scale;
     glm::vec2 Speed;

@@ -67,7 +67,6 @@ private:
     void UpdateItems(App *app);
     void UpdateBombs(App *app);
     bool CheckIfRockmanInMap(glm::vec2 cameraposition,glm::vec2 position,glm::vec2 offset);
-
     //Rockman's Rivival Place.
     std::unordered_map<int,glm::vec2> RockmanRevivalPosition = {
         {0, {258, -3056}},
@@ -83,6 +82,7 @@ private:
     //Start Animation For Start.
     long long StartTimer = 0,StartTime = 3000;
     void StartAnimation();
+
 };
 
 #endif // PHASE_STAGE_HPP

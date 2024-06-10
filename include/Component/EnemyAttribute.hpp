@@ -27,7 +27,9 @@ public:
           glm::vec2 collidersize, HurtState state,
           LifeState lifeState = LifeState::LIFE, glm::vec2 scale = {3, 3});
     virtual ~Enemy() = default;
-    virtual void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) = 0;
+    virtual void DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                            int SceneStage) = 0;
+
     void Revival();
 
     virtual glm::vec2 GetPosition();
@@ -61,7 +63,7 @@ protected:
     std::shared_ptr<Collider> Hitbox;
     HurtState Hurt;
     glm::vec2 Scale;
-    int Health;
+    int Health, InitialHealth;
     bool Visable;
     LifeState Life;
     std::string ID;
@@ -73,6 +75,8 @@ protected:
     bool InitialVisable;
     LifeState InitialLife;
     HurtState InitialHurt;
+    std::string ID;
+    long long RevivalTime = 3000, RevivalTimer = 0;
 };
 
 class Attackable {

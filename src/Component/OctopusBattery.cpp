@@ -18,9 +18,12 @@ OctopusBattery::OctopusBattery(glm::vec2 inipos,glm::vec2 finpos,glm::vec2 colli
     this->InitialFinalPos = finpos;
     this->InitialState = state;
 }
-void OctopusBattery::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
-    float direction = sqrt((CameraPos.x-Position->x)*(CameraPos.x-Position->x) + (CameraPos.y-Position->y)*(CameraPos.y-Position->y));
-    if(direction<=530){
+void OctopusBattery::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                                int SceneStage) {
+    float direction =
+        sqrt((CameraPos.x - Position->x) * (CameraPos.x - Position->x) +
+             (CameraPos.y - Position->y) * (CameraPos.y - Position->y));
+    if (direction <= 530) {
         PhysicEngine();
     }
 }

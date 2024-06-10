@@ -7,9 +7,10 @@
 #include <cstdlib>
 #include <time.h>
 
-class SniperJoe : public Enemy, Physic,Shootable {
+
+class SniperJoe : public Enemy, Physic, Shootable {
 public:
-    enum class PhysicState{
+    enum class PhysicState {
         SHOOT,
         JUMP,
         MOVE,
@@ -37,6 +38,7 @@ private:
     glm::vec2 Speed;
     glm::vec2 AmmoSpeed;
     glm::vec2 JumpHigh = {0, 160};
+
     glm::vec2 IniPos,FinPos;
     std::vector<std::shared_ptr<Ammo>> Magazine;
     int JumpTheta = 0;
