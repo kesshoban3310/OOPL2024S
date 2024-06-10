@@ -63,6 +63,7 @@ private:
     void ReloadMagazine(App *app); // Update Every Ammo In The Stage.
     void UpdateItems(App *app);
     void UpdateBombs(App *app);
+    bool CheckIfRockmanInMap(glm::vec2 cameraposition,glm::vec2 position,glm::vec2 offset);
 };
 
 #endif // PHASE_STAGE_HPP

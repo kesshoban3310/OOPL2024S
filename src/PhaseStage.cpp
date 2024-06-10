@@ -339,6 +339,11 @@ void PhaseStage::Update(App *app) {
     m_CollideEventManager.Update();
     ReloadMagazine(app);
     // m_Testbox->Move();
+    if(!CheckIfRockmanInMap(CameraPos,RockmanPos,glm::vec2{50,50}) &&
+        m_Rockman->GetCurrentState() == Rockman::LiveState::Normal){
+        //Let Rockman Die.
+        m_Rockman->SetLifeState(Rockman::LiveState::Death);
+    }
 
     /*
     LOG_INFO("Camera Position");
@@ -454,4 +459,10 @@ void PhaseStage::UpdateBombs(App *app) {
         }
         m_Bombs->push(bomb);
     }
+}
+
+bool PhaseStage::CheckIfRockmanInMap(glm::vec2 cameraposition,glm::vec2 position,glm::vec2 offset) {
+    float LeftX = cameraposition.x-384-offset.x,RightX = cameraposition.x+384+offset.x;
+    float BottomY = cameraposition.y-360-offset.y,TopY = cameraposition.y+360+offset.y;
+    return (LeftX <= position.x && position.x <= RightX) && (BottomY <= position.y && position.y <= TopY);
 }
