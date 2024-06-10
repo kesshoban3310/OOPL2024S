@@ -76,7 +76,6 @@ protected:
     LifeState InitialLife;
     HurtState InitialHurt;
     std::string ID;
-    long long RevivalTime = 3000, RevivalTimer = 0;
 };
 
 class Attackable {
