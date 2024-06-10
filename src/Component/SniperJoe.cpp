@@ -111,26 +111,21 @@ void SniperJoe::Shoot() {
                                glm::vec2{8 * 3, 8 * 3}, AmmoType::ENEMY);
     Magazine.push_back(ammo);
 }
-void SniperJoe::DeBugMessage() {
-    LOG_INFO("SniperJoe");
-    switch (MoveState) {
-    case PhysicState::SHOOT:
-        LOG_INFO("SHOOT");
-        break;
-    case PhysicState::JUMP:
-        LOG_INFO("JUMP");
-        break;
-    case PhysicState::STAND:
-        LOG_INFO("STAND");
-        break;
-    case PhysicState::INVINCIBLE:
-        LOG_INFO("INVINCIBLE");
-        break;
-    case PhysicState::MOVE:
-        LOG_INFO("MOVE");
-        break;
-    case PhysicState::BYCHOICE:
-        LOG_INFO("BYCHOICE");
-        break;
-    }
+
+void SniperJoe::Reset() {
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    MoveState = PhysicState::BYCHOICE;
+    StandTimer = 0;
+    ShootCounter = 0;
+    JumpCounter = 0;
+    InvincibleTimer = 0;
+    ShootTimer = 0;
+    Object->SetPosition(*Position);
+    Object->SetImage(Path[1]);
+    Object->SetVisible(Visable);
+    Magazine.clear();
 }

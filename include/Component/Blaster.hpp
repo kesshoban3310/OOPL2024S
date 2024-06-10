@@ -17,17 +17,17 @@ public:
             Enemy::LifeState lifestate);
     void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
     void Shoot() override;
-
+    void Reset() override;
     [[nodiscard]] std::vector<std::shared_ptr<Ammo>> Getammo() {
-        auto Object = magazine;
-        magazine.clear();
+        auto Object = Magazine;
+        Magazine.clear();
         return Object;
     }
 
 private:
     std::vector<std::string> Path;
     std::string AmmoPath;
-    std::vector<std::shared_ptr<Ammo>> magazine;
+    std::vector<std::shared_ptr<Ammo>> Magazine;
     unsigned long AnimationTimer = 0, AnimationInterval;
     int AnimationCount = 0;
     int PathIndex = 0;

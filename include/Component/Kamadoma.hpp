@@ -24,6 +24,7 @@ public:
     Kamadoma(std::vector<std::string> path,std::vector<glm::vec2> points,glm::vec2 pos,int iniidx,glm::vec2 collidersize,int hp,bool visable,Enemy::HurtState hurtstate);
     void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
     void PhysicEngine() override;
+    void Reset() override;
     void TrajectoryCalculator(std::pair<glm::vec2,glm::vec2> point);
     bool Checker(glm::vec2 NowPos,glm::vec2 ExpectPos);
 private:
@@ -42,5 +43,7 @@ private:
     glm::vec2 IniPos,FinPos;
     bool MoveLeft = true;
     bool IsJumping = false;
+    //When Initial
+    int InitialIdx;
 };
 #endif

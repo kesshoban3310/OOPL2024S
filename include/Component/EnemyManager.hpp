@@ -8,6 +8,7 @@ class EnemyManager{
 public:
     EnemyManager();
     void Update(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage);
+    void Reset();
     void SetEnemies(std::vector<std::shared_ptr<Enemy>> enemy);
     std::vector<std::shared_ptr<Enemy>> GetEnemies();
 private:

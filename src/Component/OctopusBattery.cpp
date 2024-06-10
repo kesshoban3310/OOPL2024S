@@ -13,6 +13,10 @@ OctopusBattery::OctopusBattery(glm::vec2 inipos,glm::vec2 finpos,glm::vec2 colli
     this->Speed = speed;
     this->State = state;
     this->Path = path;
+
+    this->InitialInitialPos = inipos;
+    this->InitialFinalPos = finpos;
+    this->InitialState = state;
 }
 void OctopusBattery::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
     float direction = sqrt((CameraPos.x-Position->x)*(CameraPos.x-Position->x) + (CameraPos.y-Position->y)*(CameraPos.y-Position->y));
@@ -48,6 +52,30 @@ void OctopusBattery::PhysicEngine() {
             Object->SetImage(Path[0]);
             State = OctopusState::SLEEP;
         }
+        break;
+    }
+}
+void OctopusBattery::Reset() {
+    *Position = InitialInitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    InitialPosition = InitialInitialPos;
+    FinalPosition = InitialFinalPos;
+    SleepCounter = 0;
+    BleazyCounter = 0;
+    Object->SetPosition(*Position);
+    Object->SetVisible(Visable);
+    switch (State) {
+    case OctopusState::SLEEP:
+        Object->SetImage(Path[0]);
+        break;
+    case OctopusState::BLEAZY:
+        Object->SetImage(Path[1]);
+        break;
+    case OctopusState::AWAKE:
+        Object->SetImage(Path[2]);
         break;
     }
 }

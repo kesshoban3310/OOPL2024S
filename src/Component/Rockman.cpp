@@ -126,7 +126,7 @@ void Rockman::Initialize() {
     }
 
     /* Switch State */
-    RockmanState = LiveState::Spawn;
+    RockmanState = LiveState::WaitSpawn;
 }
 
 void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
@@ -177,6 +177,7 @@ void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
                     ColliderBox.push_back(std::make_shared<Collider>(
                         Position, glm::vec2{18 * 3, 12 * 3},
                         glm::vec2{0, -18}));
+                    MoveTimer = 0;
                     RockmanState = LiveState::Normal;
                     break;
                 }
@@ -211,6 +212,8 @@ void Rockman::DoBehavior(std::vector<std::shared_ptr<TileBox>> collison) {
 
     case LiveState::Death:
         Death();
+        break;
+    case LiveState::WAITREVIVAL:
         break;
     }
 }
@@ -405,6 +408,7 @@ void Rockman::Death() {
         Visable = -1;
         CharacterImage->SetVisible(false);
         CharacterAnimate->SetVisible(false);
+        DeathTimer = Util::Time::GetElapsedTimeMs();
     }
     if (!CharacterDeath[0]->GetVisibility()) {
         for (int i = 0; i < 12; i++) {
@@ -412,8 +416,6 @@ void Rockman::Death() {
             CharacterDeath[i]->SetVisible(true);
         }
     }
-    if (CharacterDeath[0]->GetPosition().x > Position->x + 150)
-        return;
 
     int negative = 1;
     for (int i = 0; i < 4; i++) {
@@ -459,6 +461,10 @@ void Rockman::Death() {
                  position.y + 86.6 * delta * negative_y});
             negative_y *= -1;
         }
+    }
+    if(Util::Time::GetElapsedTimeMs()-DeathTimer>=DeathTime){
+        RockmanState = LiveState::WAITREVIVAL;
+        DeathTimer = 0;
     }
 }
 
@@ -522,7 +528,7 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
     std::set<RockmanCollison> box;
     for (int i = 0; i < collison.size(); i++) {
         Collider rockmanup = *ColliderBox[0], rockmandown = *ColliderBox[1];
-        if (collison[i]->GetObjectType() == TileBox::ObjectType::CLIMB) {
+        if (collison[i]->GetObjectType() == TileBox::ObjectType::CLIMB) { //If block is ladder
             if (IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))) {
                 bool OverLap = IfObjectIsOverlaping(
                     rockmandown, *(collison[i]->Getcollisonbox()));
@@ -540,22 +546,30 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
             }
             continue;
         }
-        auto collisonresult =
-            WhereIsColliding(rockmanup, *(collison[i]->Getcollisonbox()));
-        if (collisonresult.count(Collider::Bound::TOP))
-            box.insert(RockmanCollison::TOP);
-        if (collisonresult.count(Collider::Bound::LEFT))
-            box.insert(RockmanCollison::UPLEFT);
-        if (collisonresult.count(Collider::Bound::RIGHT))
-            box.insert(RockmanCollison::UPRIGHT);
-        collisonresult =
-            WhereIsColliding(rockmandown, *(collison[i]->Getcollisonbox()));
-        if (collisonresult.count(Collider::Bound::LEFT))
-            box.insert(RockmanCollison::DOWNLEFT);
-        if (collisonresult.count(Collider::Bound::RIGHT))
-            box.insert(RockmanCollison::DOWNRIGHT);
-        if (collisonresult.count(Collider::Bound::BOTTOM))
-            box.insert(RockmanCollison::BOTTOM);
+        /*else if(collison[i]->GetObjectType() == TileBox::ObjectType::DAMAGE){
+            if (IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))){
+                RockmanState = LiveState::Death;
+                return {};
+            }
+        }*/
+        else{
+            auto collisonresult =
+                WhereIsColliding(rockmanup, *(collison[i]->Getcollisonbox()));
+            if (collisonresult.count(Collider::Bound::TOP))
+                box.insert(RockmanCollison::TOP);
+            if (collisonresult.count(Collider::Bound::LEFT))
+                box.insert(RockmanCollison::UPLEFT);
+            if (collisonresult.count(Collider::Bound::RIGHT))
+                box.insert(RockmanCollison::UPRIGHT);
+            collisonresult =
+                WhereIsColliding(rockmandown, *(collison[i]->Getcollisonbox()));
+            if (collisonresult.count(Collider::Bound::LEFT))
+                box.insert(RockmanCollison::DOWNLEFT);
+            if (collisonresult.count(Collider::Bound::RIGHT))
+                box.insert(RockmanCollison::DOWNRIGHT);
+            if (collisonresult.count(Collider::Bound::BOTTOM))
+                box.insert(RockmanCollison::BOTTOM);
+        }
     }
     return box;
 }
@@ -675,6 +689,11 @@ void Rockman::SetInvincible() {
     Invincible = true;
     InvincibleTimer = Util::Time::GetElapsedTimeMs();
 }
+void Rockman::SetLifeState(Rockman::LiveState livestate) {
+    RockmanState = livestate;
+}
+
+
 
 void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
                                    std::string locate) {
@@ -733,4 +752,19 @@ void Rockman::DebugMessagePhysic(PhysicState physicState) {
         LOG_DEBUG("JUMPBEFOREMOVE");
         break;
     }
+}
+void Rockman::Revival() {
+    LOG_INFO("GO HERE");
+    for(auto i:CharacterDeath){
+        i->SetVisible(false);
+        i->SetPosition(*Position);
+    }
+    CharacterImage->SetVisible(false);
+    CharacterAnimate->SetVisible(false);
+    RockmanState = LiveState::Spawn;
+    MoveTimer = 0;
+    ColliderBox[0] = std::make_shared<Collider>(
+        Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 24});
+    ColliderBox[1] = std::make_shared<Collider>(
+        Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -24});
 }

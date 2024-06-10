@@ -62,5 +62,20 @@ void Blaster::Shoot() {
     std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
         glm::vec2{Position->x + 24, Position->y}, ammospeed, AmmoPath, ammosize,
         AmmoType::ENEMY);
-    magazine.push_back(ammo);
+    Magazine.push_back(ammo);
+}
+void Blaster::Reset() {
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    AnimationTimer = 0;
+    AnimationCount = 0;
+    PathIndex = 0;
+    Open = 1;
+    Object->SetPosition(*Position);
+    Object->SetVisible(Visable);
+    Object->SetImage(Path[0]);
+    Magazine.clear();
 }

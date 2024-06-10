@@ -44,6 +44,20 @@ void KillerBomb::PhysicEngine() {
     Object->SetPosition(*Position);
     Theta = (Theta+5) % 360;
 }
+void KillerBomb::Reset() {
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    CoolDownTimer = 0;
+    Theta = 0;
+    Object->SetPosition(*Position);
+    Object->SetVisible(Visable);
+    Object->SetImage(Path);
+}
+
+
 
 void KillerBomb::SetHealth(int health){
     Health = health;

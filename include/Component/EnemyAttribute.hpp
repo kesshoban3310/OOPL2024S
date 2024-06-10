@@ -47,6 +47,8 @@ public:
     virtual LifeState GetLifeState();
     virtual void SetLifeState(LifeState lifestate);
 
+    //Reset Function For Initial Enemy.
+    virtual void Reset() = 0;
     [[nodiscard]] Collider GetCollider() { return *Hitbox; }
     [[nodiscard]] std::shared_ptr<Util::GameObject> GetChild() {
         std::shared_ptr<Util::GameObject> object = Object;
@@ -59,12 +61,18 @@ protected:
     std::shared_ptr<Collider> Hitbox;
     HurtState Hurt;
     glm::vec2 Scale;
-    int Health,InitialHealth;
+    int Health;
     bool Visable;
     LifeState Life;
-
     std::string ID;
     long long RevivalTime = 3000,RevivalTimer = 0;
+
+    //When Reset,Their Basic Information.
+    glm::vec2 InitialPos;
+    int InitialHealth;
+    bool InitialVisable;
+    LifeState InitialLife;
+    HurtState InitialHurt;
 };
 
 class Attackable {

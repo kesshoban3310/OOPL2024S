@@ -14,7 +14,7 @@ public:
     void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
     void PhysicEngine() override;
     void Shoot() override;
-
+    void Reset() override;
     [[nodiscard]] glm::vec2 GetPosition(){return *Position;}
     [[nodiscard]] std::vector<std::shared_ptr<Ammo>> GetAmmo(){return Magazine;}
     [[nodiscard]] Collider GetCollider(){return *Hitbox;}
@@ -26,7 +26,6 @@ private:
     std::vector<std::string> Path;
     glm::vec2 Speed,AmmoSpeed;
     std::string AmmoPath;
-    int Health;
     std::vector<std::shared_ptr<Ammo>> Magazine;
     float AnimationTimer = 0;
     float CircumlateX = 0,DiffWithCamX = 0;

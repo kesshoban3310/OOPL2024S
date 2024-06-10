@@ -13,6 +13,7 @@ class Gabyoll:public Enemy,Physic{
 public:
     Gabyoll(glm::vec2 inipos,glm::vec2 finpos,glm::vec2 collidersize,std::vector<std::string> path,glm::vec2 speed,int health,bool visable,Enemy::HurtState hurtstate,Enemy::LifeState lifestate);
     void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
+    void Reset() override;
     void PhysicEngine() override;
 private:
     std::vector<std::string> Path;
@@ -21,7 +22,7 @@ private:
     glm::vec2 length;
     float AnimationTimer = 10;
     int PathIdx = 0;
-    int delta = 0;
+    int Delta = 0;
 };
 
 #endif

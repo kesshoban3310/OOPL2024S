@@ -87,6 +87,11 @@ public:
     bool GetInvincible();
 
     /**
+     * @brief Set Rockman's livestate.
+     * @param Rockman's livestate
+     */
+    void SetLifeState(Rockman::LiveState livestate);
+    /**
      * @brief collect all object in character.
      * @return All object in character.
      */

@@ -61,3 +61,17 @@ void Mambu::Shoot() {
         Magazine.push_back(ammo);
     }
 }
+void Mambu::Reset() {
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    AnimationTimer = 0;
+    CircumlateX = 0;
+    DiffWithCamX = 0;
+    Object->SetPosition(*Position);
+    Object->SetVisible(Visable);
+    Object->SetImage(Path[0]);
+    Magazine.clear();
+}

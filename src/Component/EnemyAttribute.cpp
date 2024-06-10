@@ -13,11 +13,16 @@ Enemy::Enemy(glm::vec2 pos, std::string path, int hp, bool visable, glm::vec2 co
     this->Hitbox = std::make_shared<Collider>(Position,collidersize,glm::vec2 {0,0});
     this->Object = std::make_shared<ImageObject>(path);
     this->Scale = scale;
-    this->InitialHealth = hp;
     Object->SetPosition(pos);
     Object->SetScale(Scale);
     Object->SetVisible(visable);
     Object->SetZIndex(70);
+    //When Reset,Their Basic Information.
+    this->InitialHealth = hp;
+    this->InitialVisable = visable;
+    this->InitialLife = lifeState;
+    this->InitialPos = pos;
+    this->InitialHurt = state;
 }
 
 void Enemy::SetHealth(int health){
@@ -74,3 +79,14 @@ void Enemy::Revival() {
         Health = InitialHealth;
     }
 }
+/*
+void Enemy::Reset(){
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    Object->SetPosition(*Position);
+    Object->SetVisible(Visable);
+}
+ */

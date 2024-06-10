@@ -71,3 +71,20 @@ void Screwdriver::Shoot() {
         Magazine.push_back(ammo);
     }
 }
+void Screwdriver::Reset() {
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    AnimationTimer = 0;
+    AnimationInterval = 60;
+    AnimationCount = 0;
+    Open = 0;
+    StartUp = 0;
+    PathIndex = 0;
+    Object->SetPosition(*Position);
+    Object->SetVisible(Visable);
+    Object->SetImage(ObjectPath[0]);
+}
+

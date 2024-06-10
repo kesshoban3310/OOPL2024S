@@ -17,7 +17,12 @@ void EnemyManager::Update(glm::vec2 CameraPos, glm::vec2 RockmanPos, int SceneSt
         }
     }
 }
-
+void EnemyManager::Reset(){
+    int N = m_Enemies.size();
+    for(int i=0;i<N;i++){
+        m_Enemies[i]->Reset();
+    }
+}
 void EnemyManager::SetEnemies(std::vector<std::shared_ptr<Enemy>> enemy){
     this->m_Enemies = enemy;
 }

@@ -63,3 +63,15 @@ void Bombombomb::Split() {
 void Bombombomb::SmallBombMove() {
 
 }
+void Bombombomb::Reset() {
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    Object->SetPosition(*Position);
+    Object->SetVisible(Visable);
+    Object->SetImage(Path);
+    WaitingCounter = 0;
+    BeSmallBomb = 0;
+}

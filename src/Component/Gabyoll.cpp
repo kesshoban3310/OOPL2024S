@@ -32,9 +32,21 @@ void Gabyoll::PhysicEngine() {
                 break;
         }
         Object->SetImage(Path[PathIdx]);
-        Position->x = Inipos.x + length.x * sin(delta*PI/180.0f);
-        Position->y = Inipos.y + length.y * sin(delta*PI/180.0f);
+        Position->x = Inipos.x + length.x * sin(Delta*PI/180.0f);
+        Position->y = Inipos.y + length.y * sin(Delta*PI/180.0f);
         Object->SetPosition(*Position);
-        delta = (delta+1) % 180;
+        Delta = (Delta+1) % 180;
     }
+}
+void Gabyoll::Reset() {
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    PathIdx = 0;
+    Delta = 0;
+    Object->SetPosition(*Position);
+    Object->SetVisible(Visable);
+    Object->SetImage(Path[0]);
 }

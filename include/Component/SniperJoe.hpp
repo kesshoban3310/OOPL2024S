@@ -24,6 +24,7 @@ public:
     void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
     void PhysicEngine() override;
     void Shoot() override;
+    void Reset() override;
     [[nodiscard]] std::vector<std::shared_ptr<Ammo>> GetAmmo(){
         std::vector<std::shared_ptr<Ammo>> magazine = Magazine;
         Magazine.clear();
@@ -47,6 +48,6 @@ private:
     int JumpCount = 1,JumpCounter = 0;
 
 
-    void DeBugMessage();
+    //void DeBugMessage();
 };
 #endif

@@ -12,6 +12,7 @@ Kamadoma::Kamadoma(std::vector<std::string> path,std::vector<glm::vec2> points,g
     this->Path = path;
     this->Points = points;
     this->Idx = iniidx;
+    this->InitialIdx = iniidx;
 }
 void Kamadoma::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
     float RockmanPosX = Position->x - RockmanPos.x;
@@ -84,4 +85,24 @@ bool Kamadoma::Checker(glm::vec2 NowPos,glm::vec2 ExpectPos){
     float X = std::abs(NowPos.x - ExpectPos.x);
     float Y = std::abs(NowPos.y - ExpectPos.y);
     return X <= 36 && Y <= 36;
+}
+void Kamadoma::Reset() {
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    CoolDownTimer = 0;
+    StartJumpingTime = 0;
+    JumpingTimer = 0;
+    Idx = InitialIdx;
+    SportTime = 0;
+    Theta = 0;
+    IniPos = {0,0};
+    FinPos = {0,0};
+    MoveLeft = true;
+    IsJumping = false;
+    Object->SetPosition(*Position);
+    Object->SetVisible(Visable);
+    Object->SetImage(Path[0]);
 }
