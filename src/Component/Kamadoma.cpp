@@ -25,8 +25,6 @@ void Kamadoma::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
 void Kamadoma::PhysicEngine() {
     glm::vec2 StartPoint = Points[Idx];
     if (IsJumping) {
-        if (Util::Time::GetElapsedTimeMs() - JumpingTimer < 50)
-            return;
         if (Checker(*Position, FinPos)) {
             *Position = FinPos;
             Object->SetImage(Path[2]);
@@ -35,9 +33,10 @@ void Kamadoma::PhysicEngine() {
             IsJumping = false;
             return;
         }
-        float NewX = Position->x + Speed.x * Util::Time::GetDeltaTimeMs();
-        float NewY = Position->y + Speed.y * Util::Time::GetDeltaTimeMs();
-        Speed.y -= Util::Time::GetDeltaTimeMs() / Gravity;
+        float scaledTime = Util::Time::GetDeltaTimeMs() * 0.5f;
+        float NewX = Position->x + Speed.x * scaledTime;
+        float NewY = Position->y + Speed.y * scaledTime;
+        Speed.y -= scaledTime / Gravity;
         *Position = glm::vec2{NewX, NewY};
         Object->SetPosition(*Position);
         JumpingTimer = Util::Time::GetElapsedTimeMs();
