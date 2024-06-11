@@ -19,6 +19,7 @@
 #include "Component/SniperJoe.hpp"
 #include "Component/Kamadoma.hpp"
 #include "Component/EnemyManager.hpp"
+#include "Component/Words.hpp"
 #include "IncludeComponent.hpp"
 
 class PhaseStage final : public Phase {
@@ -43,7 +44,7 @@ private:
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<HealthBar> m_RockmanHealthBar;
     std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine; // Store Rockman's Ammo.
-
+    std::shared_ptr<Words> m_Ready; //Words Ready.
     std::vector<std::shared_ptr<Blaster>> m_Blaster;
     std::vector<std::shared_ptr<Kamadoma>> m_Kamadoma;
     std::vector<std::shared_ptr<Gabyoll>> m_Gabyoll;
@@ -64,6 +65,22 @@ private:
     void UpdateItems(App *app);
     void UpdateBombs(App *app);
     bool CheckIfRockmanInMap(glm::vec2 cameraposition,glm::vec2 position,glm::vec2 offset);
+
+    //Rockman's Rivival Place.
+    std::unordered_map<int,glm::vec2> RockmanRevivalPosition = {
+        {0, {258, -3056}},
+        {1, {5080, -2284}},
+        {2, {4837, -1522}},
+        {3, {8808, -774}},
+        {4, {9291, -3}},
+        {5, {12041, -13}},
+    };
+    //Wait 3000 ms to make Rockman Rivival.
+    long long RockmanRivivalTimer = 0,RockmanRivivalTime = 3000;
+    void RockmanRivival(App *app);
+    //Start Animation For Start.
+    long long StartTimer = 0,StartTime = 3000;
+    void StartAnimation(App *app);
 };
 
 #endif // PHASE_STAGE_HPP
