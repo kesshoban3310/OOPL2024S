@@ -6,7 +6,6 @@
 Words::Words(std::string word) {
     for(int i=0;i<word.size();i++){
         std::string WordPath = RESOURCE_DIR "/Picture/UI/Alphabet/" + std::string(1,word[i]) + ".png";
-        LOG_INFO(WordPath);
         std::shared_ptr<ImageObject> WordImg = std::make_shared<ImageObject>(WordPath);
         WordImg->SetPosition({0,0});
         WordImg->SetScale({3,3});
