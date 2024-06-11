@@ -175,7 +175,7 @@ void PhaseStage::Init(App *app) {
         std::shared_ptr<OctopusBattery> octopusbattery =
             std::make_shared<OctopusBattery>(
                 OctopusBatteryIniPos, OctopusBatteryFinPos,
-                glm::vec2{16 * 3, 16 * 3}, glm::vec2{16, 0}, glm::vec2{3, 3},
+                glm::vec2{12 * 3, 12 * 3}, glm::vec2{16, 0}, glm::vec2{3, 3},
                 std::vector<std::string>{
                     RESOURCE_DIR "/Picture/Enemies/Bomb Man "
                                  "Stage/OctopusBattery/OctopusBattery1.png",
