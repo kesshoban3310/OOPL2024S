@@ -4,24 +4,28 @@
 
 #include "Component/EnemyManager.hpp"
 
-EnemyManager::EnemyManager() {}
+EnemyManager::EnemyManager(){}
 
-void EnemyManager::Update(glm::vec2 CameraPos, glm::vec2 RockmanPos,
-                          int SceneStage) {
+void EnemyManager::Update(glm::vec2 CameraPos, glm::vec2 RockmanPos, int SceneStage) {
     int N = m_Enemies.size();
-    for (int i = 0; i < N; i++) {
-        if (m_Enemies[i]->GetLifeState() == Enemy::LifeState::DEAD) {
-            m_Enemies[i]->Revival();
+    for(int i=0;i<N;i++){
+        if(m_Enemies[i]->GetLifeState() == Enemy::LifeState::DEAD){
+            m_Enemies[i]->SetPosition({-20000,-20000});
         }
-        else {
-            m_Enemies[i]->DoBehavior(CameraPos, RockmanPos, SceneStage);
+        else{
+            m_Enemies[i]->DoBehavior(CameraPos,RockmanPos,SceneStage);
         }
     }
 }
-
-void EnemyManager::SetEnemies(std::vector<std::shared_ptr<Enemy>> enemy) {
+void EnemyManager::Reset(){
+    int N = m_Enemies.size();
+    for(int i=0;i<N;i++){
+        m_Enemies[i]->Reset();
+    }
+}
+void EnemyManager::SetEnemies(std::vector<std::shared_ptr<Enemy>> enemy){
     this->m_Enemies = enemy;
 }
-std::vector<std::shared_ptr<Enemy>> EnemyManager::GetEnemies() {
+std::vector<std::shared_ptr<Enemy>> EnemyManager::GetEnemies(){
     return m_Enemies;
 }

@@ -6,13 +6,12 @@
 #include "Util/Logger.hpp"
 #define PI 3.1415926535
 
-SniperJoe::SniperJoe(glm::vec2 inipos, glm::vec2 finpos, glm::vec2 collidersize,
-                     glm::vec2 speed, glm::vec2 ammospeed,
-                     std::vector<std::string> path, std::string ammopath,
-                     int health, bool visable, Enemy::HurtState hurtstate,
-                     Enemy::LifeState lifestate)
-    : Enemy(inipos, path[1], health, visable, collidersize, hurtstate,
-            lifestate) {
+
+SniperJoe::SniperJoe(glm::vec2 inipos,glm::vec2 finpos, glm::vec2 collidersize, glm::vec2 speed,
+                     glm::vec2 ammospeed, std::vector<std::string> path,
+                     std::string ammopath, int health, bool visable,
+                     Enemy::HurtState hurtstate, Enemy::LifeState lifestate)
+    : Enemy(inipos, path[1], health, visable, collidersize, hurtstate, lifestate) {
     this->Path = path;
     this->IniPos = inipos;
     this->FinPos = finpos;
@@ -20,8 +19,7 @@ SniperJoe::SniperJoe(glm::vec2 inipos, glm::vec2 finpos, glm::vec2 collidersize,
     this->Speed = speed;
     this->AmmoSpeed = ammospeed;
 }
-void SniperJoe::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
-                           int SceneStage) {
+void SniperJoe::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
     float dir_x = Position->x - RockmanPos.x;
     if (dir_x >= 0) {
         if (MoveState == PhysicState::BYCHOICE) {
@@ -57,7 +55,7 @@ void SniperJoe::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
                 break;
             case PhysicState::STAND:
                 Object->SetImage(Path[1]);
-                Object->SetScale({3, 3});
+                Object->SetScale({3,3});
                 if (NowTime - StandTimer > StandTime) {
                     MoveState = PhysicState::SHOOT;
                     StandTimer = 0;
@@ -74,7 +72,7 @@ void SniperJoe::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
                 }
                 break;
             case PhysicState::MOVE:
-                if (JumpTheta != 0) {
+                if(JumpTheta!=0){
                     MoveState = PhysicState::JUMP;
                 }
                 else
@@ -90,20 +88,19 @@ void SniperJoe::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
     }
 }
 void SniperJoe::PhysicEngine() {
-    JumpTheta = (JumpTheta + 5) % 180;
-    if (MoveState == PhysicState::MOVE) {
-        Object->SetScale({-3, 3});
-        if (Position->x < FinPos.x) {
-            Position->x =
-                Position->x + Util::Time::GetDeltaTimeMs() / 1000 * 160;
+    JumpTheta = (JumpTheta+5) % 180;
+    if(MoveState == PhysicState::MOVE){
+        Object->SetScale({-3,3});
+        if(Position->x < FinPos.x){
+            Position->x = Position->x + Util::Time::GetDeltaTimeMs() / 1000 * 160;
         }
-        Position->y = IniPos.y + JumpHigh.y * sin(JumpTheta * PI / 180.0f);
+        Position->y = IniPos.y + JumpHigh.y * sin(JumpTheta * PI/180.0f);
         Object->SetPosition(*Position);
     }
-    else {
-        Position->y = IniPos.y + JumpHigh.y * sin(JumpTheta * PI / 180.0f);
+    else{
+        Position->y = IniPos.y + JumpHigh.y * sin(JumpTheta * PI/180.0f);
         Object->SetPosition(*Position);
-        if (JumpTheta == 0) {
+        if(JumpTheta == 0){
             JumpCounter++;
         }
     }
@@ -114,26 +111,21 @@ void SniperJoe::Shoot() {
                                glm::vec2{8 * 3, 8 * 3}, AmmoType::ENEMY);
     Magazine.push_back(ammo);
 }
-void SniperJoe::DeBugMessage() {
-    LOG_INFO("SniperJoe");
-    switch (MoveState) {
-    case PhysicState::SHOOT:
-        LOG_INFO("SHOOT");
-        break;
-    case PhysicState::JUMP:
-        LOG_INFO("JUMP");
-        break;
-    case PhysicState::STAND:
-        LOG_INFO("STAND");
-        break;
-    case PhysicState::INVINCIBLE:
-        LOG_INFO("INVINCIBLE");
-        break;
-    case PhysicState::MOVE:
-        LOG_INFO("MOVE");
-        break;
-    case PhysicState::BYCHOICE:
-        LOG_INFO("BYCHOICE");
-        break;
-    }
+
+void SniperJoe::Reset() {
+    *Position = InitialPos;
+    Health = InitialHealth;
+    Visable = InitialVisable;
+    Life = InitialLife;
+    Hurt = InitialHurt;
+    MoveState = PhysicState::BYCHOICE;
+    StandTimer = 0;
+    ShootCounter = 0;
+    JumpCounter = 0;
+    InvincibleTimer = 0;
+    ShootTimer = 0;
+    Object->SetPosition(*Position);
+    Object->SetImage(Path[1]);
+    Object->SetVisible(Visable);
+    Magazine.clear();
 }
