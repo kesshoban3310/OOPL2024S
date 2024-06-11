@@ -36,6 +36,7 @@ set(SRC_FILES
         Component/CollideEventManager.cpp
         Component/Item.cpp
         Component/PersonLife.cpp
+        Component/Word.cpp
 )
 
 set(INCLUDE_FILES
@@ -76,6 +77,7 @@ set(INCLUDE_FILES
         Component/CollideEventManager.hpp
         Component/Item.hpp
         Component/PersonLife.hpp
+        Component/Word.hpp
 
         #other
         IncludeComponent.hpp
