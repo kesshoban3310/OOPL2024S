@@ -38,6 +38,8 @@ public:
         Initial,
         Normal,
         Death,
+        WaitSpawn,
+        WAITREVIVAL,
     };
     /**
      * @brief Constructor.
@@ -74,6 +76,7 @@ public:
     void SetHealth(int hp);
     /**
      * @brief Get Rockman's LiveState.
+     * @param health for Rockman's health.
      */
     LiveState GetCurrentState();
     /**
@@ -86,10 +89,7 @@ public:
      */
     bool GetInvincible();
 
-    /**
-     * @brief Set Rockman's livestate.
-     * @param Rockman's livestate
-     */
+    void Revival();
     void SetLifeState(Rockman::LiveState livestate);
     /**
      * @brief collect all object in character.
@@ -185,7 +185,6 @@ private:
      * @param physicState for a variable storing Rockman's physic state.
      */
     void DebugMessagePhysic(Rockman::PhysicState physicState);
-
     std::shared_ptr<AnimatedObject> CharacterAnimate;
     std::shared_ptr<ImageObject> CharacterImage;
 
@@ -201,6 +200,8 @@ private:
 
     // timer to make animation smoothly.
     unsigned long MoveTimer = 0,ShootTimer = 0,ClimbTimer = 0;
+    unsigned long DeathTimer = 0,DeathTime = 2500;
+
     int Health = 28;
     int Visable = 0;
 

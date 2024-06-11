@@ -15,7 +15,12 @@ void PhaseStage::Init(App *app) {
     // Load Rockman
     m_Rockman = std::make_shared<Rockman>(glm::vec2{360, -2688},
                                           Rockman::LiveState::Initial);
-
+    //Load Word Ready
+    std::string Word = "ready";
+    m_Ready = std::make_shared<Words>(Word);
+    for(int i=0;i<Word.size();i++){
+        m_Ready->SetPosition(i,glm::vec2 {332+24*i,-3349});
+    }
     // Load Rockman Healthbar
     m_RockmanHealthBar =
         std::make_shared<HealthBar>(glm::vec2{360 - 311, -3408 + 201},
@@ -286,6 +291,7 @@ void PhaseStage::Init(App *app) {
     app->GetRoot()->AddChildren(m_Rockman->GetAllChildren());
     app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
     app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
+    app->GetRoot()->AddChildren(m_Ready->GetChildren());
 
     // TODO: remove camera movement in the futures
     app->SetCameraPosition({360, -3408});
@@ -310,6 +316,17 @@ void PhaseStage::Init(App *app) {
 }
 
 void PhaseStage::Update(App *app) {
+
+    //If Rockman Dead,then Rivival it.
+    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL){
+        RockmanRivival(app);
+        return;
+    }
+    //Ready Animation.
+    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WaitSpawn) {
+        StartAnimation(app);
+        return;
+    }
     // update SceneManager
     m_SceneManager.Update(m_Rockman->GetPosition());
     app->SetCameraPosition(m_SceneManager.GetCameraPosition());
@@ -465,4 +482,34 @@ bool PhaseStage::CheckIfRockmanInMap(glm::vec2 cameraposition,glm::vec2 position
     float LeftX = cameraposition.x-384-offset.x,RightX = cameraposition.x+384+offset.x;
     float BottomY = cameraposition.y-360-offset.y,TopY = cameraposition.y+360+offset.y;
     return (LeftX <= position.x && position.x <= RightX) && (BottomY <= position.y && position.y <= TopY);
+}
+void PhaseStage::RockmanRivival(App *app) {
+    if(RockmanRivivalTimer == 0){
+        RockmanRivivalTimer = Util::Time::GetElapsedTimeMs();
+        glm::vec2 NowPos = m_Rockman->GetPosition();
+        int NowScene = m_SceneManager.GetCurrentScene();
+        if(NowPos.x >= 11547 && NowScene == 4) {
+            NowScene = 5;
+        }
+        m_Rockman->SetPosition(RockmanRevivalPosition[std::max(0,NowScene)]);
+        m_EnemyManager.Reset();
+        m_SceneManager.Update(m_Rockman->GetPosition());
+        app->SetCameraPosition(m_SceneManager.GetCameraPosition());
+        return;
+    }
+    else if(Util::Time::GetElapsedTimeMs()-RockmanRivivalTimer>=RockmanRivivalTime){
+        m_Rockman->Revival();
+        RockmanRivivalTimer = 0;
+    }
+}
+void PhaseStage::StartAnimation(App *app) {
+    if(StartTimer == 0){
+        StartTimer = Util::Time::GetElapsedTimeMs();
+        m_Ready->ShowAll();
+    }
+    else if(Util::Time::GetElapsedTimeMs()-StartTimer>StartTime){
+        m_Ready->DisableAll();
+        m_Rockman->SetLifeState(Rockman::LiveState::Spawn);
+        StartTimer = 0;
+    }
 }

@@ -22,7 +22,7 @@ public:
     void PhysicEngine() override;
     void Split();
     void SmallBombMove();
-
+    void Reset() override;
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetAmmos() {
         std::vector<std::shared_ptr<Util::GameObject>> SmallBombObject;
         for (auto i : SmallBomb)
