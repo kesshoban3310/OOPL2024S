@@ -471,16 +471,29 @@ void PhaseStage::ReloadMagazine(App *app) {
             app->GetRoot()->AddChild(Ammo->GetChild());
         }
     }
+    for (int i = 0; i < 1; i++) { // SniperJoe Ammo
+        magazine = m_SniperJoe->GetAmmo();
+        for (auto Ammo : magazine) {
+            m_Magazine->push(Ammo);
+            app->GetRoot()->AddChild(Ammo->GetChild());
+        }
+    }
+    magazine = m_Mambu->GetAmmo();
+    for (auto Ammo : magazine) {
+        m_Magazine->push(Ammo);
+        app->GetRoot()->AddChild(Ammo->GetChild());
+    }
     int magazine_size = m_Magazine->size();
     for (int i = 0; i < magazine_size; i++) {
         auto Ammo = m_Magazine->front();
         m_Magazine->pop();
         Ammo->Behavior();
-        if (Ammo->Outofrange(CameraPosition) || Ammo->IsMarkedForRemoval()) {
+        if (Ammo->Outofrange(CameraPosition)) {
             app->GetRoot()->RemoveChild(Ammo->GetChild());
             continue;
         }
         m_Magazine->push(Ammo);
+    }
     }
 }
 
