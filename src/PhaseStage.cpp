@@ -494,7 +494,6 @@ void PhaseStage::ReloadMagazine(App *app) {
         }
         m_Magazine->push(Ammo);
     }
-    }
 }
 
 void PhaseStage::UpdateItems(App *app) {
