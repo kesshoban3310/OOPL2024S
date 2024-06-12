@@ -292,6 +292,7 @@ void PhaseStage::Init(App *app) {
     app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
     app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
     app->GetRoot()->AddChildren(m_WordReady->GetChildren());
+    app->GetRoot()->AddChildren(app->GetDebugModeWords()->GetChildren());
 
     // TODO: remove camera movement in the futures
     app->SetCameraPosition({360, -3408});
@@ -317,16 +318,7 @@ void PhaseStage::Init(App *app) {
 
 void PhaseStage::Update(App *app) {
 
-    //If Rockman Dead,then Rivival it.
-    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL){
-        RockmanRivival(app);
-        return;
-    }
-    //Ready Animation.
-    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WaitSpawn) {
-        StartAnimation(app);
-        return;
-    }
+
     // update SceneManager
     m_SceneManager.Update(m_Rockman->GetPosition());
     app->SetCameraPosition(m_SceneManager.GetCameraPosition());
@@ -340,6 +332,17 @@ void PhaseStage::Update(App *app) {
         glm::vec2{CameraPos.x - 311, CameraPos.y + 201});
     m_RockmanHealthBar->SetVisable(std::max(m_Rockman->GetHealth(), 0));
     m_PersonLife->Update(app->GetLifeCount(), CameraPos);
+
+    //If Rockman Dead,then Rivival it.
+    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL){
+        RockmanRivival(app);
+        return;
+    }
+    //Ready Animation.
+    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WaitSpawn) {
+        StartAnimation(app);
+        return;
+    }
 
     // if changing scene, return
     if (m_SceneManager.IsChangingScene()) {
@@ -356,10 +359,19 @@ void PhaseStage::Update(App *app) {
     m_CollideEventManager.Update();
     ReloadMagazine(app);
     // m_Testbox->Move();
+
     if(!CheckIfRockmanInMap(CameraPos,RockmanPos,glm::vec2{50,50}) &&
         m_Rockman->GetCurrentState() == Rockman::LiveState::Normal){
         //Let Rockman Die.
         m_Rockman->SetLifeState(Rockman::LiveState::Death);
+    }
+
+    if(Util::Input::IsKeyDown(Util::Keycode::NUM_8)){
+        SetDebugMode(app);
+    }
+    if(app->GetDebugModeState()){
+        app->SetDebugModeMessagePosition(app->GetCameraPosition());
+        DebugMode(app);
     }
 
     /*
@@ -504,5 +516,46 @@ void PhaseStage::StartAnimation(App *app) {
         m_WordReady->DisableAll();
         m_Rockman->SetLifeState(Rockman::LiveState::Spawn);
         StartTimer = 0;
+    }
+}
+void PhaseStage::SetDebugMode(App *app) {
+    std::shared_ptr<Words> DebugWord = app->GetDebugModeWords();
+    std::string DebugMessage;
+    if(app->GetDebugModeState() == true){
+        app->SetDebugModeState(false);
+        app->GetDebugModeWords()->DisableAll();
+    }
+    else{
+        RockmanRestHealth = m_Rockman->GetHealth();
+        PersonRestLife = app->GetLifeCount();
+        app->SetDebugModeState(true);
+        app->GetDebugModeWords()->ShowAll();
+    }
+}
+void PhaseStage::DebugMode(App *app){
+    m_Rockman->SetHealth(RockmanRestHealth);
+    app->SetLifeCount(PersonRestLife);
+    int SceneNum = -1;
+    if(Util::Input::IsKeyDown(Util::Keycode::NUM_1)){
+        SceneNum = 0;
+    }
+    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_2)){
+        SceneNum = 1;
+    }
+    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_3)){
+        SceneNum = 2;
+    }
+    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_4)){
+        SceneNum = 3;
+    }
+    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_5)){
+        SceneNum = 4;
+    }
+    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_6)){
+        SceneNum = 5;
+    }
+    if(SceneNum != -1) {
+        m_Rockman->SetPosition(RockmanRevivalPosition[std::max(0, SceneNum)]);
+        app->SetCameraPosition(m_SceneManager.GetCameraPosition());
     }
 }
