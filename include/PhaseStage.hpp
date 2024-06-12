@@ -43,8 +43,9 @@ private:
     std::shared_ptr<SniperJoe> m_SniperJoe;
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<HealthBar> m_RockmanHealthBar;
-    std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine; // Store Rockman's Ammo.
+    //{332,-3349}
     std::shared_ptr<Words> m_WordReady; //Words Ready.
+    std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine; // Store Rockman's Ammo.
     std::vector<std::shared_ptr<Blaster>> m_Blaster;
     std::vector<std::shared_ptr<Kamadoma>> m_Kamadoma;
     std::vector<std::shared_ptr<Gabyoll>> m_Gabyoll;
@@ -80,6 +81,11 @@ private:
     //Start Animation For Start.
     long long StartTimer = 0,StartTime = 3000;
     void StartAnimation(App *app);
+
+    //Debug Mode On;
+    void SetDebugMode(App *app);
+    unsigned int RockmanRestHealth,PersonRestLife;
+    void DebugMode(App *app);
 
 };
 

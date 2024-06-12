@@ -17,7 +17,7 @@ void PhaseStage::Init(App *app) {
                                           Rockman::LiveState::Initial);
     //Load Word Ready
     std::string Word = "ready";
-    m_WordReady = std::make_shared<Words>(Word);
+    m_WordReady = std::make_shared<Words>(Word,glm::vec2 {3,3});
     for(int i=0;i<Word.size();i++){
         m_WordReady->SetPosition(i,glm::vec2 {332+24*i,-3349});
     }

@@ -5,13 +5,22 @@
 #include <vector>
 class Words{
 public:
-    Words(std::string word);
+    Words(std::string word,glm::vec2 scale);
+
     void SetPosition(int idx,glm::vec2 pos);
     glm::vec2 GetPosition(int idx);
+
     void Show(int idx);
     void ShowAll();
+
     void Disable(int idx);
     void DisableAll();
+
+    void SetScale(glm::vec2 scales);
+    glm::vec2 GetScale();
+
+    std::string GetWords();
+
     [[nodiscard]]std::vector<std::shared_ptr<Util::GameObject>> GetChildren(){
         std::vector<std::shared_ptr<Util::GameObject>> childrens;
         for(int i=0;i<WordObjects.size();i++){
@@ -21,8 +30,10 @@ public:
     }
 private:
     std::vector<std::shared_ptr<ImageObject>> WordObjects;
-    std::vector<std::string> WordStrings;
+    std::string Word;
     std::vector<glm::vec2> WordPositions;
+    glm::vec2 WordScale;
+    void SetWords(std::string word);
 };
 
 #endif
