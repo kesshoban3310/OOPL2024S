@@ -4,13 +4,13 @@
 
 #include "Component/EnemyAttribute.hpp"
 
-Enemy::Enemy(glm::vec2 pos, std::string path, int hp, bool visable, glm::vec2 collidersize, Enemy::HurtState state,Enemy::LifeState lifeState,glm::vec2 scale) {
+Enemy::Enemy(glm::vec2 pos, std::string path, int hp, bool visable, glm::vec2 collidersize, Enemy::HurtState state,Enemy::LifeState lifeState,glm::vec2 scale, glm::vec2 colliderOffset) {
     this->Health = hp;
     this->Life = lifeState;
     this->Hurt = state;
     this->Visable = visable;
     this->Position = std::make_shared<glm::vec2>(pos);
-    this->Hitbox = std::make_shared<Collider>(Position,collidersize,glm::vec2 {0,0});
+    this->Hitbox = std::make_shared<Collider>(Position,collidersize,colliderOffset);
     this->Object = std::make_shared<ImageObject>(path);
     this->Scale = scale;
     Object->SetPosition(pos);

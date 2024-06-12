@@ -37,6 +37,7 @@ set(SRC_FILES
         Component/Item.cpp
         Component/PersonLife.cpp
         Component/Words.cpp
+        Component/Boss.cpp
 )
 
 set(INCLUDE_FILES
@@ -78,6 +79,7 @@ set(INCLUDE_FILES
         Component/Item.hpp
         Component/PersonLife.hpp
         Component/Words.hpp
+        Component/Boss.hpp
 
         #other
         IncludeComponent.hpp
