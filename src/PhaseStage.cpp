@@ -315,6 +315,7 @@ void PhaseStage::Init(App *app) {
     app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
     app->GetRoot()->AddChild(m_KillerBomb->GetChild());
     app->GetRoot()->AddChild(m_SniperJoe->GetChild());
+    app->GetRoot()->AddChild(m_Mambu->GetChild());
     app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
     app->GetRoot()->AddChild(m_BossHealthBar->GetChild());
     app->GetRoot()->AddChildren(m_WordReady->GetChildren());
