@@ -41,6 +41,7 @@ void Words::SetScale(glm::vec2 scales){
 glm::vec2 Words::GetScale() {
     return WordScale;
 }
+/*
 void Words::SetWords(std::string word){
     for(int i=0;i<word.size();i++){
         std::string WordPath;
@@ -58,6 +59,7 @@ void Words::SetWords(std::string word){
         Word = word;
     }
 }
+ */
 std::string Words::GetWords(){
     return Word;
 }
