@@ -20,6 +20,7 @@
 #include "Component/Kamadoma.hpp"
 #include "Component/EnemyManager.hpp"
 #include "Component/Words.hpp"
+#include "Component/Boss.hpp"
 #include "IncludeComponent.hpp"
 
 class PhaseStage final : public Phase {
@@ -42,7 +43,7 @@ private:
     std::shared_ptr<Mambu> m_Mambu;
     std::shared_ptr<SniperJoe> m_SniperJoe;
     std::shared_ptr<Scorebar> m_Scorebar;
-    std::shared_ptr<HealthBar> m_RockmanHealthBar;
+    std::shared_ptr<HealthBar> m_RockmanHealthBar, m_BossHealthBar;
     std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine; // Store Rockman's Ammo.
     std::shared_ptr<Words> m_Ready; //Words Ready.
     std::vector<std::shared_ptr<Blaster>> m_Blaster;
@@ -51,6 +52,7 @@ private:
     std::vector<std::shared_ptr<Screwdriver>> m_Screwdriver;
     std::vector<std::shared_ptr<OctopusBattery>> m_OctopusBattery;
     std::vector<std::shared_ptr<Bombombomb>> m_Bombombomb;
+    std::shared_ptr<Boss> m_Boss;
     std::shared_ptr<std::queue<std::shared_ptr<Item>>> m_Items;
     SceneManager m_SceneManager;
     EnemyManager m_EnemyManager;

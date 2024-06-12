@@ -25,6 +25,10 @@ void PhaseStage::Init(App *app) {
     m_RockmanHealthBar =
         std::make_shared<HealthBar>(glm::vec2{360 - 311, -3408 + 201},
                                     "/Picture/Character/Health/blood", 29);
+    // Load Boss Healthbar
+    m_BossHealthBar =
+        std::make_shared<HealthBar>(glm::vec2{360 - 311 + 48, -3408 + 201},
+                                    "/Picture/Character/Health/blood", 29);
 
     // Load Scorebar
     m_Scorebar = std::make_shared<Scorebar>(glm::vec2{360, -3408});
@@ -272,6 +276,11 @@ void PhaseStage::Init(App *app) {
     // setting bomb
     m_Bombs = std::make_shared<std::queue<std::shared_ptr<Bomb>>>();
 
+    // Boss
+    m_Boss = std::make_shared<Boss>(m_Bombs, m_Items, app->GetRoot());
+    m_Enemies.push_back(m_Boss);
+    app->GetRoot()->AddChild(m_Boss->GetChild());
+
     // Set the collide event manager
     m_CollideEventManager.SetRockman(m_Rockman);
     m_CollideEventManager.SetMagazine(m_Magazine);
@@ -291,6 +300,7 @@ void PhaseStage::Init(App *app) {
     app->GetRoot()->AddChildren(m_Rockman->GetAllChildren());
     app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
     app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
+    app->GetRoot()->AddChild(m_BossHealthBar->GetChild());
     app->GetRoot()->AddChildren(m_Ready->GetChildren());
 
     // TODO: remove camera movement in the futures
@@ -316,7 +326,6 @@ void PhaseStage::Init(App *app) {
 }
 
 void PhaseStage::Update(App *app) {
-
     //If Rockman Dead,then Rivival it.
     if(m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL){
         RockmanRivival(app);
@@ -339,6 +348,9 @@ void PhaseStage::Update(App *app) {
     m_RockmanHealthBar->SetPosition(
         glm::vec2{CameraPos.x - 311, CameraPos.y + 201});
     m_RockmanHealthBar->SetVisable(std::max(m_Rockman->GetHealth(), 0));
+    m_BossHealthBar->SetPosition(
+        glm::vec2{CameraPos.x - 311 + 48, CameraPos.y + 201});
+    m_BossHealthBar->SetVisable(std::max(m_Boss->GetHealth(), 0), m_Boss->IsTriggered() && m_Boss->GetLifeState() == Enemy::LifeState::LIFE);
     m_PersonLife->Update(app->GetLifeCount(), CameraPos);
 
     // if changing scene, return
@@ -380,16 +392,7 @@ void PhaseStage::Update(App *app) {
         m_Testbox->SetPosition({12638, -398});
     }
 
-    // bomb test
-    /*
-    if (Util::Input::IsKeyUp(Util::Keycode::R)) {
-        std::shared_ptr<Bomb> bomb = std::make_shared<Bomb>(
-            RESOURCE_DIR "/Picture/Bomb/Bomb.png",
-            glm::vec2{330, -3308}, glm::vec2{540, -3308}, -3200);
-        m_Bombs->push(bomb);
-        app->GetRoot()->AddChild(bomb);
-    }
-    */
+    // update items and bombs
     UpdateItems(app);
     UpdateBombs(app);
 
