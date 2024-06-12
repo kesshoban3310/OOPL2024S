@@ -25,7 +25,8 @@ public:
     };
     Enemy(glm::vec2 pos, std::string path, int hp, bool visable,
           glm::vec2 collidersize, HurtState state,
-          LifeState lifeState = LifeState::LIFE, glm::vec2 scale = {3, 3});
+          LifeState lifeState = LifeState::LIFE, glm::vec2 scale = {3, 3},
+          glm::vec2 colliderOffset = {0, 0});
     virtual ~Enemy() = default;
     virtual void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) = 0;
     void Revival();
