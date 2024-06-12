@@ -44,7 +44,7 @@ private:
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<HealthBar> m_RockmanHealthBar;
     std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine; // Store Rockman's Ammo.
-    std::shared_ptr<Words> m_Ready; //Words Ready.
+    std::shared_ptr<Words> m_WordReady; //Words Ready.
     std::vector<std::shared_ptr<Blaster>> m_Blaster;
     std::vector<std::shared_ptr<Kamadoma>> m_Kamadoma;
     std::vector<std::shared_ptr<Gabyoll>> m_Gabyoll;
@@ -75,12 +75,12 @@ private:
         {4, {9291, -3}},
         {5, {12041, -13}},
     };
-    //Wait 3000 ms to make Rockman Rivival.
-    long long RockmanRivivalTimer = 0,RockmanRivivalTime = 3000;
+    //Rockman Rivival Setting.
     void RockmanRivival(App *app);
     //Start Animation For Start.
     long long StartTimer = 0,StartTime = 3000;
     void StartAnimation(App *app);
+
 };
 
 #endif // PHASE_STAGE_HPP
