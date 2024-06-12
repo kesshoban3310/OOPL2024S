@@ -132,6 +132,7 @@ void CollideEventManager::Update() {
                     m_App->SetLifeCount(std::min(99u, m_App->GetLifeCount() + 1));
                     break;
                 case ItemType::SPECIAL_WEAPON_ITEM:
+                    *m_IsStageEnded = true;
                     break;
                 case ItemType::SCORE_BALL:
                     m_Scorebar->AddScore(1000);

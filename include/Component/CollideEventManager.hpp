@@ -54,6 +54,10 @@ public:
         m_App = app;
     }
 
+    void SetIsStageEnded(std::shared_ptr<bool> isStageEnded) {
+        m_IsStageEnded = std::move(isStageEnded);
+    }
+
 private:
     std::shared_ptr<Rockman> m_Rockman;
     std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine;
@@ -63,6 +67,7 @@ private:
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<Util::Renderer> m_Renderer;
     App *m_App;
+    std::shared_ptr<bool> m_IsStageEnded;
     std::mt19937 gen = std::mt19937(std::random_device{}());
     std::uniform_real_distribution<> dis =
         std::uniform_real_distribution<>(0, 1);
