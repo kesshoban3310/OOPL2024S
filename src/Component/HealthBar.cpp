@@ -22,12 +22,13 @@ std::shared_ptr<Util::GameObject> HealthBar::GetChild() {
     std::shared_ptr<Util::GameObject> Object = Bar;
     return Object;
 }
-void HealthBar::SetVisable(const int &idx) {
+void HealthBar::SetVisable(const int &idx, bool visable) {
     if (idx == -1) {
         return;
     }
     index = idx;
     Bar->SetImage(Path[index]);
+    Bar->SetVisible(visable);
 }
 void HealthBar::SetPosition(glm::vec2 cameraposition) {
     Bar->SetPosition(cameraposition);
