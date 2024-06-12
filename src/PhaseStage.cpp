@@ -17,9 +17,9 @@ void PhaseStage::Init(App *app) {
                                           Rockman::LiveState::Initial);
     //Load Word Ready
     std::string Word = "ready";
-    m_Ready = std::make_shared<Words>(Word);
+    m_WordReady = std::make_shared<Words>(Word);
     for(int i=0;i<Word.size();i++){
-        m_Ready->SetPosition(i,glm::vec2 {332+24*i,-3349});
+        m_WordReady->SetPosition(i,glm::vec2 {332+24*i,-3349});
     }
     // Load Rockman Healthbar
     m_RockmanHealthBar =
@@ -291,7 +291,7 @@ void PhaseStage::Init(App *app) {
     app->GetRoot()->AddChildren(m_Rockman->GetAllChildren());
     app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
     app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
-    app->GetRoot()->AddChildren(m_Ready->GetChildren());
+    app->GetRoot()->AddChildren(m_WordReady->GetChildren());
 
     // TODO: remove camera movement in the futures
     app->SetCameraPosition({360, -3408});
@@ -498,10 +498,10 @@ void PhaseStage::RockmanRivival(App *app) {
 void PhaseStage::StartAnimation(App *app) {
     if(StartTimer == 0){
         StartTimer = Util::Time::GetElapsedTimeMs();
-        m_Ready->ShowAll();
+        m_WordReady->ShowAll();
     }
     else if(Util::Time::GetElapsedTimeMs()-StartTimer>StartTime){
-        m_Ready->DisableAll();
+        m_WordReady->DisableAll();
         m_Rockman->SetLifeState(Rockman::LiveState::Spawn);
         StartTimer = 0;
     }
