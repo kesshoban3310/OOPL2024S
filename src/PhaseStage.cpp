@@ -28,7 +28,7 @@ void PhaseStage::Init(App *app) {
     // Load Boss Healthbar
     m_BossHealthBar =
         std::make_shared<HealthBar>(glm::vec2{360 - 311 + 48, -3408 + 201},
-                                    "/Picture/Character/Health/blood", 29);
+                                    "/Picture/Boss/Bombman/health/blood", 29);
 
     // Load Scorebar
     m_Scorebar = std::make_shared<Scorebar>(glm::vec2{360, -3408});
