@@ -4,6 +4,7 @@
 #include "Component/Blaster.hpp"
 #include "Component/Bomb.hpp"
 #include "Component/Bombombomb.hpp"
+#include "Component/Backgroundmap.hpp"
 #include "Component/CollideEventManager.hpp"
 #include "Component/HealthBar.hpp"
 #include "Component/OctopusBattery.hpp"
