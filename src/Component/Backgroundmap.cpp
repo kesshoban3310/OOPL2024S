@@ -1,4 +1,6 @@
 #include "Component/Backgroundmap.hpp"
+#include "Util/Logger.hpp"
+#include "config.hpp"
 
 Backgroundmap::Backgroundmap(const std::string &stage) {
     this->stage = stage;
