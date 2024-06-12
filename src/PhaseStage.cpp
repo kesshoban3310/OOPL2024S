@@ -342,7 +342,7 @@ void PhaseStage::Update(App *app) {
         StartAnimation(app);
         return;
     }
-    
+
     // if changing scene, return
     if (m_SceneManager.IsChangingScene()) {
         LOG_DEBUG("Changing Scene");
