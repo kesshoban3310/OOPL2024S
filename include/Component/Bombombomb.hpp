@@ -4,6 +4,7 @@
 #include "Component/Ammo.hpp"
 #include "Component/Collider.hpp"
 #include "Component/EnemyAttribute.hpp"
+#include "Component/Bomb.hpp"
 #include "ImageObject.hpp"
 #include "Util/Time.hpp"
 #include "glm/fwd.hpp"
@@ -21,17 +22,14 @@ public:
     void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
     void PhysicEngine() override;
     void Split();
-    void SmallBombMove();
     void Reset() override;
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetAmmos() {
-        std::vector<std::shared_ptr<Util::GameObject>> SmallBombObject;
-        for (auto i : SmallBomb)
-            SmallBombObject.push_back(i);
+    [[nodiscard]] std::vector<std::shared_ptr<Bomb>> GetBombs() {
+        std::vector<std::shared_ptr<Bomb>> SmallBombObject = SmallBomb;
+        SmallBomb.clear();
         return SmallBombObject;
     }
-
 private:
-    std::vector<std::shared_ptr<ImageObject>> SmallBomb;
+    std::vector<std::shared_ptr<Bomb>> SmallBomb;
     std::string Path;
     std::string AmmoPath;
     glm::vec2 InitialPosition, FinalPosition;
