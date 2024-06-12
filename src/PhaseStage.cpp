@@ -484,23 +484,16 @@ bool PhaseStage::CheckIfRockmanInMap(glm::vec2 cameraposition,glm::vec2 position
     return (LeftX <= position.x && position.x <= RightX) && (BottomY <= position.y && position.y <= TopY);
 }
 void PhaseStage::RockmanRivival(App *app) {
-    if(RockmanRivivalTimer == 0){
-        RockmanRivivalTimer = Util::Time::GetElapsedTimeMs();
-        glm::vec2 NowPos = m_Rockman->GetPosition();
-        int NowScene = m_SceneManager.GetCurrentScene();
-        if(NowPos.x >= 11547 && NowScene == 4) {
-            NowScene = 5;
-        }
-        m_Rockman->SetPosition(RockmanRevivalPosition[std::max(0,NowScene)]);
-        m_EnemyManager.Reset();
-        m_SceneManager.Update(m_Rockman->GetPosition());
-        app->SetCameraPosition(m_SceneManager.GetCameraPosition());
-        return;
+    glm::vec2 NowPos = m_Rockman->GetPosition();
+    int NowScene = m_SceneManager.GetCurrentScene();
+    if(NowPos.x >= 11547 && NowScene == 4) {
+        NowScene = 5;
     }
-    else if(Util::Time::GetElapsedTimeMs()-RockmanRivivalTimer>=RockmanRivivalTime){
-        m_Rockman->Revival();
-        RockmanRivivalTimer = 0;
-    }
+    m_Rockman->SetPosition(RockmanRevivalPosition[std::max(0,NowScene)]);
+    m_EnemyManager.Reset();
+    m_SceneManager.Update(m_Rockman->GetPosition());
+    app->SetCameraPosition(m_SceneManager.GetCameraPosition());
+    m_Rockman->Revival();
 }
 void PhaseStage::StartAnimation(App *app) {
     if(StartTimer == 0){
