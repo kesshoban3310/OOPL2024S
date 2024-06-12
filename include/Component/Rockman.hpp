@@ -40,6 +40,7 @@ public:
         Death,
         WaitSpawn,
         WAITREVIVAL,
+        FROZEN,
     };
     /**
      * @brief Constructor.
@@ -89,6 +90,10 @@ public:
      */
     bool GetInvincible();
 
+    /**
+     * @brief Set Debug mode.
+     */
+    void SetRockmanDebugMode();
     void Revival();
     void SetLifeState(Rockman::LiveState livestate);
     /**
@@ -218,6 +223,8 @@ private:
     bool Invincible = false;
     unsigned long InvincibleTimer = 0,InvincibleTime = 300;
 
+    //Debug Mode Invincible
+    bool DebugMode = false;
     std::vector<std::shared_ptr<Collider>> ColliderBox;
 };
 #endif

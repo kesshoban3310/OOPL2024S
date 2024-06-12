@@ -313,6 +313,9 @@ void PhaseStage::Init(App *app) {
     app->GetRoot()->AddChildren(m_ForegroundObjects->GetChildren());
     app->GetRoot()->AddChildren(m_Rockman->GetAllChildren());
     app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
+    app->GetRoot()->AddChild(m_KillerBomb->GetChild());
+    app->GetRoot()->AddChild(m_SniperJoe->GetChild());
+    app->GetRoot()->AddChild(m_Mambu->GetChild());
     app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
     app->GetRoot()->AddChild(m_BossHealthBar->GetChild());
     app->GetRoot()->AddChildren(m_WordReady->GetChildren());
@@ -410,9 +413,6 @@ void PhaseStage::Update(App *app) {
     LOG_INFO(std::to_string(m_Rockman->Getposition().x)+"
     "+std::to_string(m_Rockman->Getposition().y)); LOG_INFO("Root Size");
     LOG_INFO(std::to_string(app->GetRoot()->size()));
-    LOG_INFO("Bombombomb Position");
-    LOG_INFO(std::to_string(m_Bombombomb[0]->GetPosition().x)+"
-    "+std::to_string(m_Bombombomb[0]->GetPosition().y));
     */
     if (Util::Input::IsKeyPressed(Util::Keycode::B))
         m_Rockman->SetPosition(app->GetCameraPosition());
@@ -472,6 +472,18 @@ void PhaseStage::ReloadMagazine(App *app) {
             app->GetRoot()->AddChild(Ammo->GetChild());
         }
     }
+    for (int i = 0; i < 1; i++) { // SniperJoe Ammo
+        magazine = m_SniperJoe->GetAmmo();
+        for (auto Ammo : magazine) {
+            m_Magazine->push(Ammo);
+            app->GetRoot()->AddChild(Ammo->GetChild());
+        }
+    }
+    magazine = m_Mambu->GetAmmo();
+    for (auto Ammo : magazine) {
+        m_Magazine->push(Ammo);
+        app->GetRoot()->AddChild(Ammo->GetChild());
+    }
     int magazine_size = m_Magazine->size();
     for (int i = 0; i < magazine_size; i++) {
         auto Ammo = m_Magazine->front();
@@ -526,7 +538,7 @@ bool PhaseStage::CheckIfRockmanInMap(glm::vec2 cameraposition,
 void PhaseStage::RockmanRivival(App *app) {
     glm::vec2 NowPos = m_Rockman->GetPosition();
     int NowScene = m_SceneManager.GetCurrentScene();
-    if (NowPos.x >= 11547 && NowScene == 4) {
+    if((NowPos.x >= 11547 && NowScene == 4) || NowScene > 5) {
         NowScene = 5;
     }
     m_Rockman->SetPosition(RockmanRevivalPosition[std::max(0, NowScene)]);
@@ -549,13 +561,15 @@ void PhaseStage::StartAnimation(App *app) {
 void PhaseStage::SetDebugMode(App *app) {
     std::shared_ptr<Words> DebugWord = app->GetDebugModeWords();
     std::string DebugMessage;
-    if (app->GetDebugModeState() == true) {
+    if(app->GetDebugModeState() == true){
         app->SetDebugModeState(false);
         app->GetDebugModeWords()->DisableAll();
+        m_Rockman->SetRockmanDebugMode();
     }
-    else {
+    else{
         RockmanRestHealth = m_Rockman->GetHealth();
         PersonRestLife = app->GetLifeCount();
+        m_Rockman->SetRockmanDebugMode();
         app->SetDebugModeState(true);
         app->GetDebugModeWords()->ShowAll();
     }
