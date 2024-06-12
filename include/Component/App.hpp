@@ -59,7 +59,7 @@ private:
     std::shared_ptr<Words> m_WordDebug;
     glm::vec2 m_CameraPosition;
     unsigned int m_LifeCount;
-    bool m_DebugMode;
+    bool m_DebugMode = false;
 };
 
 #endif // APP_HPP
