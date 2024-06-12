@@ -488,7 +488,7 @@ void PhaseStage::ReloadMagazine(App *app) {
         auto Ammo = m_Magazine->front();
         m_Magazine->pop();
         Ammo->Behavior();
-        if (Ammo->Outofrange(CameraPosition)) {
+        if (Ammo->Outofrange(CameraPosition) || Ammo->IsMarkedForRemoval()) {
             app->GetRoot()->RemoveChild(Ammo->GetChild());
             continue;
         }
