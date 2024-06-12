@@ -19,7 +19,6 @@ public:
     void SetScale(glm::vec2 scales);
     glm::vec2 GetScale();
 
-    //void SetWords(std::string word);
     std::string GetWords();
 
     [[nodiscard]]std::vector<std::shared_ptr<Util::GameObject>> GetChildren(){
@@ -34,6 +33,8 @@ private:
     std::string Word;
     std::vector<glm::vec2> WordPositions;
     glm::vec2 WordScale;
+
+    void SetWords(std::string word);
 };
 
 #endif
