@@ -91,6 +91,8 @@ void Boss::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
 }
 
 void Boss::Reset() {
+    if (m_IsDead)
+        return;
     ChangeState(State::Idle);
     m_IsThrown = false;
     m_IsJumped = false;

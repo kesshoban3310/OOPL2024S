@@ -5,10 +5,11 @@
 #include "Component/EnemyAttribute.hpp"
 #include "Component/Item.hpp"
 #include "Util/Renderer.hpp"
+#include <limits>
 #include <queue>
 #include <random>
 
-class Boss : public Enemy {
+class Boss final : public Enemy {
 public:
     Boss(std::shared_ptr<std::queue<std::shared_ptr<Bomb>>> bombs,
          std::shared_ptr<std::queue<std::shared_ptr<Item>>> items,
@@ -20,6 +21,21 @@ public:
     void Reset() override;
 
     [[nodiscard]] bool IsTriggered() const { return m_IsTriggered; }
+
+    void SetHealth(int health) override {
+        Health = health;
+        if (Health <= 0) {
+            Life = LifeState::DEAD;
+            SetVisable(false);
+            std::shared_ptr<Item> item = std::make_shared<Item>(
+                ItemType::SPECIAL_WEAPON_ITEM,
+                glm::vec2{12650, -2500},
+                std::numeric_limits<float>::infinity());
+            m_Items->push(item);
+            m_Renderer->AddChild(item);
+            m_IsDead = true;
+        }
+    }
 
 private:
     enum class State { Idle, Attack, Jump };
@@ -39,6 +55,7 @@ private:
     bool m_IsThrown = false;
     bool m_IsJumped = false;
     bool m_IsTriggered = false;
+    bool m_IsDead = false;
     const float GRAVITY = 250.0f;
     float m_XVelocity = 0.0f;
     float m_YVelocity = 0.0f;

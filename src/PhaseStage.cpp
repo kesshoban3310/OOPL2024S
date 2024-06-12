@@ -5,6 +5,8 @@
 #include "limits"
 
 void PhaseStage::Init(App *app) {
+    m_IsWaitingForEndAnimation = std::make_shared<bool>(false);
+
     // define enemy array
     std::vector<std::shared_ptr<Enemy>> enemies;
 
@@ -15,12 +17,23 @@ void PhaseStage::Init(App *app) {
     // Load Rockman
     m_Rockman = std::make_shared<Rockman>(glm::vec2{360, -2688},
                                           Rockman::LiveState::Initial);
-    //Load Word Ready
+    // Load Word Ready
     std::string Word = "ready";
-    m_WordReady = std::make_shared<Words>(Word,glm::vec2 {3,3});
-    for(int i=0;i<Word.size();i++){
-        m_WordReady->SetPosition(i,glm::vec2 {332+24*i,-3349});
+    m_WordReady = std::make_shared<Words>(Word, glm::vec2{3, 3});
+    for (int i = 0; i < Word.size(); i++) {
+        m_WordReady->SetPosition(i, glm::vec2{332 + 24 * i, -3349});
     }
+
+    // Load Word End
+    m_WordForEndAnimation =
+        std::make_shared<Words>("stageclear", glm::vec2{3, 3});
+    for (int i = 0; i < 5; i++) {
+        m_WordForEndAnimation->SetPosition(i, glm::vec2{12600 + 24 * i, -2500});
+    }
+    for (int i = 5; i < 10; i++) {
+        m_WordForEndAnimation->SetPosition(i, glm::vec2{12600 + 24 * (i - 5), -2550});
+    }
+
     // Load Rockman Healthbar
     m_RockmanHealthBar =
         std::make_shared<HealthBar>(glm::vec2{360 - 311, -3408 + 201},
@@ -58,9 +71,9 @@ void PhaseStage::Init(App *app) {
         glm::vec2{835, -3504},  glm::vec2{1031, -3408}, glm::vec2{1226, -3312},
         glm::vec2{1356, -3412}, glm::vec2{1461, -3506}, glm::vec2{1607, -3600},
         glm::vec2{1850, -3600}, glm::vec2{2132, -3600}};
-    for(int i=0;i<5;i++){
+    for (int i = 0; i < 5; i++) {
         std::shared_ptr<Kamadoma> kamadoma = std::make_shared<Kamadoma>(
-            KamadomaPath, KamadomaPoints, KamadomaPoints[3+i],3+i,
+            KamadomaPath, KamadomaPoints, KamadomaPoints[3 + i], 3 + i,
             glm::vec2{16 * 3, 16 * 3}, 1, true, Enemy::HurtState::COWARDLY);
         m_Kamadoma.push_back(kamadoma);
         m_Enemies.push_back(kamadoma);
@@ -226,13 +239,13 @@ void PhaseStage::Init(App *app) {
                            std::to_string(i) + ".png";
         GabyollPath.push_back(path);
     }
-    std::vector<std::pair<glm::vec2,glm::vec2> >GabyollPos;
+    std::vector<std::pair<glm::vec2, glm::vec2>> GabyollPos;
     GabyollPos = {
-        {glm::vec2 {8108,-1888},glm::vec2 {8260,-1888}},
-        {glm::vec2 {8534,-1744},glm::vec2 {8598,-1744}},
-        {glm::vec2 {8936,-2080},glm::vec2 {7962,-2080}},
+        {glm::vec2{8108, -1888}, glm::vec2{8260, -1888}},
+        {glm::vec2{8534, -1744}, glm::vec2{8598, -1744}},
+        {glm::vec2{8936, -2080}, glm::vec2{7962, -2080}},
     };
-    for(int i=0;i<3;i++){
+    for (int i = 0; i < 3; i++) {
         std::shared_ptr<Gabyoll> gabyoll = std::make_shared<Gabyoll>(
             GabyollPos[i].first, GabyollPos[i].second, glm::vec2{16 * 3, 8 * 3},
             GabyollPath, glm::vec2{0, 0}, 1, true, Enemy::HurtState::INVINCIBLE,
@@ -290,6 +303,7 @@ void PhaseStage::Init(App *app) {
     m_CollideEventManager.SetEnemies(m_Enemies);
     m_CollideEventManager.SetRenderer(app->GetRoot());
     m_CollideEventManager.SetApp(app);
+    m_CollideEventManager.SetIsStageEnded(m_IsWaitingForEndAnimation);
 
     // Add the root
     m_Rockman->DoBehavior(*m_ForeObjectTileBox);
@@ -302,6 +316,7 @@ void PhaseStage::Init(App *app) {
     app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
     app->GetRoot()->AddChild(m_BossHealthBar->GetChild());
     app->GetRoot()->AddChildren(m_WordReady->GetChildren());
+    app->GetRoot()->AddChildren(m_WordForEndAnimation->GetChildren());
     app->GetRoot()->AddChildren(app->GetDebugModeWords()->GetChildren());
 
     // TODO: remove camera movement in the futures
@@ -341,16 +356,19 @@ void PhaseStage::Update(App *app) {
     m_RockmanHealthBar->SetVisable(std::max(m_Rockman->GetHealth(), 0));
     m_BossHealthBar->SetPosition(
         glm::vec2{CameraPos.x - 311 + 48, CameraPos.y + 201});
-    m_BossHealthBar->SetVisable(std::max(m_Boss->GetHealth(), 0), m_Boss->IsTriggered() && m_Boss->GetLifeState() == Enemy::LifeState::LIFE);
+    m_BossHealthBar->SetVisable(std::max(m_Boss->GetHealth(), 0),
+                                m_Boss->IsTriggered() &&
+                                    m_Boss->GetLifeState() ==
+                                        Enemy::LifeState::LIFE);
     m_PersonLife->Update(app->GetLifeCount(), CameraPos);
 
-    //If Rockman Dead,then Rivival it.
-    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL){
+    // If Rockman Dead,then Rivival it.
+    if (m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL) {
         RockmanRivival(app);
         return;
     }
-    //Ready Animation.
-    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WaitSpawn) {
+    // Ready Animation.
+    if (m_Rockman->GetCurrentState() == Rockman::LiveState::WaitSpawn) {
         StartAnimation(app);
         return;
     }
@@ -365,22 +383,22 @@ void PhaseStage::Update(App *app) {
     glm::vec2 RockmanPos = m_Rockman->GetPosition();
     int SceneStage = m_SceneManager.GetCurrentScene();
 
-    m_EnemyManager.Update(CameraPos,RockmanPos,SceneStage);
+    m_EnemyManager.Update(CameraPos, RockmanPos, SceneStage);
 
     m_CollideEventManager.Update();
     ReloadMagazine(app);
     // m_Testbox->Move();
 
-    if(!CheckIfRockmanInMap(CameraPos,RockmanPos,glm::vec2{50,50}) &&
-        m_Rockman->GetCurrentState() == Rockman::LiveState::Normal){
-        //Let Rockman Die.
+    if (!CheckIfRockmanInMap(CameraPos, RockmanPos, glm::vec2{50, 50}) &&
+        m_Rockman->GetCurrentState() == Rockman::LiveState::Normal) {
+        // Let Rockman Die.
         m_Rockman->SetLifeState(Rockman::LiveState::Death);
     }
 
-    if(Util::Input::IsKeyDown(Util::Keycode::NUM_8)){
+    if (Util::Input::IsKeyDown(Util::Keycode::NUM_8)) {
         SetDebugMode(app);
     }
-    if(app->GetDebugModeState()){
+    if (app->GetDebugModeState()) {
         app->SetDebugModeMessagePosition(app->GetCameraPosition());
         DebugMode(app);
     }
@@ -413,14 +431,19 @@ void PhaseStage::Update(App *app) {
         return;
     }
 
-    // TODO : change this condition to lose a life
-    if (Util::Input::IsKeyUp(Util::Keycode::O)) {
-        app->SetLifeCount(app->GetLifeCount() - 1);
-        if (app->GetLifeCount() == 0)
-            app->ChangeState(App::State::LOSE);
-        else
-            app->ChangeState(App::State::STAGE);
+    if (m_IsPlayingEndAnimation) {
+        m_WordForEndAnimation->ShowAll();
+    }
+
+    if (Util::Time::GetElapsedTimeMs() >= m_EndTimeStampOfEndAnimation) {
+        app->ChangeState(App::State::ENDING_ANIMATION);
         return;
+    }
+
+    if (*m_IsWaitingForEndAnimation) {
+        *m_IsWaitingForEndAnimation = false;
+        m_IsPlayingEndAnimation = true;
+        m_EndTimeStampOfEndAnimation = Util::Time::GetElapsedTimeMs() + 4000;
     }
 }
 
@@ -468,8 +491,7 @@ void PhaseStage::UpdateItems(App *app) {
         auto item = m_Items->front();
         m_Items->pop();
         item->Update(m_ForeObjectTileBox);
-        if (!item->IsAlive() ||
-            m_SceneManager.IsFallOutOfScene(item->GetPosition())) {
+        if (!item->IsAlive()) {
             app->GetRoot()->RemoveChild(item);
             continue;
         }
@@ -492,29 +514,33 @@ void PhaseStage::UpdateBombs(App *app) {
     }
 }
 
-bool PhaseStage::CheckIfRockmanInMap(glm::vec2 cameraposition,glm::vec2 position,glm::vec2 offset) {
-    float LeftX = cameraposition.x-384-offset.x,RightX = cameraposition.x+384+offset.x;
-    float BottomY = cameraposition.y-360-offset.y,TopY = cameraposition.y+360+offset.y;
-    return (LeftX <= position.x && position.x <= RightX) && (BottomY <= position.y && position.y <= TopY);
+bool PhaseStage::CheckIfRockmanInMap(glm::vec2 cameraposition,
+                                     glm::vec2 position, glm::vec2 offset) {
+    float LeftX = cameraposition.x - 384 - offset.x,
+          RightX = cameraposition.x + 384 + offset.x;
+    float BottomY = cameraposition.y - 360 - offset.y,
+          TopY = cameraposition.y + 360 + offset.y;
+    return (LeftX <= position.x && position.x <= RightX) &&
+           (BottomY <= position.y && position.y <= TopY);
 }
 void PhaseStage::RockmanRivival(App *app) {
     glm::vec2 NowPos = m_Rockman->GetPosition();
     int NowScene = m_SceneManager.GetCurrentScene();
-    if(NowPos.x >= 11547 && NowScene == 4) {
+    if (NowPos.x >= 11547 && NowScene == 4) {
         NowScene = 5;
     }
-    m_Rockman->SetPosition(RockmanRevivalPosition[std::max(0,NowScene)]);
+    m_Rockman->SetPosition(RockmanRevivalPosition[std::max(0, NowScene)]);
     m_EnemyManager.Reset();
     m_SceneManager.Update(m_Rockman->GetPosition());
     app->SetCameraPosition(m_SceneManager.GetCameraPosition());
     m_Rockman->Revival();
 }
 void PhaseStage::StartAnimation(App *app) {
-    if(StartTimer == 0){
+    if (StartTimer == 0) {
         StartTimer = Util::Time::GetElapsedTimeMs();
         m_WordReady->ShowAll();
     }
-    else if(Util::Time::GetElapsedTimeMs()-StartTimer>StartTime){
+    else if (Util::Time::GetElapsedTimeMs() - StartTimer > StartTime) {
         m_WordReady->DisableAll();
         m_Rockman->SetLifeState(Rockman::LiveState::Spawn);
         StartTimer = 0;
@@ -523,40 +549,40 @@ void PhaseStage::StartAnimation(App *app) {
 void PhaseStage::SetDebugMode(App *app) {
     std::shared_ptr<Words> DebugWord = app->GetDebugModeWords();
     std::string DebugMessage;
-    if(app->GetDebugModeState() == true){
+    if (app->GetDebugModeState() == true) {
         app->SetDebugModeState(false);
         app->GetDebugModeWords()->DisableAll();
     }
-    else{
+    else {
         RockmanRestHealth = m_Rockman->GetHealth();
         PersonRestLife = app->GetLifeCount();
         app->SetDebugModeState(true);
         app->GetDebugModeWords()->ShowAll();
     }
 }
-void PhaseStage::DebugMode(App *app){
+void PhaseStage::DebugMode(App *app) {
     m_Rockman->SetHealth(RockmanRestHealth);
     app->SetLifeCount(PersonRestLife);
     int SceneNum = -1;
-    if(Util::Input::IsKeyDown(Util::Keycode::NUM_1)){
+    if (Util::Input::IsKeyDown(Util::Keycode::NUM_1)) {
         SceneNum = 0;
     }
-    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_2)){
+    else if (Util::Input::IsKeyDown(Util::Keycode::NUM_2)) {
         SceneNum = 1;
     }
-    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_3)){
+    else if (Util::Input::IsKeyDown(Util::Keycode::NUM_3)) {
         SceneNum = 2;
     }
-    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_4)){
+    else if (Util::Input::IsKeyDown(Util::Keycode::NUM_4)) {
         SceneNum = 3;
     }
-    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_5)){
+    else if (Util::Input::IsKeyDown(Util::Keycode::NUM_5)) {
         SceneNum = 4;
     }
-    else if(Util::Input::IsKeyDown(Util::Keycode::NUM_6)){
+    else if (Util::Input::IsKeyDown(Util::Keycode::NUM_6)) {
         SceneNum = 5;
     }
-    if(SceneNum != -1) {
+    if (SceneNum != -1) {
         m_Rockman->SetPosition(RockmanRevivalPosition[std::max(0, SceneNum)]);
         app->SetCameraPosition(m_SceneManager.GetCameraPosition());
     }
