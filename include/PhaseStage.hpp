@@ -35,6 +35,7 @@ public:
         : Phase(lastState){};
 
 private:
+    std::shared_ptr<bool> m_IsWaitingForEndAnimation;
     std::shared_ptr<Backgroundmap> m_BackgroundObjects;
     std::shared_ptr<Backgroundmap> m_ForegroundObjects;
     std::shared_ptr<Rockman> m_Rockman;
@@ -82,6 +83,10 @@ private:
     //Start Animation For Start.
     long long StartTimer = 0,StartTime = 3000;
     void StartAnimation(App *app);
+
+    std::shared_ptr<Words> m_WordForEndAnimation;
+    bool m_IsPlayingEndAnimation = false;
+    float m_EndTimeStampOfEndAnimation = std::numeric_limits<float>::infinity();
 
     //Debug Mode On;
     void SetDebugMode(App *app);
