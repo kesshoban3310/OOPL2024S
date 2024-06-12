@@ -8,6 +8,7 @@ Words::Words(std::string word,glm::vec2 scale) {
     SetWords(word);
 }
 
+
 void Words::SetPosition(int idx,glm::vec2 pos){
     WordObjects[idx]->SetPosition(pos);
     WordPositions[idx] = pos;
@@ -40,7 +41,6 @@ void Words::SetScale(glm::vec2 scales){
 glm::vec2 Words::GetScale() {
     return WordScale;
 }
-
 void Words::SetWords(std::string word){
     for(int i=0;i<word.size();i++){
         std::string WordPath;

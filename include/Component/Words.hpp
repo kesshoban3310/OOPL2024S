@@ -33,10 +33,6 @@ private:
     std::string Word;
     std::vector<glm::vec2> WordPositions;
     glm::vec2 WordScale;
-<<<<<<< HEAD
-=======
-
->>>>>>> 8f0d4981ffc27b6fa73d868352829e9d60500219
     void SetWords(std::string word);
 };
 
