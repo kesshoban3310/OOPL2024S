@@ -546,12 +546,12 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
             }
             continue;
         }
-        /*else if(collison[i]->GetObjectType() == TileBox::ObjectType::DAMAGE){
+        else if(collison[i]->GetObjectType() == TileBox::ObjectType::DAMAGE && DebugMode == false){
             if (IsColliding(rockmandown, *(collison[i]->Getcollisonbox()))){
                 RockmanState = LiveState::Death;
                 return {};
             }
-        }*/
+        }
         else{
             auto collisonresult =
                 WhereIsColliding(rockmanup, *(collison[i]->Getcollisonbox()));
@@ -692,9 +692,6 @@ void Rockman::SetInvincible() {
 void Rockman::SetLifeState(Rockman::LiveState livestate) {
     RockmanState = livestate;
 }
-
-
-
 void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
                                    std::string locate) {
     LOG_DEBUG("=========" + locate + "============");
@@ -767,4 +764,12 @@ void Rockman::Revival() {
         Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, 24});
     ColliderBox[1] = std::make_shared<Collider>(
         Position, glm::vec2{20 * 3, 12 * 3}, glm::vec2{0, -24});
+}
+void Rockman::SetRockmanDebugMode(){
+    if(DebugMode){
+        DebugMode = false;
+    }
+    else{
+        DebugMode = true;
+    }
 }
