@@ -91,6 +91,7 @@ App::App(State state)
       m_Root(std::make_shared<Util::Renderer>()),
       m_Context(Core::Context::GetInstance()),
       m_CameraPosition({0, 0}) {
+    m_WordDebug = std::make_shared<Words>("debug mode on",glm::vec2 {2,2});
     ChangeState(state);
 }
 
@@ -110,4 +111,28 @@ void App::SetLifeCount(unsigned int count) {
 
 unsigned int App::GetLifeCount() const {
     return m_LifeCount;
+}
+void App::SetDebugModeState(bool debugstate) {
+    m_DebugMode = debugstate;
+}
+bool App::GetDebugModeState() const {
+    return m_DebugMode;
+}
+std::shared_ptr<Words> App::GetDebugModeWords() const{
+    return m_WordDebug;
+}
+void App::SetDebugModeMessagePosition(const glm::vec2 &position){
+    int Xscale = 0,Yscale = 0;
+    glm::vec2 WordInitialPosition = {position.x+188,position.y+308};
+    glm::vec2 Scale = m_WordDebug->GetScale();
+    int WordSize = m_WordDebug->GetWords().size();
+    for(int i=0;i<WordSize;i++){
+        if(m_WordDebug->GetWords()[i] == ' '){
+            Xscale = 0,Yscale++;
+            continue;
+        }
+        glm::vec2 WordPosition = {WordInitialPosition.x + 8*Scale.x*Xscale,WordInitialPosition.y - 8*Scale.y*Yscale};
+        m_WordDebug->SetPosition(i,WordPosition);
+        Xscale++;
+    }
 }
