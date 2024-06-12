@@ -46,7 +46,6 @@ private:
     //{332,-3349}
     std::shared_ptr<Words> m_WordReady; //Words Ready.
     std::shared_ptr<std::queue<std::shared_ptr<Ammo>>> m_Magazine; // Store Rockman's Ammo.
-
     std::vector<std::shared_ptr<Blaster>> m_Blaster;
     std::vector<std::shared_ptr<Kamadoma>> m_Kamadoma;
     std::vector<std::shared_ptr<Gabyoll>> m_Gabyoll;
@@ -87,6 +86,7 @@ private:
     void SetDebugMode(App *app);
     unsigned int RockmanRestHealth,PersonRestLife;
     void DebugMode(App *app);
+
 };
 
 #endif // PHASE_STAGE_HPP

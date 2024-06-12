@@ -317,16 +317,7 @@ void PhaseStage::Init(App *app) {
 
 void PhaseStage::Update(App *app) {
 
-    //If Rockman Dead,then Rivival it.
-    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL){
-        RockmanRivival(app);
-        return;
-    }
-    //Ready Animation.
-    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WaitSpawn) {
-        StartAnimation(app);
-        return;
-    }
+
     // update SceneManager
     m_SceneManager.Update(m_Rockman->GetPosition());
     app->SetCameraPosition(m_SceneManager.GetCameraPosition());
@@ -340,6 +331,17 @@ void PhaseStage::Update(App *app) {
         glm::vec2{CameraPos.x - 311, CameraPos.y + 201});
     m_RockmanHealthBar->SetVisable(std::max(m_Rockman->GetHealth(), 0));
     m_PersonLife->Update(app->GetLifeCount(), CameraPos);
+
+    //If Rockman Dead,then Rivival it.
+    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL){
+        RockmanRivival(app);
+        return;
+    }
+    //Ready Animation.
+    if(m_Rockman->GetCurrentState() == Rockman::LiveState::WaitSpawn) {
+        StartAnimation(app);
+        return;
+    }
 
     // if changing scene, return
     if (m_SceneManager.IsChangingScene()) {
