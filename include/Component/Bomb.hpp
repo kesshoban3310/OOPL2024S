@@ -12,7 +12,8 @@ public:
     enum class State { FALLING, EXPLODING };
 
     Bomb(const std::string &imagePath, glm::vec2 startPosition,
-         glm::vec2 expectedEndPosition, float expectedHeight);
+         glm::vec2 expectedEndPosition, float expectedHeight,
+         unsigned int collisionDamage, unsigned int explosionDamage);
     ~Bomb() override = default;
 
     void Update(std::shared_ptr<std::vector<std::shared_ptr<TileBox>>> tiles);
@@ -27,10 +28,21 @@ public:
 
     [[nodiscard]] State GetState() const { return m_State; }
 
+    [[nodiscard]] int GetDamage() const {
+        if (m_State == State::FALLING) {
+            return m_CollisionDamage;
+        }
+        else {
+            return m_ExplosionDamage;
+        }
+    }
+
     void SetToExplode();
 
 private:
     const float GRAVITY = 200.0f;
+    unsigned int m_CollisionDamage;
+    unsigned int m_ExplosionDamage;
     float m_XVelocity;
     float m_YVelocity;
     std::shared_ptr<Collider> m_Collider;
