@@ -47,7 +47,7 @@ void Boss::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
                 std::shared_ptr<Bomb> bomb = std::make_shared<Bomb>(
                     RESOURCE_DIR "/Picture/Bomb/Bomb.png",
                     GetPosition() + glm::vec2{0, 10 * 3}, RockmanPos,
-                    -2600 + float(m_RandomNumberGenerator() % 200));
+                    -2600 + float(m_RandomNumberGenerator() % 200), 3, 3);
                 m_Bombs->push(bomb);
                 m_Renderer->AddChild(bomb);
                 m_IsThrown = true;

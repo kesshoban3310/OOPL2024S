@@ -72,7 +72,7 @@ void Bombombomb::Split() {
         float High = -3420 + 16;
         glm::vec2 StartPosition = FinalPosition;
         glm::vec2 EndPosition = {InitialPosition.x+PositionOffset[i].x,InitialPosition.y+PositionOffset[i].y};
-        std::shared_ptr<Bomb> bomb = std::make_shared<Bomb>(AmmoPath,StartPosition,EndPosition,High);
+        std::shared_ptr<Bomb> bomb = std::make_shared<Bomb>(AmmoPath,StartPosition,EndPosition,High,1,0);
         SmallBomb.push_back(bomb);
     }
     BeSmallBomb = 0;
