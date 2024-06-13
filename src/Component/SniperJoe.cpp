@@ -18,6 +18,7 @@ SniperJoe::SniperJoe(glm::vec2 inipos,glm::vec2 finpos, glm::vec2 collidersize, 
     this->AmmoPath = ammopath;
     this->Speed = speed;
     this->AmmoSpeed = ammospeed;
+    this->ID = "SniperJoe";
 }
 void SniperJoe::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
     float dir_x = Position->x - RockmanPos.x;

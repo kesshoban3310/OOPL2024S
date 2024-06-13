@@ -13,6 +13,7 @@ Kamadoma::Kamadoma(std::vector<std::string> path,std::vector<glm::vec2> points,g
     this->Points = points;
     this->Idx = iniidx;
     this->InitialIdx = iniidx;
+    this->ID = "Kamadoma";
 }
 void Kamadoma::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
     float RockmanPosX = Position->x - RockmanPos.x;

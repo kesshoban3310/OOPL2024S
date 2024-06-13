@@ -4,7 +4,7 @@
 #include "Component/Ammo.hpp"
 #include "Component/Collider.hpp"
 #include "Component/EnemyAttribute.hpp"
-#include "Component/Bomb.hpp"
+#include "Component/SmallBomb.hpp"
 #include "ImageObject.hpp"
 #include "Util/Time.hpp"
 #include "glm/fwd.hpp"
@@ -12,7 +12,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-
 class Bombombomb : public Enemy, Physic {
 public:
     Bombombomb(glm::vec2 pos, glm::vec2 speed, glm::vec2 ammospeed,
@@ -21,15 +20,13 @@ public:
                Enemy::HurtState hurtState);
     void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
     void PhysicEngine() override;
-    void Split();
+    void MakeSmallBomb();
     void Reset() override;
-    [[nodiscard]] std::vector<std::shared_ptr<Bomb>> GetBombs() {
-        std::vector<std::shared_ptr<Bomb>> SmallBombObject = SmallBomb;
-        SmallBomb.clear();
-        return SmallBombObject;
+    [[nodiscard]] std::vector<std::shared_ptr<SmallBomb>> GetBombs() {
+        return Bomb;
     }
 private:
-    std::vector<std::shared_ptr<Bomb>> SmallBomb;
+    std::vector<std::shared_ptr<SmallBomb>> Bomb;
     std::string Path;
     std::string AmmoPath;
     glm::vec2 InitialPosition, FinalPosition;

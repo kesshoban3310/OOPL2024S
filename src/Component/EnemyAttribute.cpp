@@ -79,14 +79,6 @@ void Enemy::Revival() {
         Health = InitialHealth;
     }
 }
-/*
-void Enemy::Reset(){
-    *Position = InitialPos;
-    Health = InitialHealth;
-    Visable = InitialVisable;
-    Life = InitialLife;
-    Hurt = InitialHurt;
-    Object->SetPosition(*Position);
-    Object->SetVisible(Visable);
+std::string Enemy::GetEnemyId(){
+    return ID;
 }
- */
