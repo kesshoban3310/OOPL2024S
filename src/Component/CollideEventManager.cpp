@@ -52,6 +52,8 @@ void CollideEventManager::Update() {
     // 1. rockman <---> ammo : completed
     int ammoCount = (int)m_Magazine->size();
     for (int i = 0; i < ammoCount; i++) {
+        if(m_Rockman->GetCurrentState() != Rockman::LiveState::Normal)
+            break;
         std::shared_ptr<Ammo> ammo = m_Magazine->front();
         m_Magazine->pop();
         m_Magazine->push(ammo);
@@ -70,6 +72,8 @@ void CollideEventManager::Update() {
 
     // 2. rockman <---> enemy
     for (auto &enemy : m_Enemies) {
+        if(m_Rockman->GetCurrentState() != Rockman::LiveState::Normal)
+            break;
         auto rockmanCollider = m_Rockman->GetCollider();
         auto enemyCollider = enemy->GetCollider();
         if (enemy->GetLifeState() == Enemy::LifeState::DEAD)
@@ -106,6 +110,8 @@ void CollideEventManager::Update() {
     // TODO : make more implementation to other items
     int itemCount = (int)m_Items->size();
     for (int i = 0; i < itemCount; i++) {
+        if(m_Rockman->GetCurrentState() != Rockman::LiveState::Normal)
+            break;
         auto item = m_Items->front();
         m_Items->pop();
         m_Items->push(item);
@@ -146,6 +152,8 @@ void CollideEventManager::Update() {
     // 5. rockman <---> bomb
     int bombCount = (int)m_Bombs->size();
     for (int i = 0; i < bombCount; i++) {
+        if(m_Rockman->GetCurrentState() != Rockman::LiveState::Normal)
+            break;
         std::shared_ptr<Bomb> bomb = m_Bombs->front();
         m_Bombs->pop();
         m_Bombs->push(bomb);
