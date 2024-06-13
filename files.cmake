@@ -30,7 +30,6 @@ set(SRC_FILES
         Component/SceneManager.cpp
         Component/ScrewDriver.cpp
         Component/SniperJoe.cpp
-        Component/SmallBomb.cpp
         Component/TestBox.cpp
         Component/TileMap.cpp
         Component/TileBox.cpp
@@ -73,7 +72,6 @@ set(INCLUDE_FILES
         Component/SceneManager.hpp
         Component/ScrewDriver.hpp
         Component/SniperJoe.hpp
-        Component/SmallBomb.hpp
         Component/TestBox.hpp
         Component/TileMap.hpp
         Component/TileBox.hpp
