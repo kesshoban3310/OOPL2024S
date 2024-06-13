@@ -100,6 +100,30 @@ void PhaseStage::Init(App *app) {
         m_Enemies.push_back(blaster);
         app->GetRoot()->AddChild(blaster->GetChild());
     }
+    std::shared_ptr<Blaster> blaster = std::make_shared<Blaster>(
+        glm::vec2{6576,-1966}, glm::vec2{16 * 3, 16 * 3},
+        glm::vec2{3, 3}, 66,0 , BlasterPath, BlasterAmmoPath, 1,
+        true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
+    m_Blaster.push_back(blaster);
+    m_Enemies.push_back(blaster);
+    app->GetRoot()->AddChild(blaster->GetChild());
+
+    blaster = std::make_shared<Blaster>(
+        glm::vec2{6962,-1966}, glm::vec2{16 * 3, 16 * 3},
+        glm::vec2{3, 3}, 66,0, BlasterPath, BlasterAmmoPath, 1,
+        true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
+    m_Blaster.push_back(blaster);
+    m_Enemies.push_back(blaster);
+    app->GetRoot()->AddChild(blaster->GetChild());
+
+    blaster = std::make_shared<Blaster>(
+        glm::vec2{7826,-1966}, glm::vec2{16 * 3, 16 * 3},
+        glm::vec2{3, 3}, 66,0, BlasterPath, BlasterAmmoPath, 1,
+        true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
+    m_Blaster.push_back(blaster);
+    m_Enemies.push_back(blaster);
+    app->GetRoot()->AddChild(blaster->GetChild());
+
     // Load Screwdriver
     std::vector<std::string> ScrewDriverPath;
     for (int i = 1; i <= 5; i++) {
@@ -477,7 +501,7 @@ void PhaseStage::ReloadMagazine(App *app) {
         m_Magazine->push(Ammo);
         app->GetRoot()->AddChild(Ammo->GetChild());
     }
-    for (int i = 0; i < 4; i++) { // Blaster Magazine
+    for (int i = 0; i < 7; i++) { // Blaster Magazine
         magazine = m_Blaster[i]->Getammo();
         for (auto Ammo : magazine) {
             m_Magazine->push(Ammo);
