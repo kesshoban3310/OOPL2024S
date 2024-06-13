@@ -275,7 +275,6 @@ void PhaseStage::Init(App *app) {
         app->GetRoot()->AddChild(gabyoll->GetChild());
     }
     // Load SniperJoe
-    // Load SniperJoe
     std::vector<std::string> SniperJoePath;
     for (int i = 1; i <= 4; i++) {
         std::string path =
