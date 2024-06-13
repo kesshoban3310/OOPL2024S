@@ -21,7 +21,7 @@ public:
     void SetVisable(bool visable);
     bool GetVisable();
 private:
-    long long CoolDownTimer = 0,CoolDownTime = 500;
+    long long CoolDownTimer = 0,CoolDownTime = 2500;
 
     std::string Path;
     glm::vec2 Scale;
