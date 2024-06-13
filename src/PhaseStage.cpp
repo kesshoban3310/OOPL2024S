@@ -441,6 +441,7 @@ void PhaseStage::Update(App *app) {
     if (*m_IsWaitingForEndAnimation) {
         *m_IsWaitingForEndAnimation = false;
         m_IsPlayingEndAnimation = true;
+        m_Rockman->SetLifeState(Rockman::LiveState::FROZEN);
         m_EndTimeStampOfEndAnimation = Util::Time::GetElapsedTimeMs() + 4000;
     }
 }
