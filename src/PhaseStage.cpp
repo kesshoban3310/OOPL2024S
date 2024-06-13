@@ -308,6 +308,7 @@ void PhaseStage::Init(App *app) {
     app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
     app->GetRoot()->AddChild(m_KillerBomb->GetChild());
     app->GetRoot()->AddChild(m_SniperJoe->GetChild());
+    app->GetRoot()->AddChild(m_Mambu->GetChild());
     app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
     app->GetRoot()->AddChild(m_BossHealthBar->GetChild());
     app->GetRoot()->AddChildren(m_WordReady->GetChildren());
@@ -481,7 +482,7 @@ void PhaseStage::ReloadMagazine(App *app) {
         auto Ammo = m_Magazine->front();
         m_Magazine->pop();
         Ammo->Behavior();
-        if (Ammo->Outofrange(CameraPosition)) {
+        if (Ammo->Outofrange(CameraPosition) || Ammo->IsMarkedForRemoval()) {
             app->GetRoot()->RemoveChild(Ammo->GetChild());
             continue;
         }
