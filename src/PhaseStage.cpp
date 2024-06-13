@@ -330,6 +330,19 @@ void PhaseStage::Init(App *app) {
         {8, {{12264, -2280}, {13032, -3048}}},
     });
 
+    m_EnemyManager.SetEnemyStage({
+        {"Kamadoma",{0}},
+        {"Bombombomb",{0}},
+        {"ScrewDriver",{0}},
+        {"Blaster",{1,2}},
+        {"SniperJoe",{2}},
+        {"KillerBomb",{2,3,4}},
+        {"Gabyoll",{2}},
+        {"Mambu",{4}},
+        {"OctopusBattery",{6,7}},
+        {"Bomb Man",{8}},
+        {"Small Bomb",{0}}
+    });
     // setting person life
     m_PersonLife = std::make_shared<PersonLife>();
     app->GetRoot()->AddChild(m_PersonLife);
