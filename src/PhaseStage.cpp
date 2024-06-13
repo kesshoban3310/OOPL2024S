@@ -35,7 +35,8 @@ void PhaseStage::Init(App *app) {
         m_WordForEndAnimation->SetPosition(i, glm::vec2{12600 + 24 * i, -2500});
     }
     for (int i = 5; i < 10; i++) {
-        m_WordForEndAnimation->SetPosition(i, glm::vec2{12600 + 24 * (i - 5), -2550});
+        m_WordForEndAnimation->SetPosition(
+            i, glm::vec2{12600 + 24 * (i - 5), -2550});
     }
 
     // Load Rockman Healthbar
@@ -96,11 +97,36 @@ void PhaseStage::Init(App *app) {
         std::shared_ptr<Blaster> blaster = std::make_shared<Blaster>(
             glm::vec2{4894, -2832 + 96 * i}, glm::vec2{16 * 3, 16 * 3},
             glm::vec2{-3, 3}, timer, i % 2, BlasterPath, BlasterAmmoPath, 1,
-            true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
+            true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE,
+            glm::vec2{360, 0});
         m_Blaster.push_back(blaster);
         m_Enemies.push_back(blaster);
         app->GetRoot()->AddChild(blaster->GetChild());
     }
+    std::shared_ptr<Blaster> blaster = std::make_shared<Blaster>(
+        glm::vec2{6576, -1966}, glm::vec2{16 * 3, 16 * 3}, glm::vec2{3, 3}, 66,
+        0, BlasterPath, BlasterAmmoPath, 1, true, Enemy::HurtState::INVINCIBLE,
+        Enemy::LifeState::LIFE, glm::vec2{-360, 0});
+    m_Blaster.push_back(blaster);
+    m_Enemies.push_back(blaster);
+    app->GetRoot()->AddChild(blaster->GetChild());
+
+    blaster = std::make_shared<Blaster>(
+        glm::vec2{6962, -1966}, glm::vec2{16 * 3, 16 * 3}, glm::vec2{3, 3}, 66,
+        0, BlasterPath, BlasterAmmoPath, 1, true, Enemy::HurtState::INVINCIBLE,
+        Enemy::LifeState::LIFE, glm::vec2{-360, 0});
+    m_Blaster.push_back(blaster);
+    m_Enemies.push_back(blaster);
+    app->GetRoot()->AddChild(blaster->GetChild());
+
+    blaster = std::make_shared<Blaster>(
+        glm::vec2{7826, -1966}, glm::vec2{16 * 3, 16 * 3}, glm::vec2{3, 3}, 66,
+        0, BlasterPath, BlasterAmmoPath, 1, true, Enemy::HurtState::INVINCIBLE,
+        Enemy::LifeState::LIFE, glm::vec2{-360, 0});
+    m_Blaster.push_back(blaster);
+    m_Enemies.push_back(blaster);
+    app->GetRoot()->AddChild(blaster->GetChild());
+
     // Load Screwdriver
     std::vector<std::string> ScrewDriverPath;
     for (int i = 1; i <= 5; i++) {
@@ -457,7 +483,7 @@ void PhaseStage::ReloadMagazine(App *app) {
         m_Magazine->push(Ammo);
         app->GetRoot()->AddChild(Ammo->GetChild());
     }
-    for (int i = 0; i < 4; i++) { // Blaster Magazine
+    for (int i = 0; i < 7; i++) { // Blaster Magazine
         magazine = m_Blaster[i]->Getammo();
         for (auto Ammo : magazine) {
             m_Magazine->push(Ammo);
@@ -544,7 +570,7 @@ bool PhaseStage::CheckIfRockmanInMap(glm::vec2 cameraposition,
 void PhaseStage::RockmanRivival(App *app) {
     glm::vec2 NowPos = m_Rockman->GetPosition();
     int NowScene = m_SceneManager.GetCurrentScene();
-    if((NowPos.x >= 11547 && NowScene == 4) || NowScene > 5) {
+    if ((NowPos.x >= 11547 && NowScene == 4) || NowScene > 5) {
         NowScene = 5;
     }
     m_Rockman->SetPosition(RockmanRevivalPosition[std::max(0, NowScene)]);
@@ -556,6 +582,11 @@ void PhaseStage::RockmanRivival(App *app) {
 void PhaseStage::StartAnimation(App *app) {
     if (StartTimer == 0) {
         StartTimer = Util::Time::GetElapsedTimeMs();
+        glm::vec2 ReadyPosition = app->GetCameraPosition();
+        for (int i = 0; i < m_WordReady->GetWords().size(); i++) {
+            m_WordReady->SetPosition(i, ReadyPosition +
+                                            glm::vec2{-28 + 24 * i, 60});
+        }
         m_WordReady->ShowAll();
     }
     else if (Util::Time::GetElapsedTimeMs() - StartTimer > StartTime) {
@@ -567,12 +598,12 @@ void PhaseStage::StartAnimation(App *app) {
 void PhaseStage::SetDebugMode(App *app) {
     std::shared_ptr<Words> DebugWord = app->GetDebugModeWords();
     std::string DebugMessage;
-    if(app->GetDebugModeState() == true){
+    if (app->GetDebugModeState() == true) {
         app->SetDebugModeState(false);
         app->GetDebugModeWords()->DisableAll();
         m_Rockman->SetRockmanDebugMode();
     }
-    else{
+    else {
         RockmanRestHealth = m_Rockman->GetHealth();
         PersonRestLife = app->GetLifeCount();
         m_Rockman->SetRockmanDebugMode();
