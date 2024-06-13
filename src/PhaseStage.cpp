@@ -512,6 +512,13 @@ void PhaseStage::UpdateItems(App *app) {
 }
 
 void PhaseStage::UpdateBombs(App *app) {
+    for(int i=0;i<4;i++){
+        auto Bombombomb = m_Bombombomb[i]->GetBombs();
+        for(int i=0;i<Bombombomb.size();i++) {
+            m_Bombs->push(Bombombomb[i]);
+            app->GetRoot()->AddChild(Bombombomb[i]);
+        }
+    }
     int bombSize = (int)m_Bombs->size();
     for (int i = 0; i < bombSize; i++) {
         auto bomb = m_Bombs->front();
