@@ -48,6 +48,8 @@ public:
     virtual LifeState GetLifeState();
     virtual void SetLifeState(LifeState lifestate);
 
+    std::string GetEnemyId();
+
     //Reset Function For Initial Enemy.
     virtual void Reset() = 0;
     [[nodiscard]] Collider GetCollider() { return *Hitbox; }
