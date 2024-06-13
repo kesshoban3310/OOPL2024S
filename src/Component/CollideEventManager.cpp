@@ -1,6 +1,6 @@
 #include "Component/CollideEventManager.hpp"
-#include "Component/Item.hpp"
 #include "Component/App.hpp"
+#include "Component/Item.hpp"
 #include <random>
 
 void CollideEventManager::Update() {
@@ -43,8 +43,7 @@ void CollideEventManager::Update() {
                 type = ItemType::ONE_UP;
             }
 
-            auto item = std::make_shared<Item>(type, enemy->GetPosition() +
-                                                         glm::vec2(0, 40));
+            auto item = std::make_shared<Item>(type, enemy->GetPosition());
             m_Items->push(item);
             m_Renderer->AddChild(item);
         }
@@ -129,7 +128,8 @@ void CollideEventManager::Update() {
                 case ItemType::BIG_WEAPON_ENERGY:
                     break;
                 case ItemType::ONE_UP:
-                    m_App->SetLifeCount(std::min(99u, m_App->GetLifeCount() + 1));
+                    m_App->SetLifeCount(
+                        std::min(99u, m_App->GetLifeCount() + 1));
                     break;
                 case ItemType::SPECIAL_WEAPON_ITEM:
                     *m_IsStageEnded = true;
@@ -153,7 +153,7 @@ void CollideEventManager::Update() {
         auto bombCollider = bomb->GetCollider();
         for (auto &j : rockmanCollider) {
             if (IsColliding(*j, bombCollider)) {
-                if(bomb->GetState() == Bomb::State::FALLING)
+                if (bomb->GetState() == Bomb::State::FALLING)
                     bomb->SetToExplode();
                 RockmanGetDamage(3);
                 break;
