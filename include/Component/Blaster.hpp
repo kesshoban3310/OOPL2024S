@@ -14,7 +14,7 @@ public:
             unsigned long animationinterval, bool increase,
             std::vector<std::string> path, std::string ammopath, int health,
             bool visable, Enemy::HurtState hurtstate,
-            Enemy::LifeState lifestate);
+            Enemy::LifeState lifestate, glm::vec2 AmmoSpeed);
     void DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) override;
     void Shoot() override;
     void Reset() override;
@@ -28,6 +28,7 @@ private:
     std::vector<std::string> Path;
     std::string AmmoPath;
     std::vector<std::shared_ptr<Ammo>> Magazine;
+    glm::vec2 AmmoSpeed;
     unsigned long AnimationTimer = 0, AnimationInterval;
     int AnimationCount = 0;
     int PathIndex = 0;
