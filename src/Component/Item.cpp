@@ -46,8 +46,8 @@ Item::Item(ItemType type, glm::vec2 position, float remainingTime)
         break;
     }
     SetZIndex(70);
-    m_Collider = std::make_shared<Collider>(
-        Collider(m_Position, GetScaledSize(), {0, 0}));
+    m_Collider = std::make_shared<Collider>(Collider(
+        m_Position, GetScaledSize() - glm::vec2{4 * 3, 4 * 3}, {0, -2 * 3}));
 }
 
 void Item::Update(

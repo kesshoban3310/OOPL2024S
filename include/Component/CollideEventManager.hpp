@@ -13,7 +13,6 @@
 
 class PhaseStage;
 
-// TODO : add item collide event in future
 class CollideEventManager {
 public:
     CollideEventManager() = default;
@@ -50,9 +49,7 @@ public:
         m_Renderer = std::move(renderer);
     }
 
-    void SetApp(App *app) {
-        m_App = app;
-    }
+    void SetApp(App *app) { m_App = app; }
 
     void SetIsStageEnded(std::shared_ptr<bool> isStageEnded) {
         m_IsStageEnded = std::move(isStageEnded);
