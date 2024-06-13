@@ -129,15 +129,10 @@ void PhaseStage::Init(App *app) {
             glm::vec2{16, 16}, glm::vec2{3, 3}, glm::vec2{16 * 3, 16 * 3},
             RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb1.png",
             RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb2.png",
-            1, true, Enemy::HurtState::INVINCIBLE);
+            1, true, Enemy::HurtState::COWARDLY);
         m_Bombombomb.push_back(bombombomb);
         m_Enemies.push_back(bombombomb);
         app->GetRoot()->AddChild(bombombomb->GetChild());
-        auto SmallBomb = bombombomb->GetBombs();
-        for(int i=0;i<SmallBomb.size();i++){
-            m_Enemies.push_back(SmallBomb[i]);
-            app->GetRoot()->AddChild(SmallBomb[i]->GetChild());
-        }
     }
     // Load OctopusBattery
     glm::vec2 OctopusBatteryIniPos = glm::vec2{12576, -959};
@@ -341,7 +336,6 @@ void PhaseStage::Init(App *app) {
         {"Mambu",{4}},
         {"OctopusBattery",{6,7}},
         {"Bomb Man",{8}},
-        {"Small Bomb",{0}}
     });
     // setting person life
     m_PersonLife = std::make_shared<PersonLife>();
@@ -518,6 +512,13 @@ void PhaseStage::UpdateItems(App *app) {
 }
 
 void PhaseStage::UpdateBombs(App *app) {
+    for(int i=0;i<4;i++){
+        auto Bombombomb = m_Bombombomb[i]->GetBombs();
+        for(int i=0;i<Bombombomb.size();i++) {
+            m_Bombs->push(Bombombomb[i]);
+            app->GetRoot()->AddChild(Bombombomb[i]);
+        }
+    }
     int bombSize = (int)m_Bombs->size();
     for (int i = 0; i < bombSize; i++) {
         auto bomb = m_Bombs->front();
