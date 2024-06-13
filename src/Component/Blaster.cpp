@@ -16,6 +16,7 @@ Blaster::Blaster(glm::vec2 pos, glm::vec2 collidersize, glm::vec2 scale,
     this->Open = increase;
     this->AmmoPath = ammopath;
     this->Path = path;
+    this->ID = "Blaster";
 }
 
 void Blaster::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {

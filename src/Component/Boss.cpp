@@ -10,7 +10,9 @@ Boss::Boss(std::shared_ptr<std::queue<std::shared_ptr<Bomb>>> bombs,
       m_RandomNumberGenerator(std::random_device{}()),
       m_Bombs(std::move(bombs)),
       m_Items(std::move(items)),
-      m_Renderer(std::move(renderer)) {}
+      m_Renderer(std::move(renderer)) {
+        this->ID = "Bomb Man";
+      }
 
 void Boss::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
                       int SceneStage) {
