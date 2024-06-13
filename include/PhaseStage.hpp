@@ -22,6 +22,7 @@
 #include "Component/Words.hpp"
 #include "Component/Boss.hpp"
 #include "IncludeComponent.hpp"
+#include "Util/BGM.hpp"
 
 class PhaseStage final : public Phase {
 public:
@@ -61,6 +62,7 @@ private:
     std::shared_ptr<std::vector<std::shared_ptr<TileBox>>> m_ForeObjectTileBox;
     std::shared_ptr<std::queue<std::shared_ptr<Bomb>>> m_Bombs;
     std::shared_ptr<PersonLife> m_PersonLife;
+    std::shared_ptr<Util::BGM> m_BGM;
 
 
     std::vector<std::shared_ptr<Enemy>> m_Enemies;
