@@ -567,11 +567,15 @@ void PhaseStage::RockmanRivival(App *app) {
     m_Rockman->Revival();
 }
 void PhaseStage::StartAnimation(App *app) {
-    if (StartTimer == 0) {
+    if(StartTimer == 0){
         StartTimer = Util::Time::GetElapsedTimeMs();
+        glm::vec2 ReadyPosition = app->GetCameraPosition();
+        for(int i=0;i<m_WordReady->GetWords().size();i++){
+            m_WordReady->SetPosition(i,ReadyPosition + glm::vec2 {-28 + 24*i,60});
+        }
         m_WordReady->ShowAll();
     }
-    else if (Util::Time::GetElapsedTimeMs() - StartTimer > StartTime) {
+    else if(Util::Time::GetElapsedTimeMs()-StartTimer>StartTime){
         m_WordReady->DisableAll();
         m_Rockman->SetLifeState(Rockman::LiveState::Spawn);
         StartTimer = 0;
