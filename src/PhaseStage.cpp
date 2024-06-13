@@ -263,7 +263,7 @@ void PhaseStage::Init(App *app) {
     for (int i = 0; i < 3; i++) {
         std::shared_ptr<Gabyoll> gabyoll = std::make_shared<Gabyoll>(
             GabyollPos[i].first, GabyollPos[i].second, glm::vec2{16 * 3, 8 * 3},
-            GabyollPath, glm::vec2{0, 0}, 1, true, Enemy::HurtState::INVINCIBLE,
+            GabyollPath, glm::vec2{80, 0}, 1, true, Enemy::HurtState::INVINCIBLE,
             Enemy::LifeState::LIFE);
         m_Enemies.push_back(gabyoll);
         m_Gabyoll.push_back(gabyoll);
