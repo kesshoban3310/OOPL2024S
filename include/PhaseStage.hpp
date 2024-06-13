@@ -40,7 +40,6 @@ private:
     std::shared_ptr<Backgroundmap> m_ForegroundObjects;
     std::shared_ptr<Rockman> m_Rockman;
     std::shared_ptr<KillerBomb> m_KillerBomb;
-    std::shared_ptr<TestBox> m_Testbox;
     std::shared_ptr<Mambu> m_Mambu;
     std::shared_ptr<SniperJoe> m_SniperJoe;
     std::shared_ptr<Scorebar> m_Scorebar;

@@ -45,9 +45,6 @@ void PhaseStage::Init(App *app) {
 
     // Load Scorebar
     m_Scorebar = std::make_shared<Scorebar>(glm::vec2{360, -3408});
-    // Load Testbox
-    m_Testbox =
-        std::make_shared<TestBox>(glm::vec2{360, -3408}, glm::vec2{3, 3});
     // Load Map
     m_BackgroundObjects->SetImagetoBackgroundObject();
     m_ForegroundObjects->SetImagetoForegroundObject();
@@ -308,7 +305,6 @@ void PhaseStage::Init(App *app) {
     // Add the root
     m_Rockman->DoBehavior(*m_ForeObjectTileBox);
     m_Scorebar->Show({360, -3408});
-    app->GetRoot()->AddChild(m_Testbox->Getchild());
     app->GetRoot()->AddChildren(m_BackgroundObjects->GetChildren());
     app->GetRoot()->AddChildren(m_ForegroundObjects->GetChildren());
     app->GetRoot()->AddChildren(m_Rockman->GetAllChildren());
@@ -406,30 +402,9 @@ void PhaseStage::Update(App *app) {
         DebugMode(app);
     }
 
-    /*
-    LOG_INFO("Camera Position");
-    LOG_INFO(std::to_string(app->GetCameraPosition().x)+"
-    "+std::to_string(app->GetCameraPosition().y)); LOG_INFO("Rockman Position");
-    LOG_INFO(std::to_string(m_Rockman->Getposition().x)+"
-    "+std::to_string(m_Rockman->Getposition().y)); LOG_INFO("Root Size");
-    LOG_INFO(std::to_string(app->GetRoot()->size()));
-    */
-    if (Util::Input::IsKeyPressed(Util::Keycode::B))
-        m_Rockman->SetPosition(app->GetCameraPosition());
-    if (Util::Input::IsKeyPressed(Util::Keycode::L)) {
-        m_Rockman->SetPosition({12638, -398});
-        m_Testbox->SetPosition({12638, -398});
-    }
-
     // update items and bombs
     UpdateItems(app);
     UpdateBombs(app);
-
-    // TODO : change this to win
-    if (Util::Input::IsKeyUp(Util::Keycode::I)) {
-        app->ChangeState(App::State::ENDING_ANIMATION);
-        return;
-    }
 
     if (m_IsPlayingEndAnimation) {
         m_WordForEndAnimation->ShowAll();
