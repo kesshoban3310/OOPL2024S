@@ -11,6 +11,7 @@ Screwdriver::Screwdriver(glm::vec2 pos,glm::vec2 scale,glm::vec2 collidersize,st
     : Enemy(pos,path[0],health,visable,collidersize,hurtstate,lifestate,scale){
     this->ObjectPath = path;
     this->AmmoPath = ammopath;
+    this->ID = "ScrewDriver";
 }
 void Screwdriver::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
     double Distance = sqrt(((RockmanPos.x - Position->x) * (RockmanPos.x - Position->x)) +
