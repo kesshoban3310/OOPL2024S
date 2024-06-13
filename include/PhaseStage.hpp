@@ -42,7 +42,6 @@ private:
     std::shared_ptr<KillerBomb> m_KillerBomb;
     std::shared_ptr<TestBox> m_Testbox;
     std::shared_ptr<Mambu> m_Mambu;
-    std::shared_ptr<SniperJoe> m_SniperJoe;
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<HealthBar> m_RockmanHealthBar, m_BossHealthBar;
     std::shared_ptr<Words> m_WordReady; //Words Ready.
@@ -51,6 +50,7 @@ private:
     std::vector<std::shared_ptr<Kamadoma>> m_Kamadoma;
     std::vector<std::shared_ptr<Gabyoll>> m_Gabyoll;
     std::vector<std::shared_ptr<Screwdriver>> m_Screwdriver;
+    std::vector<std::shared_ptr<SniperJoe>> m_SniperJoe;
     std::vector<std::shared_ptr<OctopusBattery>> m_OctopusBattery;
     std::vector<std::shared_ptr<Bombombomb>> m_Bombombomb;
     std::shared_ptr<Boss> m_Boss;

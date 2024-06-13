@@ -255,6 +255,7 @@ void PhaseStage::Init(App *app) {
         app->GetRoot()->AddChild(gabyoll->GetChild());
     }
     // Load SniperJoe
+    // Load SniperJoe
     std::vector<std::string> SniperJoePath;
     for (int i = 1; i <= 4; i++) {
         std::string path =
@@ -264,12 +265,28 @@ void PhaseStage::Init(App *app) {
     }
     std::string SniperJoeAmmoPath =
         RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/SniperJoe/SniperJoe5.png";
-    m_SniperJoe = std::make_shared<SniperJoe>(
+
+    m_SniperJoe.push_back(std::make_shared<SniperJoe>(
+        glm::vec2{5400, -2052}, glm::vec2{5976, -2052},
+        glm::vec2{20 * 3, 22 * 3}, glm::vec2{20 * 3, 0 * 3}, glm::vec2{-240, 0},
+        SniperJoePath, SniperJoeAmmoPath, 7, true, Enemy::HurtState::COWARDLY,
+        Enemy::LifeState::LIFE));
+
+    m_SniperJoe.push_back(std::make_shared<SniperJoe>(
         glm::vec2{10460, -323}, glm::vec2{10992, -323},
         glm::vec2{20 * 3, 22 * 3}, glm::vec2{20 * 3, 0 * 3}, glm::vec2{-240, 0},
-        SniperJoePath, SniperJoeAmmoPath, 5, true, Enemy::HurtState::INVINCIBLE,
-        Enemy::LifeState::LIFE);
-    m_Enemies.push_back(m_SniperJoe);
+        SniperJoePath, SniperJoeAmmoPath, 7, true, Enemy::HurtState::COWARDLY,
+        Enemy::LifeState::LIFE));
+
+    m_SniperJoe.push_back(std::make_shared<SniperJoe>(
+        glm::vec2{12027, -422}, glm::vec2{12027, -422},
+        glm::vec2{20 * 3, 22 * 3}, glm::vec2{20 * 3, 0 * 3}, glm::vec2{-240, 0},
+        SniperJoePath, SniperJoeAmmoPath, 7, true, Enemy::HurtState::COWARDLY,
+        Enemy::LifeState::LIFE));
+
+    m_Enemies.push_back(m_SniperJoe[0]);
+    m_Enemies.push_back(m_SniperJoe[1]);
+    m_Enemies.push_back(m_SniperJoe[2]);
     // setting items
     m_Items = std::make_shared<std::queue<std::shared_ptr<Item>>>();
     std::vector<std::pair<ItemType, glm::vec2>> itemsAttributes = {
@@ -314,7 +331,9 @@ void PhaseStage::Init(App *app) {
     app->GetRoot()->AddChildren(m_Rockman->GetAllChildren());
     app->GetRoot()->AddChildren(m_Scorebar->GetChildren());
     app->GetRoot()->AddChild(m_KillerBomb->GetChild());
-    app->GetRoot()->AddChild(m_SniperJoe->GetChild());
+    app->GetRoot()->AddChild(m_SniperJoe[0]->GetChild());
+    app->GetRoot()->AddChild(m_SniperJoe[1]->GetChild());
+    app->GetRoot()->AddChild(m_SniperJoe[2]->GetChild());
     app->GetRoot()->AddChild(m_Mambu->GetChild());
     app->GetRoot()->AddChild(m_RockmanHealthBar->GetChild());
     app->GetRoot()->AddChild(m_BossHealthBar->GetChild());
@@ -472,8 +491,8 @@ void PhaseStage::ReloadMagazine(App *app) {
             app->GetRoot()->AddChild(Ammo->GetChild());
         }
     }
-    for (int i = 0; i < 1; i++) { // SniperJoe Ammo
-        magazine = m_SniperJoe->GetAmmo();
+    for (int i = 0; i < 3; i++) { // SniperJoe Ammo
+        magazine = m_SniperJoe[i]->GetAmmo();
         for (auto Ammo : magazine) {
             m_Magazine->push(Ammo);
             app->GetRoot()->AddChild(Ammo->GetChild());
