@@ -3,12 +3,14 @@
 #include "Util/Time.hpp"
 
 Bomb::Bomb(const std::string &imagePath, glm::vec2 startPosition,
-           glm::vec2 expectedEndPosition, float expectedHeight) {
-
+           glm::vec2 expectedEndPosition, float expectedHeight,
+           unsigned int collisionDamage, unsigned int explosionDamage) {
     auto CalculateFallingTime = [&](float startY, float endY) {
         return std::sqrt(2 * std::abs(endY - startY) * GRAVITY);
     };
 
+    m_CollisionDamage = collisionDamage;
+    m_ExplosionDamage = explosionDamage;
     m_Drawable = std::make_shared<Util::Image>(imagePath);
     m_Transform.scale = {3, 3};
     m_Position = std::make_shared<glm::vec2>(startPosition);
