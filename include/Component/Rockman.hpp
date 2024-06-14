@@ -217,7 +217,6 @@ private:
     bool DebugMode = false;
     std::vector<std::shared_ptr<Collider>> ColliderBox;
 
-
     //Music
     std::shared_ptr<Util::SFX> RockmanBGM;
 };
