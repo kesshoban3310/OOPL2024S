@@ -619,13 +619,13 @@ void Rockman::Jump(std::vector<std::shared_ptr<TileBox>> collison) {
                 if (!result.count(RockmanCollison::DOWNRIGHT) &&
                     !result.count(RockmanCollison::UPRIGHT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-                    pos.x += 32 * (Util::Time::GetDeltaTimeMs() / 1000);
+                    pos.x += 32 * (Util::Time::GetDeltaTimeMs() / 1000.0);
                     SetVisable(2, false);
                 }
                 if (!result.count(RockmanCollison::DOWNLEFT) &&
                     !result.count(RockmanCollison::UPLEFT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-                    pos.x -= 32 * (Util::Time::GetDeltaTimeMs() / 1000);
+                    pos.x -= 32 * (Util::Time::GetDeltaTimeMs() / 1000.0);
                     SetVisable(2, true);
                 }
                 if(result.count(RockmanCollison::ROCKMANINLADDER)&&
