@@ -7,6 +7,7 @@
 #include "Component/Collider.hpp"
 #include "Component/TileBox.hpp"
 #include "Util/Logger.hpp"
+#include "Util/SFX.hpp"
 #include <queue>
 
 
@@ -178,18 +179,7 @@ private:
      */
     void Climb(std::vector<std::shared_ptr<TileBox>> collison);
 
-    /**
-     * @brief Print LOG_DEBUG for rockman's collison state.
-     * @param collidorstate for a set storing Rockman's collison state.
-     * @param locate for where the function call or other message.
-     */
-    void DebugMessageCollidor(std::set<Rockman::RockmanCollison> collidorstate,std::string locate);
 
-    /**
-     * @brief Print LOG_DEBUG for rockman's physic state.
-     * @param physicState for a variable storing Rockman's physic state.
-     */
-    void DebugMessagePhysic(Rockman::PhysicState physicState);
     std::shared_ptr<AnimatedObject> CharacterAnimate;
     std::shared_ptr<ImageObject> CharacterImage;
 
@@ -226,5 +216,9 @@ private:
     //Debug Mode Invincible
     bool DebugMode = false;
     std::vector<std::shared_ptr<Collider>> ColliderBox;
+
+
+    //Music
+    std::shared_ptr<Util::SFX> RockmanBGM;
 };
 #endif
