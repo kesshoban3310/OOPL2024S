@@ -196,6 +196,7 @@ void Rockman::DoBehavior(std::vector<std::shared_ptr<TileBox>> collison) {
         Invincible = false;
         InvincibleTimer = 0;
     }
+    DebugMessageCollidor(collisonstate,"Behavior");
     switch (RockmanState) {
     case LiveState::Initial:
         Initialize();
@@ -608,7 +609,7 @@ void Rockman::Jump(std::vector<std::shared_ptr<TileBox>> collison) {
         Util::Time::GetElapsedTimeMs() - jumptimer > (18)) {
         jumptimer = Util::Time::GetElapsedTimeMs();
         for (int i = 0; i < 6; i++) {
-            if (pos.y <= Initial_Pos.y + 162 &&
+            if (pos.y <= Initial_Pos.y + 172 &&
                 Util::Input::IsKeyPressed(Util::Keycode::X)) {
                 result = GetCollison(collison);
                 if (result.count(RockmanCollison::TOP)) {
@@ -619,13 +620,13 @@ void Rockman::Jump(std::vector<std::shared_ptr<TileBox>> collison) {
                 if (!result.count(RockmanCollison::DOWNRIGHT) &&
                     !result.count(RockmanCollison::UPRIGHT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-                    pos.x += 16 * (Util::Time::GetDeltaTimeMs() / 1000);
+                    pos.x += 32 * (Util::Time::GetDeltaTimeMs() / 1000);
                     SetVisable(2, false);
                 }
                 if (!result.count(RockmanCollison::DOWNLEFT) &&
                     !result.count(RockmanCollison::UPLEFT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-                    pos.x -= 16 * (Util::Time::GetDeltaTimeMs() / 1000);
+                    pos.x -= 32 * (Util::Time::GetDeltaTimeMs() / 1000);
                     SetVisable(2, true);
                 }
                 pos.y += 120 * (Util::Time::GetDeltaTimeMs() / 1000);
@@ -728,25 +729,25 @@ void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
 void Rockman::DebugMessagePhysic(PhysicState physicState) {
     switch (physicState) {
     case PhysicState::JUMP:
-        LOG_DEBUG("JUMP");
+        LOG_INFO("JUMP");
         break;
     case PhysicState::MOVE:
-        LOG_DEBUG("MOVE");
+        LOG_INFO("MOVE");
         break;
     case PhysicState::CLIMB:
-        LOG_DEBUG("CLIMB");
+        LOG_INFO("CLIMB");
         break;
     case PhysicState::FALL:
-        LOG_DEBUG("FALL");
+        LOG_INFO("FALL");
         break;
     case PhysicState::SHOOT:
-        LOG_DEBUG("SHOOT");
+        LOG_INFO("SHOOT");
         break;
     case PhysicState::JUMPBEFOREFALL:
-        LOG_DEBUG("JUMPBEFOREFALL");
+        LOG_INFO("JUMPBEFOREFALL");
         break;
     case PhysicState::JUMPBEFOREMOVE:
-        LOG_DEBUG("JUMPBEFOREMOVE");
+        LOG_INFO("JUMPBEFOREMOVE");
         break;
     }
 }
