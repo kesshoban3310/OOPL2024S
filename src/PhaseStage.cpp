@@ -243,7 +243,7 @@ void PhaseStage::Init(App *app) {
         std::vector<std::string>{
             RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Mambu/Mambu1.png",
             RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Mambu/Mambu2.png"},
-        glm::vec2{-80, 0}, glm::vec2{40, 40},
+        glm::vec2{-80, 0}, glm::vec2{80, 80},
         RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Mambu/Mambu3.png",
         glm::vec2{3, 3}, 1, true);
     m_Enemies.push_back(m_Mambu);
@@ -270,7 +270,6 @@ void PhaseStage::Init(App *app) {
         m_Gabyoll.push_back(gabyoll);
         app->GetRoot()->AddChild(gabyoll->GetChild());
     }
-    // Load SniperJoe
     // Load SniperJoe
     std::vector<std::string> SniperJoePath;
     for (int i = 1; i <= 4; i++) {
@@ -432,6 +431,9 @@ void PhaseStage::Update(App *app) {
         return;
     }
     m_Rockman->DoBehavior(*m_ForeObjectTileBox);
+    //Before Rockman Spawn, Don't Make Enemy Move.
+    if(m_Rockman->GetCurrentState() == Rockman::LiveState::Spawn)
+        return;
 
     glm::vec2 RockmanPos = m_Rockman->GetPosition();
     int SceneStage = m_SceneManager.GetCurrentScene();
@@ -442,11 +444,20 @@ void PhaseStage::Update(App *app) {
     ReloadMagazine(app);
     // m_Testbox->Move();
 
+    if (m_SceneManager.IsFallOutOfScene(m_Rockman->GetPosition(),50.0f) &&
+        m_Rockman->GetCurrentState() == Rockman::LiveState::Normal) {
+        // Let Rockman Die.
+        m_Rockman->SetLifeState(Rockman::LiveState::Death);
+    }
+
+
+    /*
     if (!CheckIfRockmanInMap(CameraPos, RockmanPos, glm::vec2{50, 50}) &&
         m_Rockman->GetCurrentState() == Rockman::LiveState::Normal) {
         // Let Rockman Die.
         m_Rockman->SetLifeState(Rockman::LiveState::Death);
     }
+    */
 
     if (Util::Input::IsKeyDown(Util::Keycode::NUM_8)) {
         SetDebugMode(app);
