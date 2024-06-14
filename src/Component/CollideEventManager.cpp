@@ -11,7 +11,7 @@ void CollideEventManager::Update() {
             return;
         m_Rockman->SetHealth(std::max(0, m_Rockman->GetHealth() - damage));
         m_Rockman->SetInvincible();
-        m_DamageSoundRockman->Play();
+        if (m_Rockman->GetCurrentState()!=Rockman::LiveState::Death) m_DamageSoundRockman->Play();
     };
 
     auto EnemyGetDamage = [this](const std::shared_ptr<Enemy> &enemy,
