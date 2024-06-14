@@ -26,3 +26,8 @@
 ## Debug mode
 
 關卡中按8即可進入，其中可以按1~6瞬移到對應的場景，另外在debug mode中Rockman會鎖定生命數及血量。
+
+## Warning
+
+**如果你的電腦設備太爛導致FPS<20，可能會導致無法遊玩**
+**建議CLion Indexing結束後再開啟遊戲**
