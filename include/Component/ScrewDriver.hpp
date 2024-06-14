@@ -25,7 +25,7 @@ private:
     std::vector<std::shared_ptr<Ammo>> Magazine;
 
     // Deal Animation of ScrewDriver.
-    float AnimationTimer = 0, AnimationInterval = 60;
+    float AnimationTimer = 0, AnimationInterval = 80;
     int AnimationCount = 0;
     bool Open = 0, StartUp = 0;
     int PathIndex = 0;
