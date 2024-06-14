@@ -22,6 +22,7 @@ Blaster::Blaster(glm::vec2 pos, glm::vec2 collidersize, glm::vec2 scale,
 void Blaster::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
     if (Open) {
         Hurt = Enemy::HurtState::COWARDLY;
+        this->Hitbox = std::make_shared<Collider>(Position,glm::vec2 {16*3,16*3},glm::vec2 {0,0});
         if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
             AnimationInterval) {
             if (PathIndex < 3)
@@ -42,6 +43,9 @@ void Blaster::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage
     }
     else {
         Hurt = Enemy::HurtState::INVINCIBLE;
+        glm::vec2 ColliderOffset = {24,0};
+        if(Scale.x<0) ColliderOffset.x*=(-1);
+        this->Hitbox = std::make_shared<Collider>(Position,glm::vec2 {16*3,16*3},ColliderOffset);
         if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
             AnimationInterval) {
             if (PathIndex > 0)
