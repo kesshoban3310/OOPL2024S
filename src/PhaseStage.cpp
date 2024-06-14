@@ -7,6 +7,7 @@
 void PhaseStage::Init(App *app) {
 
     m_BGM = std::make_shared<Util::BGM>(RESOURCE_DIR"/Sound/Bombman_Stage.mp3");
+    m_BGM->SetVolume(70);
     m_BGM->Play();
 
     m_IsWaitingForEndAnimation = std::make_shared<bool>(false);
