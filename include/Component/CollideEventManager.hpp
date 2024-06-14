@@ -7,6 +7,7 @@
 #include "Rockman.hpp"
 #include "Scorebar.hpp"
 #include "Util/Renderer.hpp"
+#include "Util/SFX.hpp"
 #include <memory>
 #include <random>
 #include <utility>
@@ -68,6 +69,9 @@ private:
     std::mt19937 gen = std::mt19937(std::random_device{}());
     std::uniform_real_distribution<> dis =
         std::uniform_real_distribution<>(0, 1);
+    std::shared_ptr<Util::SFX> m_DamageSoundRockman = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/RockmanDamage.mp3");
+    std::shared_ptr<Util::SFX> m_DamageSoundEnemy = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/EnemyDamage.mp3");
+    std::shared_ptr<Util::SFX> m_EnergySoundRockman = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/EnergyFill.mp3");
 };
 
 #endif

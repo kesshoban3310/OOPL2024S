@@ -124,7 +124,9 @@ void Rockman::Initialize() {
             CharacterSpawn.emplace_back(Initial);
         }
     }
-
+    // Setting Music
+    RockmanBGM = std::make_shared<Util::SFX>(RESOURCE_DIR "/Sound/RockmanLand.mp3");
+    RockmanBGM->SetVolume(40);
     /* Switch State */
     RockmanState = LiveState::WaitSpawn;
 }
@@ -147,6 +149,8 @@ void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
         }
     }
     else {
+        RockmanBGM->LoadMedia(RESOURCE_DIR"/Sound/RockmanLand.mp3");
+        RockmanBGM->Play();
         for (int i = 0; i <= 2; i++) {
             if (CharacterSpawn[i]->GetVisibility()) {
                 switch (i) {
@@ -408,6 +412,8 @@ void Rockman::Death() {
         Visable = -1;
         CharacterImage->SetVisible(false);
         CharacterAnimate->SetVisible(false);
+        RockmanBGM->LoadMedia(RESOURCE_DIR"/Sound/RockmanDead.mp3");
+        RockmanBGM->Play();
         DeathTimer = Util::Time::GetElapsedTimeMs();
     }
     if (!CharacterDeath[0]->GetVisibility()) {
@@ -416,7 +422,6 @@ void Rockman::Death() {
             CharacterDeath[i]->SetVisible(true);
         }
     }
-
     int negative = 1;
     for (int i = 0; i < 4; i++) {
         auto delta = Util::Time::GetDeltaTimeMs() / 1000;
@@ -482,6 +487,8 @@ void Rockman::SetHealth(int hp) {
 
 void Rockman::Shoot() {
     if (Util::Input::IsKeyDown(Util::Keycode::Z)) {
+        RockmanBGM->LoadMedia(RESOURCE_DIR"/Sound/RockmanShoot.mp3");
+        RockmanBGM->Play();
         SetShootVisable(Visable, true);
         if (MoveState == PhysicState::MOVE)
             MoveState = PhysicState::SHOOT;
@@ -704,64 +711,7 @@ void Rockman::SetInvincible() {
 void Rockman::SetLifeState(Rockman::LiveState livestate) {
     RockmanState = livestate;
 }
-void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
-                                   std::string locate) {
-    LOG_DEBUG("=========" + locate + "============");
-    for (auto test : collidorstate) {
-        switch (test) {
-        case RockmanCollison::UPRIGHT:
-            LOG_INFO("UPRIGHT");
-            break;
-        case RockmanCollison::UPLEFT:
-            LOG_INFO("UPLEFT");
-            break;
-        case RockmanCollison::TOP:
-            LOG_INFO("TOP");
-            break;
-        case RockmanCollison::BOTTOM:
-            LOG_INFO("BOTTOM");
-            break;
-        case RockmanCollison::DOWNRIGHT:
-            LOG_INFO("DOWNRIGHT");
-            break;
-        case RockmanCollison::DOWNLEFT:
-            LOG_INFO("DOWNLEFT");
-            break;
-        case RockmanCollison::BOTTEMINLADDER:
-            LOG_INFO("BOTTEMINLADDER");
-            break;
-        case RockmanCollison::ROCKMANINLADDER:
-            LOG_INFO("ROCKMANINLADDER");
-            break;
-        }
-    }
-    LOG_INFO("=====================");
-}
-void Rockman::DebugMessagePhysic(PhysicState physicState) {
-    switch (physicState) {
-    case PhysicState::JUMP:
-        LOG_INFO("JUMP");
-        break;
-    case PhysicState::MOVE:
-        LOG_INFO("MOVE");
-        break;
-    case PhysicState::CLIMB:
-        LOG_INFO("CLIMB");
-        break;
-    case PhysicState::FALL:
-        LOG_INFO("FALL");
-        break;
-    case PhysicState::SHOOT:
-        LOG_INFO("SHOOT");
-        break;
-    case PhysicState::JUMPBEFOREFALL:
-        LOG_INFO("JUMPBEFOREFALL");
-        break;
-    case PhysicState::JUMPBEFOREMOVE:
-        LOG_INFO("JUMPBEFOREMOVE");
-        break;
-    }
-}
+
 void Rockman::Revival() {
     for(auto i:CharacterDeath){
         i->SetVisible(false);
