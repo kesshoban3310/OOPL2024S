@@ -21,7 +21,7 @@
 Bombombomb::Bombombomb(glm::vec2 pos, glm::vec2 speed, glm::vec2 ammospeed,
                        glm::vec2 scale, glm::vec2 colldiersize,std::string path,
                        std::string ammopath,int health,bool visable,Enemy::HurtState hurtState)
-: Enemy(pos,path,health,visable,colldiersize,hurtState){
+    : Enemy(pos,path,health,visable,colldiersize,hurtState){
     this->Path = path;
     this->AmmoPath =  ammopath;
     this->InitialPosition = pos;
@@ -30,23 +30,15 @@ Bombombomb::Bombombomb(glm::vec2 pos, glm::vec2 speed, glm::vec2 ammospeed,
     this->Scale = scale;
     this->AmmoSpeed = ammospeed;
     this->ID = "Bombombomb";
-    MakeSmallBomb();
 }
 
 void Bombombomb::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
     float direction = sqrt((CameraPos.x-Position->x)*(CameraPos.x-Position->x) + (CameraPos.y-Position->y)*(CameraPos.y-Position->y));
-    bool CanMove = Bomb[0]->CanBombombombMove() &&
-                   Bomb[1]->CanBombombombMove() &&
-                   Bomb[2]->CanBombombombMove() &&
-                   Bomb[3]->CanBombombombMove();
-    if(direction <= 630  && CanMove) {
-        if(!BeSmallBomb) {
+    if(direction <= 630) {
+        if(!BeSmallBomb)
             PhysicEngine();
-        }
-        else {
-            for(int i=0;i<4;i++)
-                Bomb[i]->SetCanMove(true);
-        }
+        else
+            Split();
     }
     else{ //Set to Initial.
         Object->SetPosition(InitialPosition);
@@ -56,7 +48,7 @@ void Bombombomb::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneSt
     }
 }
 void Bombombomb::PhysicEngine() {
-    if (Util::Time::GetElapsedTimeMs() - WaitingCounter <= 3500) {
+    if (Util::Time::GetElapsedTimeMs() - WaitingCounter <= 3000) {
         return;
     }
     if (FinalPosition.y >= Position->y) {
@@ -71,18 +63,19 @@ void Bombombomb::PhysicEngine() {
         WaitingCounter = Util::Time::GetElapsedTimeMs();
     }
 }
-void Bombombomb::MakeSmallBomb() {
+void Bombombomb::Split() {
     std::vector<glm::vec2> PositionOffset = {{-238,-286},
-                                              {-121,-186},
-                                              {182,-286},
-                                              {274,-186}};
+                                             {-121,-186},
+                                             {182,-286},
+                                             {274,-186}};
     for(int i=0;i<4;i++){
-        float High = -3420 + 40;
+        float High = -3420 + 16;
         glm::vec2 StartPosition = FinalPosition;
         glm::vec2 EndPosition = {InitialPosition.x+PositionOffset[i].x,InitialPosition.y+PositionOffset[i].y};
-        std::shared_ptr<SmallBomb> bomb = std::make_shared<SmallBomb>(AmmoPath,StartPosition,EndPosition,High,InitialPosition);
-        Bomb.push_back(bomb);
+        std::shared_ptr<Bomb> bomb = std::make_shared<Bomb>(AmmoPath,StartPosition,EndPosition,High,1,0);
+        SmallBomb.push_back(bomb);
     }
+    BeSmallBomb = 0;
 }
 void Bombombomb::Reset() {
     *Position = InitialPos;
