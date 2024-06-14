@@ -413,6 +413,10 @@ void PhaseStage::Update(App *app) {
     // If Rockman Dead,then Rivival it.
     if (m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL) {
         RockmanRivival(app);
+        if (!app->GetDebugModeState())
+            app->SetLifeCount(app->GetLifeCount() - 1);
+        if (app->GetLifeCount() == 0)
+            app->ChangeState(App::State::LOSE);
         return;
     }
     // Ready Animation.
