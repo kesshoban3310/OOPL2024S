@@ -541,6 +541,9 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
                     box.insert(RockmanCollison::ROCKMANINLADDER);
                 }
                 if (CollisonResult.count(Collider::Bound::BOTTOM)) {
+                    if (glm::vec2{-2000, -2000} == Ladder_Pos) {
+                        Ladder_Pos = collison[i]->GetPosition();
+                    }
                     box.insert(RockmanCollison::BOTTEMINLADDER);
                 }
             }
