@@ -126,7 +126,7 @@ void Rockman::Initialize() {
     }
     // Setting Music
     RockmanBGM = std::make_shared<Util::SFX>(RESOURCE_DIR "/Sound/RockmanLand.mp3");
-    RockmanBGM->SetVolume(40);
+    RockmanBGM->SetVolume(60);
     /* Switch State */
     RockmanState = LiveState::WaitSpawn;
 }

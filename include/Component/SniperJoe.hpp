@@ -46,8 +46,5 @@ private:
     float StandTime = 2500,StandTimer = 0;
     int ShootCount = 3,ShootCounter = 0;
     int JumpCount = 1,JumpCounter = 0;
-
-
-    //void DeBugMessage();
 };
 #endif

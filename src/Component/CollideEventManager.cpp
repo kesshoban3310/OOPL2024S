@@ -4,8 +4,9 @@
 #include <random>
 
 void CollideEventManager::Update() {
-    m_DamageSoundEnemy->SetVolume(40);
-    m_DamageSoundRockman->SetVolume(40);
+    m_DamageSoundEnemy->SetVolume(60);
+    m_DamageSoundRockman->SetVolume(60);
+    m_EnergySoundRockman->SetVolume(60);
     auto RockmanGetDamage = [this](int damage) {
         if (m_Rockman->GetInvincible())
             return;
