@@ -14,7 +14,6 @@
 
 class PhaseStage;
 
-// TODO : add item collide event in future
 class CollideEventManager {
 public:
     CollideEventManager() = default;
@@ -51,8 +50,10 @@ public:
         m_Renderer = std::move(renderer);
     }
 
-    void SetApp(App *app) {
-        m_App = app;
+    void SetApp(App *app) { m_App = app; }
+
+    void SetIsStageEnded(std::shared_ptr<bool> isStageEnded) {
+        m_IsStageEnded = std::move(isStageEnded);
     }
 
 private:
@@ -64,13 +65,12 @@ private:
     std::shared_ptr<Scorebar> m_Scorebar;
     std::shared_ptr<Util::Renderer> m_Renderer;
     App *m_App;
+    std::shared_ptr<bool> m_IsStageEnded;
     std::mt19937 gen = std::mt19937(std::random_device{}());
     std::uniform_real_distribution<> dis =
         std::uniform_real_distribution<>(0, 1);
-
     std::shared_ptr<Util::SFX> m_DamageSoundRockman = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/RockmanDamage.mp3");
     std::shared_ptr<Util::SFX> m_DamageSoundEnemy = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/EnemyDamage.mp3");
-
 };
 
 #endif
