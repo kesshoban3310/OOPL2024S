@@ -4,11 +4,14 @@
 #include <random>
 
 void CollideEventManager::Update() {
+    m_DamageSoundEnemy->SetVolume(40);
+    m_DamageSoundRockman->SetVolume(40);
     auto RockmanGetDamage = [this](int damage) {
         if (m_Rockman->GetInvincible())
             return;
         m_Rockman->SetHealth(std::max(0, m_Rockman->GetHealth() - damage));
         m_Rockman->SetInvincible();
+        if (m_Rockman->GetCurrentState()!=Rockman::LiveState::Death) m_DamageSoundRockman->Play();
     };
 
     auto EnemyGetDamage = [this](const std::shared_ptr<Enemy> &enemy,
@@ -17,6 +20,7 @@ void CollideEventManager::Update() {
             enemy->GetLifeState() == Enemy::LifeState::DEAD)
             return;
         enemy->SetHealth(enemy->GetHealth() - damage);
+        m_DamageSoundEnemy->Play();
         if (enemy->GetHealth() <= 0) {
             ItemType type = ItemType::SMALL_HEALTH_ENERGY;
             double rng = dis(gen);
@@ -124,10 +128,12 @@ void CollideEventManager::Update() {
                 case ItemType::SMALL_HEALTH_ENERGY:
                     m_Rockman->SetHealth(
                         std::min(28, m_Rockman->GetHealth() + 2));
+                    m_EnergySoundRockman->Play();
                     break;
                 case ItemType::BIG_HEALTH_ENERGY:
                     m_Rockman->SetHealth(
                         std::min(28, m_Rockman->GetHealth() + 4));
+                    m_EnergySoundRockman->Play();
                     break;
                 case ItemType::SMALL_WEAPON_ENERGY:
                     break;

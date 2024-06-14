@@ -20,8 +20,7 @@ void Mambu::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) 
         SetVisable(false);
         return;
     }
-    else
-        SetVisable(true);
+    else SetVisable(true);
     if(-484 <= DiffWithCamX && DiffWithCamX <= 584)
         PhysicEngine();
     else if(-584 <= DiffWithCamX && DiffWithCamX <= -384){
