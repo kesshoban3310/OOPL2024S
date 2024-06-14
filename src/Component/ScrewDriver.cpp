@@ -20,13 +20,15 @@ void Screwdriver::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneS
         StartUp = true;
     if (StartUp) {
         if (Open) {
+            Hitbox = std::make_shared<Collider>(Position,glm::vec2 {16*3,16*3},glm::vec2 {0,0});
+            Hurt = HurtState::COWARDLY;
             if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
                 AnimationInterval) {
                 PathIndex = PathIndex + 1;
                 if (PathIndex >= 5)
                     PathIndex = 2;
                 AnimationCount++;
-                if (AnimationCount == 7 || AnimationCount == 13) {
+                if (AnimationCount == 13) {
                     Shoot();
                 }
                 if (AnimationCount > 15) {
@@ -37,7 +39,9 @@ void Screwdriver::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneS
                 AnimationTimer = Util::Time::GetElapsedTimeMs();
             }
         }
-        else if (!Open) {
+        else{
+            Hitbox = std::make_shared<Collider>(Position,glm::vec2 {16*3,8*3},glm::vec2 {0,-24});
+            Hurt = HurtState::INVINCIBLE;
             if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
                 AnimationInterval) {
                 if (PathIndex > 0)

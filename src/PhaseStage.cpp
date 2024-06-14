@@ -142,9 +142,9 @@ void PhaseStage::Init(App *app) {
     for (int i = 0; i < 3; i++) {
         std::shared_ptr<Screwdriver> screwdriver =
             std::make_shared<Screwdriver>(
-                glm::vec2{4295 + 301.5 * i, -3602}, glm::vec2{3, 3},
-                glm::vec2{16 * 3, 16 * 3}, ScrewDriverPath, ScrewDriverAmmoPath,
-                Enemy::LifeState::LIFE, Enemy::HurtState::COWARDLY, 1, true);
+                glm::vec2{4295 + 301.5 * i, -3600}, glm::vec2{3, 3},
+                glm::vec2{16 * 3, 8 * 3}, ScrewDriverPath, ScrewDriverAmmoPath,
+                Enemy::LifeState::LIFE, Enemy::HurtState::INVINCIBLE, 6, true);
         m_Screwdriver.push_back(screwdriver);
         m_Enemies.push_back(screwdriver);
         app->GetRoot()->AddChild(screwdriver->GetChild());
