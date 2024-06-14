@@ -378,7 +378,7 @@ void PhaseStage::Init(App *app) {
         {"SniperJoe",{2,4}},
         {"KillerBomb",{2,3}},
         {"Gabyoll",{2}},
-        {"Mambu",{4}},
+        {"Mambu",{4,5}},
         {"OctopusBattery",{6,7}},
         {"Bomb Man",{8}},
     });

@@ -15,12 +15,13 @@ Mambu::Mambu(glm::vec2 pos,std::vector<std::string> path,glm::vec2 speed,glm::ve
 }
 void Mambu::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
     DiffWithCamX = Position->x - CameraPos.x;
-    if(RockmanPos.x > 11560){
+    if(SceneStage == 5){
         Reset();
         SetVisable(false);
         return;
     }
-    else SetVisable(true);
+    else
+        SetVisable(true);
     if(-484 <= DiffWithCamX && DiffWithCamX <= 584)
         PhysicEngine();
     else if(-584 <= DiffWithCamX && DiffWithCamX <= -384){
