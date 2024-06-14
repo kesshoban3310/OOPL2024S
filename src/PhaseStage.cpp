@@ -98,7 +98,7 @@ void PhaseStage::Init(App *app) {
         std::shared_ptr<Blaster> blaster = std::make_shared<Blaster>(
             glm::vec2{4894, -2832 + 96 * i}, glm::vec2{8 * 3, 16 * 3},
             glm::vec2{-3, 3}, timer, i % 2, BlasterPath, BlasterAmmoPath, 1,
-            true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
+            true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE, glm::vec2{360, 0});
         m_Blaster.push_back(blaster);
         m_Enemies.push_back(blaster);
         app->GetRoot()->AddChild(blaster->GetChild());
@@ -106,21 +106,21 @@ void PhaseStage::Init(App *app) {
     std::shared_ptr<Blaster> blaster = std::make_shared<Blaster>(
         glm::vec2{6580,-1966}, glm::vec2{8 * 3, 16 * 3},
         glm::vec2{3, 3}, 66,0 , BlasterPath, BlasterAmmoPath, 1,
-        true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
+        true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE, glm::vec2{-360, 0});
     m_Blaster.push_back(blaster);
     m_Enemies.push_back(blaster);
     app->GetRoot()->AddChild(blaster->GetChild());
     blaster = std::make_shared<Blaster>(
         glm::vec2{6962,-1966}, glm::vec2{8 * 3, 16 * 3},
         glm::vec2{3, 3}, 66,0, BlasterPath, BlasterAmmoPath, 1,
-        true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
+        true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE, glm::vec2{-360, 0});
     m_Blaster.push_back(blaster);
     m_Enemies.push_back(blaster);
     app->GetRoot()->AddChild(blaster->GetChild());
     blaster = std::make_shared<Blaster>(
         glm::vec2{7826,-1966}, glm::vec2{8 * 3, 16 * 3},
         glm::vec2{3, 3}, 66,0, BlasterPath, BlasterAmmoPath, 1,
-        true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE);
+        true, Enemy::HurtState::INVINCIBLE, Enemy::LifeState::LIFE, glm::vec2{-360, 0});
     m_Blaster.push_back(blaster);
     m_Enemies.push_back(blaster);
     app->GetRoot()->AddChild(blaster->GetChild());
