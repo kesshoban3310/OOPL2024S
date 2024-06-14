@@ -405,7 +405,8 @@ void PhaseStage::Update(App *app) {
     m_BossHealthBar->SetPosition(
         glm::vec2{CameraPos.x - 311 + 48, CameraPos.y + 201});
     m_BossHealthBar->SetVisable(std::max(m_Boss->GetHealth(), 0),
-                                m_Boss->IsTriggered() &&
+                                12264 <= m_Rockman->GetPosition().x &&m_Rockman->GetPosition().x <= 13032 &&
+                                    -2300 >= m_Rockman->GetPosition().y && m_Rockman->GetPosition().y >= -3048 &&
                                     m_Boss->GetLifeState() ==
                                         Enemy::LifeState::LIFE);
     m_PersonLife->Update(app->GetLifeCount(), CameraPos);
