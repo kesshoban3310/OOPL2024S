@@ -673,7 +673,7 @@ void Rockman::Fall(std::vector<std::shared_ptr<TileBox>> collison) {
                             result.count(RockmanCollison::ROCKMANINLADDER));
             if (CanFall) {
                 bool isleft = false;
-                pos.y -= 60 * (Util::Time::GetDeltaTimeMs() / 1000);
+                pos.y -= 96 * (Util::Time::GetDeltaTimeMs() / 1000);
                 if (!result.count(RockmanCollison::DOWNRIGHT) &&
                     !result.count(RockmanCollison::UPRIGHT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
