@@ -124,7 +124,9 @@ void Rockman::Initialize() {
             CharacterSpawn.emplace_back(Initial);
         }
     }
-
+    // Setting Music
+    RockmanBGM = std::make_shared<Util::SFX>(RESOURCE_DIR "/Sound/RockmanLand.mp3");
+    RockmanBGM->SetVolume(40);
     /* Switch State */
     RockmanState = LiveState::WaitSpawn;
 }
@@ -147,6 +149,8 @@ void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
         }
     }
     else {
+        RockmanBGM->LoadMedia(RESOURCE_DIR"/Sound/RockmanLand.mp3");
+        RockmanBGM->Play();
         for (int i = 0; i <= 2; i++) {
             if (CharacterSpawn[i]->GetVisibility()) {
                 switch (i) {
@@ -362,15 +366,14 @@ void Rockman::Climb(std::vector<std::shared_ptr<TileBox>> collison) {
         Ladder_Pos = {-2000, -2000};
     }
     glm::vec2 pos = GetPosition(), initial_yaxis = GetPosition();
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 8; i++) {
         CollisonResult = GetCollison(collison);
         if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
-            pos.y += 32 * (Util::Time::GetDeltaTimeMs() / 1000);
+            pos.y += 32 * (Util::Time::GetDeltaTimeMs() / 1000.0);
         }
-
-        if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) &&
+        else if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) &&
             !CollisonResult.count(RockmanCollison::BOTTOM)) {
-            pos.y -= 32 * (Util::Time::GetDeltaTimeMs() / 1000);
+            pos.y -= 32 * (Util::Time::GetDeltaTimeMs() / 1000.0);
         }
         else if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) &&
                  CollisonResult.count(RockmanCollison::BOTTOM)) {
@@ -379,8 +382,9 @@ void Rockman::Climb(std::vector<std::shared_ptr<TileBox>> collison) {
             SetPosition({pos.x, pos.y + 72});
             return;
         }
-        if (Util::Input::IsKeyPressed(Util::Keycode::X)) {
+        if (!Util::Input::IsKeyPressed(Util::Keycode::DOWN) && Util::Input::IsKeyPressed(Util::Keycode::X)) {
             MoveState = PhysicState::FALL;
+            SetPosition(pos);
             SetVisable(2, false);
             return;
         }
@@ -408,6 +412,8 @@ void Rockman::Death() {
         Visable = -1;
         CharacterImage->SetVisible(false);
         CharacterAnimate->SetVisible(false);
+        RockmanBGM->LoadMedia(RESOURCE_DIR"/Sound/RockmanDead.mp3");
+        RockmanBGM->Play(true);
         DeathTimer = Util::Time::GetElapsedTimeMs();
     }
     if (!CharacterDeath[0]->GetVisibility()) {
@@ -416,7 +422,6 @@ void Rockman::Death() {
             CharacterDeath[i]->SetVisible(true);
         }
     }
-
     int negative = 1;
     for (int i = 0; i < 4; i++) {
         auto delta = Util::Time::GetDeltaTimeMs() / 1000;
@@ -482,6 +487,8 @@ void Rockman::SetHealth(int hp) {
 
 void Rockman::Shoot() {
     if (Util::Input::IsKeyDown(Util::Keycode::Z)) {
+        RockmanBGM->LoadMedia(RESOURCE_DIR"/Sound/RockmanShoot.mp3");
+        RockmanBGM->Play();
         SetShootVisable(Visable, true);
         if (MoveState == PhysicState::MOVE)
             MoveState = PhysicState::SHOOT;
@@ -541,6 +548,9 @@ Rockman::GetCollison(std::vector<std::shared_ptr<TileBox>> collison) {
                     box.insert(RockmanCollison::ROCKMANINLADDER);
                 }
                 if (CollisonResult.count(Collider::Bound::BOTTOM)) {
+                    if (glm::vec2{-2000, -2000} == Ladder_Pos) {
+                        Ladder_Pos = collison[i]->GetPosition();
+                    }
                     box.insert(RockmanCollison::BOTTEMINLADDER);
                 }
             }
@@ -608,7 +618,7 @@ void Rockman::Jump(std::vector<std::shared_ptr<TileBox>> collison) {
         Util::Time::GetElapsedTimeMs() - jumptimer > (18)) {
         jumptimer = Util::Time::GetElapsedTimeMs();
         for (int i = 0; i < 6; i++) {
-            if (pos.y <= Initial_Pos.y + 162 &&
+            if (pos.y <= Initial_Pos.y + 172 &&
                 Util::Input::IsKeyPressed(Util::Keycode::X)) {
                 result = GetCollison(collison);
                 if (result.count(RockmanCollison::TOP)) {
@@ -619,14 +629,23 @@ void Rockman::Jump(std::vector<std::shared_ptr<TileBox>> collison) {
                 if (!result.count(RockmanCollison::DOWNRIGHT) &&
                     !result.count(RockmanCollison::UPRIGHT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-                    pos.x += 16 * (Util::Time::GetDeltaTimeMs() / 1000);
+                    pos.x += 32 * (Util::Time::GetDeltaTimeMs() / 1000);
                     SetVisable(2, false);
                 }
                 if (!result.count(RockmanCollison::DOWNLEFT) &&
                     !result.count(RockmanCollison::UPLEFT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-                    pos.x -= 16 * (Util::Time::GetDeltaTimeMs() / 1000);
+                    pos.x -= 32 * (Util::Time::GetDeltaTimeMs() / 1000);
                     SetVisable(2, true);
+                }
+                if(result.count(RockmanCollison::ROCKMANINLADDER)&&
+                    result.count(RockmanCollison::BOTTEMINLADDER)&&
+                    (Util::Input::IsKeyPressed(Util::Keycode::UP) || Util::Input::IsKeyPressed(Util::Keycode::DOWN))){
+                    MoveState = PhysicState::CLIMB;
+                    jumptimer = 0;
+                    SetVisable(0, false);
+                    Ladder_Pos = {-2000, -2000};
+                    return;
                 }
                 pos.y += 120 * (Util::Time::GetDeltaTimeMs() / 1000);
                 SetPosition(pos);
@@ -728,25 +747,25 @@ void Rockman::DebugMessageCollidor(std::set<RockmanCollison> collidorstate,
 void Rockman::DebugMessagePhysic(PhysicState physicState) {
     switch (physicState) {
     case PhysicState::JUMP:
-        LOG_DEBUG("JUMP");
+        LOG_INFO("JUMP");
         break;
     case PhysicState::MOVE:
-        LOG_DEBUG("MOVE");
+        LOG_INFO("MOVE");
         break;
     case PhysicState::CLIMB:
-        LOG_DEBUG("CLIMB");
+        LOG_INFO("CLIMB");
         break;
     case PhysicState::FALL:
-        LOG_DEBUG("FALL");
+        LOG_INFO("FALL");
         break;
     case PhysicState::SHOOT:
-        LOG_DEBUG("SHOOT");
+        LOG_INFO("SHOOT");
         break;
     case PhysicState::JUMPBEFOREFALL:
-        LOG_DEBUG("JUMPBEFOREFALL");
+        LOG_INFO("JUMPBEFOREFALL");
         break;
     case PhysicState::JUMPBEFOREMOVE:
-        LOG_DEBUG("JUMPBEFOREMOVE");
+        LOG_INFO("JUMPBEFOREMOVE");
         break;
     }
 }
