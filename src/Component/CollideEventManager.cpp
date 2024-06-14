@@ -1,6 +1,6 @@
 #include "Component/CollideEventManager.hpp"
-#include "Component/Item.hpp"
 #include "Component/App.hpp"
+#include "Component/Item.hpp"
 #include <random>
 
 void CollideEventManager::Update() {
@@ -47,8 +47,7 @@ void CollideEventManager::Update() {
                 type = ItemType::ONE_UP;
             }
 
-            auto item = std::make_shared<Item>(type, enemy->GetPosition() +
-                                                         glm::vec2(0, 40));
+            auto item = std::make_shared<Item>(type, enemy->GetPosition());
             m_Items->push(item);
             m_Renderer->AddChild(item);
         }
@@ -57,6 +56,8 @@ void CollideEventManager::Update() {
     // 1. rockman <---> ammo : completed
     int ammoCount = (int)m_Magazine->size();
     for (int i = 0; i < ammoCount; i++) {
+        if (m_Rockman->GetCurrentState() != Rockman::LiveState::Normal)
+            break;
         std::shared_ptr<Ammo> ammo = m_Magazine->front();
         m_Magazine->pop();
         m_Magazine->push(ammo);
@@ -75,6 +76,8 @@ void CollideEventManager::Update() {
 
     // 2. rockman <---> enemy
     for (auto &enemy : m_Enemies) {
+        if (m_Rockman->GetCurrentState() != Rockman::LiveState::Normal)
+            break;
         auto rockmanCollider = m_Rockman->GetCollider();
         auto enemyCollider = enemy->GetCollider();
         if (enemy->GetLifeState() == Enemy::LifeState::DEAD)
@@ -111,6 +114,8 @@ void CollideEventManager::Update() {
     // TODO : make more implementation to other items
     int itemCount = (int)m_Items->size();
     for (int i = 0; i < itemCount; i++) {
+        if (m_Rockman->GetCurrentState() != Rockman::LiveState::Normal)
+            break;
         auto item = m_Items->front();
         m_Items->pop();
         m_Items->push(item);
@@ -133,9 +138,11 @@ void CollideEventManager::Update() {
                 case ItemType::BIG_WEAPON_ENERGY:
                     break;
                 case ItemType::ONE_UP:
-                    m_App->SetLifeCount(std::min(99u, m_App->GetLifeCount() + 1));
+                    m_App->SetLifeCount(
+                        std::min(99u, m_App->GetLifeCount() + 1));
                     break;
                 case ItemType::SPECIAL_WEAPON_ITEM:
+                    *m_IsStageEnded = true;
                     break;
                 case ItemType::SCORE_BALL:
                     m_Scorebar->AddScore(1000);
@@ -149,6 +156,8 @@ void CollideEventManager::Update() {
     // 5. rockman <---> bomb
     int bombCount = (int)m_Bombs->size();
     for (int i = 0; i < bombCount; i++) {
+        if (m_Rockman->GetCurrentState() != Rockman::LiveState::Normal)
+            break;
         std::shared_ptr<Bomb> bomb = m_Bombs->front();
         m_Bombs->pop();
         m_Bombs->push(bomb);
@@ -156,9 +165,9 @@ void CollideEventManager::Update() {
         auto bombCollider = bomb->GetCollider();
         for (auto &j : rockmanCollider) {
             if (IsColliding(*j, bombCollider)) {
-                if(bomb->GetState() == Bomb::State::FALLING)
+                RockmanGetDamage(bomb->GetDamage());
+                if (bomb->GetState() == Bomb::State::FALLING)
                     bomb->SetToExplode();
-                RockmanGetDamage(3);
                 break;
             }
         }
