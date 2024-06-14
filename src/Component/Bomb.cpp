@@ -23,6 +23,7 @@ Bomb::Bomb(const std::string &imagePath, glm::vec2 startPosition,
     m_Collider = std::make_shared<Collider>(m_Position, GetScaledSize(),
                                             glm::vec2{0, 0});
     m_Transform.translation = *m_Position;
+    m_BGM->SetVolume(60);
 }
 
 void Bomb::Update(
@@ -49,6 +50,7 @@ void Bomb::Update(
 
 void Bomb::SetToExplode() {
     m_State = State::EXPLODING;
+    m_BGM->Play();
     m_Drawable = std::make_shared<Util::Animation>(
         std::vector<std::string>{
             RESOURCE_DIR "/Picture/Bomb/Explosion_1.png",

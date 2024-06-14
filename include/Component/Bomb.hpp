@@ -5,6 +5,7 @@
 #include "Component/TileBox.hpp"
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
+#include "Util/SFX.hpp"
 #include <string>
 
 class Bomb : public Util::GameObject {
@@ -49,6 +50,8 @@ private:
     std::shared_ptr<glm::vec2> m_Position;
     bool m_MarkedForRemoval = false;
     State m_State = State::FALLING;
+
+    std::shared_ptr<Util::SFX> m_BGM = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Explosion.mp3");
 };
 
 #endif // BOMB_HPP
