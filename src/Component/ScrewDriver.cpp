@@ -7,20 +7,27 @@
 
 #define PI 3.1415926535
 
-Screwdriver::Screwdriver(glm::vec2 pos,glm::vec2 scale,glm::vec2 collidersize,std::vector<std::string> path,std::string ammopath,Enemy::LifeState lifestate,Enemy::HurtState hurtstate,int health,bool visable)
-    : Enemy(pos,path[0],health,visable,collidersize,hurtstate,lifestate,scale){
+Screwdriver::Screwdriver(glm::vec2 pos, glm::vec2 scale, glm::vec2 collidersize,
+                         std::vector<std::string> path, std::string ammopath,
+                         Enemy::LifeState lifestate, Enemy::HurtState hurtstate,
+                         int health, bool visable)
+    : Enemy(pos, path[0], health, visable, collidersize, hurtstate, lifestate,
+            scale,glm::vec2{0,-24}) {
     this->ObjectPath = path;
     this->AmmoPath = ammopath;
     this->ID = "ScrewDriver";
 }
-void Screwdriver::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneStage) {
-    double Distance = sqrt(((RockmanPos.x - Position->x) * (RockmanPos.x - Position->x)) +
-                           ((RockmanPos.y - Position->y) * (RockmanPos.y - Position->y)));
+void Screwdriver::DoBehavior(glm::vec2 CameraPos, glm::vec2 RockmanPos,
+                             int SceneStage) {
+    double Distance =
+        sqrt(((RockmanPos.x - Position->x) * (RockmanPos.x - Position->x)) +
+             ((RockmanPos.y - Position->y) * (RockmanPos.y - Position->y)));
     if (Distance <= 250)
         StartUp = true;
     if (StartUp) {
         if (Open) {
-            Hitbox = std::make_shared<Collider>(Position,glm::vec2 {16*3,16*3},glm::vec2 {0,0});
+            Hitbox = std::make_shared<Collider>(
+                Position, glm::vec2{16 * 3, 16 * 3}, glm::vec2{0, 0});
             Hurt = HurtState::COWARDLY;
             if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
                 AnimationInterval) {
@@ -39,8 +46,9 @@ void Screwdriver::DoBehavior(glm::vec2 CameraPos,glm::vec2 RockmanPos,int SceneS
                 AnimationTimer = Util::Time::GetElapsedTimeMs();
             }
         }
-        else{
-            Hitbox = std::make_shared<Collider>(Position,glm::vec2 {16*3,8*3},glm::vec2 {0,-24});
+        else {
+            Hitbox = std::make_shared<Collider>(
+                Position, glm::vec2{16 * 3, 8 * 3}, glm::vec2{0, -24});
             Hurt = HurtState::INVINCIBLE;
             if (Util::Time::GetElapsedTimeMs() - AnimationTimer >
                 AnimationInterval) {
@@ -68,7 +76,8 @@ void Screwdriver::Shoot() {
         ammospeed = {320 * cos(theta * PI / 180.0f),
                      320 * sin(theta * PI / 180.0f)};
         std::shared_ptr<Ammo> ammo = std::make_shared<Ammo>(
-            glm::vec2{Position->x, Position->y}, ammospeed, AmmoPath, ammosize,AmmoType::ENEMY);
+            glm::vec2{Position->x, Position->y}, ammospeed, AmmoPath, ammosize,
+            AmmoType::ENEMY);
         if (i > 0 && i < 3)
             theta += 30;
         else
@@ -92,5 +101,3 @@ void Screwdriver::Reset() {
     Object->SetVisible(Visable);
     Object->SetImage(ObjectPath[0]);
 }
-
-
