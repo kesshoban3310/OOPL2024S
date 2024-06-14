@@ -139,7 +139,7 @@ void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
         for (int i = 0; i < 5; i++) {
             std::set<RockmanCollison> RockmanCollisonState =
                 GetCollison(collison);
-            if (!RockmanCollisonState.count(RockmanCollison::BOTTOM) && Util::Time::GetDeltaTimeMs() <= 60) {
+            if (!RockmanCollisonState.count(RockmanCollison::BOTTOM) && Util::Time::GetDeltaTimeMs() <= 26) {
                 Position->y -= 320 * (Util::Time::GetDeltaTimeMs() / 1000);
                 SetPosition(*Position);
                 CharacterSpawn[0]->SetPosition(*Position);

@@ -407,7 +407,7 @@ void PhaseStage::Update(App *app) {
                                     m_Boss->GetLifeState() ==
                                         Enemy::LifeState::LIFE);
     m_PersonLife->Update(app->GetLifeCount(), CameraPos);
-    
+
     // If Rockman Dead,then Rivival it.
     if (m_Rockman->GetCurrentState() == Rockman::LiveState::WAITREVIVAL) {
         RockmanRivival(app);
