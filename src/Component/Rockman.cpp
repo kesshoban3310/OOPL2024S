@@ -139,7 +139,7 @@ void Rockman::Spawn(std::vector<std::shared_ptr<TileBox>> collison) {
         for (int i = 0; i < 5; i++) {
             std::set<RockmanCollison> RockmanCollisonState =
                 GetCollison(collison);
-            if (!RockmanCollisonState.count(RockmanCollison::BOTTOM) && Util::Time::GetDeltaTimeMs() <= 26) {
+            if (!RockmanCollisonState.count(RockmanCollison::BOTTOM) && Util::Time::GetDeltaTimeMs() <= 60) {
                 Position->y -= 320 * (Util::Time::GetDeltaTimeMs() / 1000);
                 SetPosition(*Position);
                 CharacterSpawn[0]->SetPosition(*Position);
@@ -673,7 +673,7 @@ void Rockman::Fall(std::vector<std::shared_ptr<TileBox>> collison) {
                             result.count(RockmanCollison::ROCKMANINLADDER));
             if (CanFall) {
                 bool isleft = false;
-                pos.y -= 60 * (Util::Time::GetDeltaTimeMs() / 1000);
+                pos.y -= 96 * (Util::Time::GetDeltaTimeMs() / 1000);
                 if (!result.count(RockmanCollison::DOWNRIGHT) &&
                     !result.count(RockmanCollison::UPRIGHT) &&
                     Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
