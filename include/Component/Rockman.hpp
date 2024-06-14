@@ -7,6 +7,7 @@
 #include "Component/Collider.hpp"
 #include "Component/TileBox.hpp"
 #include "Util/Logger.hpp"
+#include "Util/SFX.hpp"
 #include <queue>
 
 
@@ -226,5 +227,8 @@ private:
     //Debug Mode Invincible
     bool DebugMode = false;
     std::vector<std::shared_ptr<Collider>> ColliderBox;
+
+    //Music
+    std::shared_ptr<Util::SFX> RockmanBGM;
 };
 #endif
