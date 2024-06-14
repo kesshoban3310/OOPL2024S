@@ -363,15 +363,14 @@ void Rockman::Climb(std::vector<std::shared_ptr<TileBox>> collison) {
         Ladder_Pos = {-2000, -2000};
     }
     glm::vec2 pos = GetPosition(), initial_yaxis = GetPosition();
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 8; i++) {
         CollisonResult = GetCollison(collison);
         if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
-            pos.y += 32 * (Util::Time::GetDeltaTimeMs() / 1000);
+            pos.y += 32 * (Util::Time::GetDeltaTimeMs() / 1000.0);
         }
-
-        if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) &&
+        else if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) &&
             !CollisonResult.count(RockmanCollison::BOTTOM)) {
-            pos.y -= 32 * (Util::Time::GetDeltaTimeMs() / 1000);
+            pos.y -= 32 * (Util::Time::GetDeltaTimeMs() / 1000.0);
         }
         else if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) &&
                  CollisonResult.count(RockmanCollison::BOTTOM)) {
@@ -380,7 +379,7 @@ void Rockman::Climb(std::vector<std::shared_ptr<TileBox>> collison) {
             SetPosition({pos.x, pos.y + 72});
             return;
         }
-        if (Util::Input::IsKeyPressed(Util::Keycode::X)) {
+        else if (Util::Input::IsKeyPressed(Util::Keycode::X)) {
             MoveState = PhysicState::FALL;
             SetVisable(2, false);
             return;
