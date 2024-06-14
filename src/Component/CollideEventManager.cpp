@@ -128,10 +128,12 @@ void CollideEventManager::Update() {
                 case ItemType::SMALL_HEALTH_ENERGY:
                     m_Rockman->SetHealth(
                         std::min(28, m_Rockman->GetHealth() + 2));
+                    m_EnergySoundRockman->Play();
                     break;
                 case ItemType::BIG_HEALTH_ENERGY:
                     m_Rockman->SetHealth(
                         std::min(28, m_Rockman->GetHealth() + 4));
+                    m_EnergySoundRockman->Play();
                     break;
                 case ItemType::SMALL_WEAPON_ENERGY:
                     break;

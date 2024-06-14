@@ -413,7 +413,7 @@ void Rockman::Death() {
         CharacterImage->SetVisible(false);
         CharacterAnimate->SetVisible(false);
         RockmanBGM->LoadMedia(RESOURCE_DIR"/Sound/RockmanDead.mp3");
-        RockmanBGM->Play(true);
+        RockmanBGM->Play();
         DeathTimer = Util::Time::GetElapsedTimeMs();
     }
     if (!CharacterDeath[0]->GetVisibility()) {
