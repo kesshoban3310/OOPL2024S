@@ -196,7 +196,6 @@ void Rockman::DoBehavior(std::vector<std::shared_ptr<TileBox>> collison) {
         Invincible = false;
         InvincibleTimer = 0;
     }
-    DebugMessageCollidor(collisonstate,"Behavior");
     switch (RockmanState) {
     case LiveState::Initial:
         Initialize();
