@@ -154,7 +154,7 @@ void PhaseStage::Init(App *app) {
             glm::vec2{16, 16}, glm::vec2{3, 3}, glm::vec2{16 * 3, 16 * 3},
             RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb1.png",
             RESOURCE_DIR "/Picture/Enemies/Bomb Man Stage/Bombombomb/bomb2.png",
-            1, true, Enemy::HurtState::COWARDLY);
+            1, true, Enemy::HurtState::INVINCIBLE);
         m_Bombombomb.push_back(bombombomb);
         m_Enemies.push_back(bombombomb);
         app->GetRoot()->AddChild(bombombomb->GetChild());
